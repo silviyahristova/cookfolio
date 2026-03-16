@@ -176,45 +176,45 @@ Wireframes were created using Figma to plan the structure of each page. These wi
 
 <details><summary>Desktop</summary>
 
-<img src="static/images/docs/wireframes/home-page-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/register-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/login-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/empty-dashboard-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/dashboard-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/my-recipes-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/recipe-detail-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/add-recipe-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/edit-recipe-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/delete-recipe-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/meal-planner-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/discover-recipe-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/search-results-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/support-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/403-page-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/404-page-desktop.webp" width=250px>
-<img src="static/images/docs/wireframes/500-page-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/home-page-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/register-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/login-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/empty-dashboard-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/dashboard-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/my-recipes-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/recipe-detail-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/add-recipe-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/edit-recipe-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/delete-recipe-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/meal-planner-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/discover-recipe-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/search-results-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/support-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/403-page-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/404-page-desktop.webp" width=250px>
+<img src="app/static/images/docs/wireframes/500-page-desktop.webp" width=250px>
 
 </details>
 
 <details><summary>Mobile</summary>
 
-<img src="static/images/docs/wireframes/home-page-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/register-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/login-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/empty-dashboard-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/dashboard-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/my-recipes-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/recipe-detail-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/add-recipe-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/edit-recipe-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/delete-recipe-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/meal-planner-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/discover-recipe-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/search-results-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/support-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/403-page-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/404-page-mobile.webp" width=250px>
-<img src="static/images/docs/wireframes/500-page-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/home-page-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/register-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/login-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/empty-dashboard-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/dashboard-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/my-recipes-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/recipe-detail-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/add-recipe-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/edit-recipe-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/delete-recipe-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/meal-planner-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/discover-recipe-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/search-results-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/support-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/403-page-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/404-page-mobile.webp" width=250px>
+<img src="app/static/images/docs/wireframes/500-page-mobile.webp" width=250px>
 
 </details>
 
