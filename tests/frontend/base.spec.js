@@ -31,4 +31,9 @@ test.describe('Base layout', () => {
         await logo.click(); // click the logo
         await expect(page).toHaveURL(/\/$/); // check if the URL is still the homepage after clicking the logo
     });
+
+    test(`social media links test`, async ({page}) => {
+        await page.goto('/'); // navigate to the homepage
+        await expect(page.locator('.social-links')).toBeVisible(); // check if footer is visible
+    });
 });
