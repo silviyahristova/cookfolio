@@ -3,8 +3,70 @@
 {% block title %}Cookfolio - Home{% endblock %}
 
 {% block content %}
-    <section class="hero">
-        <h1>Organize Your Recipes. Plan Smarter.</h1>
-        <p>Cookfolio helps you save recipes, plan meals, and discover new dishes all in one place.</p>
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Organize Your Recipes. <br> Plan Smarter.</h1>
+                <p>Cookfolio helps you save recipes, plan meals, and discover new dishes all in one place.</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('main.register') }}" class="btn btn-primary">Get Started</a>
+                    <a href="{{ url_for('main.discover') }}" class="btn btn-secondary">Discover recipes</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <picture>
+                    <source srcset="{{ url_for('static', filename='images/homepage-hero-image.webp') }}" type="image/webp">
+                    <source srcset="{{ url_for('static', filename='images/homepage-hero-image.png') }}" type="image/png">
+                    <img src="{{ url_for('static', filename='images/homepage-hero-image.png') }}" alt="Cookfolio homepage hero Image" class="hero-picture">
+                </picture>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+
+        <h2>What You Can Do?</h2>
+
+        <div class="feature-container">
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fa fa-book-bookmark"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Save Recipes</h3>
+                    <p>Store your favourite recipes.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fa fa-calendar"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Plan Weekly Meals</h3>
+                    <p>Create meal plans for the week.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Discover New Recipes</h3>
+                    <p>Find and import new recipes.</p>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="action-section">
+        <div class="container">
+            <h2>Start Your Cooking Journey</h2>
+            <p>Create an account to manage your recipes and meal plans.</p>
+            <a href="{{ url_for('main.register') }}" class="btn btn-success">Create account</a>
+        </div>
     </section>
 {% endblock %}
