@@ -1,5 +1,7 @@
 from flask import Blueprint , render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.models import User
+from app import db
 
 main = Blueprint('main', __name__)
 
@@ -30,10 +32,26 @@ def register():
         if password != confirm_password:
             flash('Passwords do not match.', 'error')
             return redirect(url_for('main.register'))
-        else:
-            # Hash the password before storing it
-            hashed_password = generate_password_hash(password)
-            return f"User {username} registered successfully with email {email} and hashed password {hashed_password}"
+        
+        #Check if user already exists
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            flash('Username or email already exists.', 'error')
+            return redirect(url_for('main.register'))
+        
+        # Hash the password before storing it
+        hashed_password = generate_password_hash(password)
+        
+        # Create a new user and add to the database
+        new_user = User(username=username, email=email, password=hashed_password)
+        #Save user to database
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Provide feedback to the user
+        flash('Registration successful! You can now log in.', 'success')
+        return redirect(url_for('main.login'))
+
     return render_template('register.html')
 
 @main.route('/dashboard')
