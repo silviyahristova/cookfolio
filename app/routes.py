@@ -1,4 +1,4 @@
-from flask import Blueprint , render_template, request, flash, url_for
+from flask import Blueprint , render_template, request, flash, redirect, url_for
 
 main = Blueprint('main', __name__)
 
@@ -25,13 +25,13 @@ def register():
         # Validation
         if not username or not email or not password or not confirm_password:
             flash('All fields are required.', 'error')
-            return render_template('register.html')
+            return redirect(url_for('main.register'))
         if password != confirm_password:
             flash('Passwords do not match.', 'error')
-            return render_template('register.html')
+            return redirect(url_for('main.register'))
         else:
             flash('Registration successful!', 'success')
-            return render_template('login.html')
+            return redirect(url_for('main.login'))
     return render_template('register.html')
 
 @main.route('/dashboard')
