@@ -76,12 +76,25 @@
 
     <main>
 
+        <!--Flash Messages-->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!--Page Content-->
         {% block content %}
         
         {% endblock %}
 
     </main>
 
+    <!--Footer-->
     <footer class="footer">
         <div class="container-fluid">
             <div class="footer-wrapper">
