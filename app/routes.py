@@ -1,4 +1,4 @@
-from flask import Blueprint , render_template   
+from flask import Blueprint , render_template, request   
 
 main = Blueprint('main', __name__)
 
@@ -14,8 +14,16 @@ def discover():
 def login():
     return render_template('login.html')
 
-@main.route('/register')
+@main.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        # Handle form submission
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        return f" Form submitted for username: {username} with email: {email}"
     return render_template('register.html')
 
 @main.route('/dashboard')
