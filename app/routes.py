@@ -1,4 +1,4 @@
-from flask import Blueprint , render_template, request   
+from flask import Blueprint , render_template, request, flash, url_for
 
 main = Blueprint('main', __name__)
 
@@ -18,12 +18,20 @@ def login():
 def register():
     if request.method == 'POST':
         # Handle form submission
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
-
-        return f" Form submitted for username: {username} with email: {email}"
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+        # Validation
+        if not username or not email or not password or not confirm_password:
+            flash('All fields are required.', 'error')
+            return render_template('register.html')
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return render_template('register.html')
+        else:
+            flash('Registration successful!', 'success')
+            return render_template('login.html')
     return render_template('register.html')
 
 @main.route('/dashboard')
