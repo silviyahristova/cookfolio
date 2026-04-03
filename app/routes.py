@@ -1,4 +1,5 @@
 from flask import Blueprint , render_template, request, flash, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 
 main = Blueprint('main', __name__)
 
@@ -30,8 +31,9 @@ def register():
             flash('Passwords do not match.', 'error')
             return redirect(url_for('main.register'))
         else:
-            flash('Registration successful!', 'success')
-            return redirect(url_for('main.login'))
+            # Hash the password before storing it
+            hashed_password = generate_password_hash(password)
+            return f"User {username} registered successfully with email {email} and hashed password {hashed_password}"
     return render_template('register.html')
 
 @main.route('/dashboard')
