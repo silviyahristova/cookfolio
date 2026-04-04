@@ -89,11 +89,18 @@ def login():
             session['user_id'] = user.id
             session['username'] = user.username
             session['is_admin'] = user.is_admin
-            
+
             flash('Login successful!', 'success')
             return redirect(url_for('main.dashboard'))
 
     return render_template('login.html')
+
+#logout route
+@main.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('main.login'))
 
 @main.route('/dashboard')
 def dashboard():
