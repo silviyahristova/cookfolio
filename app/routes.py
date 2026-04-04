@@ -3,8 +3,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
 from app import db
 import re
+from functools import wraps
 
 main = Blueprint('main', __name__)
+
+# Decorator to require login for certain routes
+def login_required(view_function):
+    @wraps(view_function)
+    def wrapped_view_function(*args, **kwargs):
+        if not session.get('user_id'):
+            flash('Please log in to access this page.', 'error')
+            return redirect(url_for('main.login'))
+        return view_function(*args, **kwargs)
+    return wrapped_view_function
 
 @main.route('/')
 def home():
@@ -103,6 +114,7 @@ def logout():
     return redirect(url_for('main.login'))
 
 @main.route('/dashboard')
+@login_required
 def dashboard():
     return render_template('dashboard.html')
 
