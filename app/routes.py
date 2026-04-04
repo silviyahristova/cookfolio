@@ -7,7 +7,7 @@ from functools import wraps
 
 main = Blueprint('main', __name__)
 
-# Decorator to require login for certain routes
+# Logged in user protection decorator
 def login_required(view_function):
     @wraps(view_function)
     def wrapped_view_function(*args, **kwargs):
@@ -16,6 +16,25 @@ def login_required(view_function):
             return redirect(url_for('main.login'))
         return view_function(*args, **kwargs)
     return wrapped_view_function
+
+# Admin protection decorator
+def admin_required(view_function):
+    @wraps(view_function)
+    def wrapped_view_function(*args, **kwargs):
+        if not session.get('user_id'):
+            flash('Please log in to access this page.', 'error')
+            return redirect(url_for('main.login'))
+        if not session.get('is_admin'):
+            flash('You do not have permission to access this page.', 'error')
+            return redirect(url_for('main.home'))
+        return view_function(*args, **kwargs)
+    return wrapped_view_function
+
+#admin dashboard route
+@main.route('/admin')
+@admin_required
+def admin_dashboard():
+    return render_template('admin_dashboard.html')
 
 @main.route('/')
 def home():
