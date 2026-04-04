@@ -1,4 +1,4 @@
-from flask import Blueprint , render_template, request, flash, redirect, url_for
+from flask import Blueprint , render_template, request, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
 from app import db
@@ -10,14 +10,7 @@ main = Blueprint('main', __name__)
 def home():
     return render_template('index.html')
 
-@main.route('/discover')
-def discover():
-    return render_template('discover.html')
-
-@main.route('/login')
-def login():
-    return render_template('login.html')
-
+#register route
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -76,9 +69,39 @@ def register():
 
     return render_template('register.html')
 
+#login route
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+
+        if not username or not password:
+            flash('Both fields are required.', 'error')
+            return redirect(url_for('main.login'))
+        
+        user = User.query.filter_by(username=username).first()
+
+        if not user or not check_password_hash(user.password, password):
+            flash('Invalid username or password.', 'error')
+            return redirect(url_for('main.login'))
+        else:
+            session['user_id'] = user.id
+            session['username'] = user.username
+            session['is_admin'] = user.is_admin
+            
+            flash('Login successful!', 'success')
+            return redirect(url_for('main.dashboard'))
+
+    return render_template('login.html')
+
 @main.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+@main.route('/discover')
+def discover():
+    return render_template('discover.html')
 
 @main.route('/support')
 def support():
