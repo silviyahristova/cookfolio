@@ -16,3 +16,15 @@ def test_register_empty_fields(client):
 
     assert response.status_code == 200
     assert b'All fields are required.' in response.data
+
+#test for password mismatch
+def test_register_password_mismatch(client):
+    response = client.post('/register', data={
+        'username': 'testuser',
+        'email': 'testuser@example.com',
+        'password': 'password123',
+        'confirm_password': 'password456'
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b'Passwords do not match.' in response.data
