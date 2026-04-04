@@ -28,3 +28,15 @@ def test_register_password_mismatch(client):
 
     assert response.status_code == 200
     assert b'Passwords do not match.' in response.data
+
+#test for invalid email
+def test_register_invalid_email(client):
+    response = client.post('/register', data={
+        'username': 'testuser',
+        'email': 'invalidemail',
+        'password': 'password123',
+        'confirm_password': 'password123'
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b'Please enter a valid email address.' in response.data
