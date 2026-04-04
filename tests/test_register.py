@@ -61,3 +61,20 @@ def test_register_duplicate_username_email(client, app):
 
     assert response.status_code == 200
     assert b'Username or email already exists.' in response.data
+
+#test for successful registration
+def test_register_success(client, app):
+    response = client.post('/register', data={
+        'username': 'newuser',
+        'email': 'newuser@example.com',
+        'password': 'password123',
+        'confirm_password': 'password123'
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b'Registration successful! You can now log in.' in response.data
+
+    with app.app_context():
+        user = User.query.filter_by(username='newuser').first()
+        assert user is not None
+        assert user.email == 'newuser@example.com'
