@@ -88,15 +88,18 @@
     <main>
 
         <!--Flash Messages-->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
+        <div class="flash-messages-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                        <div class="flash-message {{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="close-btn" aria-label="Close flash message"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
                     {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+                {% endif %}
+            {% endwith %}
+        </div>
 
         <!--Page Content-->
         {% block content %}
