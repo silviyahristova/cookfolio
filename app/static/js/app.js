@@ -9,3 +9,12 @@ menuToggle.addEventListener('click', function(){
     icon.classList.toggle('fa-bars');
     icon.classList.toggle('fa-xmark');
 });
+
+//Manual close flash messages
+
+document.querySelectorAll('.flash-message .close-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const message = e.target.closest('.flash-message');
+        message.remove();
+    });
+});
