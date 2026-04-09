@@ -332,7 +332,8 @@ header {
 }
 
 .hero-container,
-.register-container {
+.register-container,
+.login-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -343,7 +344,8 @@ header {
 }
 
 .hero-text,
-.register-text {
+.register-text,
+.login-text {
     text-align: center;
 }
 
@@ -482,11 +484,13 @@ header {
 
 /*register page*/
 
-.register-section {
+.register-section,
+.login-section {
     padding: 2rem 1rem 0 1rem;
 }
 
-.register-form {
+.register-form,
+.login-form {
     background-color: #fff;
     border: 1px solid #e3e3e3;
     border-radius: 1.5rem;
@@ -550,8 +554,22 @@ header {
     font-weight: 700;
 }
 
-.register-image{
+.register-image,
+.login-image {
     display: none;
+}
+
+/*Login page*/
+
+.login-container{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.login-form{
+    max-width: 420px;
 }
 
 /*Media Queries*/
@@ -629,6 +647,7 @@ header {
 }
 
 /*Desktop*/
+
 @media (min-width: 992px) {
 
     .menu-toggle {
@@ -687,23 +706,21 @@ header {
         justify-content: center;
     }
 
-    .register-container {
-        display: flex;
-        align-items: center;
-    }
-
-    .register-container{
+    .register-container,
+    .login-container {
         display: grid;
         align-items: center;
         grid-template-columns: 1fr 1fr;
-         gap: 2rem;
+        gap: 2rem;
     }
 
-    .register-text,.register-form {
+    .register-text,.register-form,
+    .login-text,.login-form {
         text-align: left;
     }
 
-    .register-image{
+    .register-image,
+    .login-image {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -713,7 +730,8 @@ header {
         border-radius: 2rem;
     }
 
-    .register-image img{
+    .register-image img,
+    .login-image img{
         width: 100%;
         height: 100%;
         object-fit: contain;

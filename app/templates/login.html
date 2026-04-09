@@ -4,21 +4,34 @@
 
 {% block content %}
 <section class="login-section">
-    <div class="container">
-        <h1>Login</h1>
-        <p>Sign in to manage your recipes and meal plans.</p>
+    <div class="login-container">
+        <div class="login-text">
+            <h1>Login</h1>
+            <p>Sign in to manage your recipes and meal plans.</p>
 
-        <form method="POST" action="{{ url_for('main.login') }}">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn-primary">Log In</button>
-        </form>
+            <form method="POST" action="{{ url_for('main.login') }}" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-lock">
+                        <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Log In</button>
+                <p class="register-login-text">Don't have an account? <a href="{{ url_for('main.register') }}">Register</a>.</p>
+            </form>
+        </div>
+        <div class="login-image">
+            <picture>
+                <source srcset="{{ url_for('static', filename='images/login-hero-image.webp') }}" type="image/webp">
+                <source srcset="{{ url_for('static', filename='images/login-hero-image.png') }}" type="image/png">
+                <img src="{{ url_for('static', filename='images/login-hero-image.png') }}" alt="Cookfolio login hero Image" class="page-picture">
+            </picture>
+        </div>
     </div>
 </section>
 {% endblock %}
