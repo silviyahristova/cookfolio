@@ -4,32 +4,45 @@
 
 {% block content %}
 <section class="register-section">
-    <div class="container">
-        <div class="register-container">
+    <div class="register-container">
+        <div class="register-text">
             <h1>Create account</h1>
             <p>Create an account to manage your recipes and meal plans.</p>
 
-            <form method="POST" action="{{ url_for('main.register') }}">
-                <div>
+            <form method="POST" action="{{ url_for('main.register') }}" class="register-form">
+                <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Enter your username" required>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="password">Password</label>
+                    <div class="password-lock">
+                        <i class="fa-solid fa-lock"></i>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="confirm_password">Confirm Password</label>
+                    <div class="password-lock">
+                        <i class="fa-solid fa-lock"></i>
                     <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Create Account</button>
+                <p class="register-login-text">Already have an account? <a href="{{ url_for('main.login') }}">Log in</a>.</p>
             </form>
-            <p>Already have an account? <a href="{{ url_for('main.login') }}">Log in</a>.</p>
+        </div>
+        <div class="register-image">
+            <picture>
+                <source srcset="{{ url_for('static', filename='images/register-hero-image.webp') }}" type="image/webp">
+                <source srcset="{{ url_for('static', filename='images/register-hero-image.png') }}" type="image/png">
+                <img src="{{ url_for('static', filename='images/register-hero-image.png') }}" alt="Cookfolio register hero Image" class="page-picture">
+            </picture>
         </div>
     </div>
 </section>
