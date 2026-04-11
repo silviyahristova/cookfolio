@@ -115,6 +115,7 @@ def login():
 
         # Login user using flask-login
         login_user(user)
+        flash('Logged in successfully.', 'success')
         return redirect(url_for('main.dashboard'))
 
     return render_template('login.html')
