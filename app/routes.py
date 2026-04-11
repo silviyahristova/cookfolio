@@ -1,30 +1,21 @@
 from flask import Blueprint , render_template, request, flash, redirect, url_for, session
+from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import User
-from app import db
+from .models import User
+from . import db
 import re
 from functools import wraps
 
 main = Blueprint('main', __name__)
 
-# Logged in user protection decorator
-def login_required(view_function):
-    @wraps(view_function)
-    def wrapped_view_function(*args, **kwargs):
-        if not session.get('user_id'):
-            flash('Please log in to access this page.', 'error')
-            return redirect(url_for('main.login'))
-        return view_function(*args, **kwargs)
-    return wrapped_view_function
-
 # Admin protection decorator
 def admin_required(view_function):
     @wraps(view_function)
     def wrapped_view_function(*args, **kwargs):
-        if not session.get('user_id'):
+        if not current_user.is_authenticated:
             flash('Please log in to access this page.', 'error')
             return redirect(url_for('main.login'))
-        if not session.get('is_admin'):
+        if not current_user.is_admin:
             flash('You do not have permission to access this page.', 'error')
             return redirect(url_for('main.home'))
         return view_function(*args, **kwargs)
@@ -32,6 +23,7 @@ def admin_required(view_function):
 
 #admin dashboard route
 @main.route('/admin')
+@login_required
 @admin_required
 def admin_dashboard():
     return render_template('admin_dashboard.html')
@@ -102,33 +94,37 @@ def register():
 #login route
 @main.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+    
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
 
+        #check if both fields are filled
         if not username or not password:
             flash('Both fields are required.', 'error')
             return redirect(url_for('main.login'))
         
+        # Check if user exists and password is correct
         user = User.query.filter_by(username=username).first()
 
         if not user or not check_password_hash(user.password, password):
             flash('Invalid username or password.', 'error')
             return redirect(url_for('main.login'))
-        else:
-            session['user_id'] = user.id
-            session['username'] = user.username
-            session['is_admin'] = user.is_admin
 
-            flash('Login successful!', 'success')
-            return redirect(url_for('main.dashboard'))
+        # Login user using flask-login
+        login_user(user)
+        return redirect(url_for('main.dashboard'))
 
     return render_template('login.html')
 
 #logout route
 @main.route('/logout')
+@login_required
 def logout():
-    session.clear()
+    # Logout user using flask-login
+    logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
 
