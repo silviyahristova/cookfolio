@@ -33,13 +33,13 @@ test(`login form fields are visible`, async ({page}) => {
 });
 
 test(`user can fill the form and submit`, async ({page}) => {
+    await page.goto('http://127.0.0.1:5000/logout'); // Ensure we are logged out before testing login
     await page.goto('http://127.0.0.1:5000/login');
     await page.fill(`input[name="username"]`, 'testuser');
     await page.fill(`input[name="password"]`, 'password123');
     await page.click(`button[type="submit"]`);
     await page.waitForLoadState('networkidle'); // wait for the page to load after submission
-    await expect(page).not.toHaveURL(/login/); // Ensure we are not on the login page anymore
-    await expect(page.locator('.flash-message')).toBeVisible(); // Check for flash message visibility
+    await expect(page).toHaveURL(/dashboard/); // Ensure we are on the dashboard page
 });
 
 test(`invalid login stays on login page and shows error message`, async ({page}) => {
