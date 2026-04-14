@@ -4,10 +4,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from flask_login import LoginManager
+from flask_migrate import Migrate
 
 load_dotenv()
 
 login_manager = LoginManager()
+migrate = Migrate()
 
 class Base(DeclarativeBase):
     pass
@@ -19,9 +21,11 @@ def create_app():
 
     app.config['SECRET_KEY'] = os.getenv('cookfolio_secret_key')
 
-    # Database configuration#
+    # Database configuration
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///project.db"
 
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
     db.init_app(app)
 
     login_manager.init_app(app)
@@ -30,7 +34,11 @@ def create_app():
     login_manager.login_message_category = 'warning'
     login_manager.login_message = 'Please log in to access this page.'
 
+    # Initialize Flask-Migrate
+    migrate.init_app(app, db)
+
+    from app import models
     from .routes import main
     app.register_blueprint(main)
-
+    
     return app
