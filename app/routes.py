@@ -1,12 +1,20 @@
+import os
 from flask import Blueprint , render_template, request, flash, redirect, url_for, session
 from flask_login import login_user, logout_user, current_user, login_required
+from flask import current_app
+from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User
+from .models import User, Recipe
 from . import db
 import re
 from functools import wraps
 
 main = Blueprint('main', __name__)
+
+# Allowed file extensions for recipe images
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Admin protection decorator
 def admin_required(view_function):
@@ -128,6 +136,67 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
+
+#recipe routes
+@main.route('/add-recipe', methods=['GET', 'POST'])
+@login_required
+def add_recipe():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        category = request.form.get('category', '').strip()
+        ingredients = request.form.get('ingredients', '').strip()
+        instructions = request.form.get('instructions', '').strip()
+        prep_time = request.form.get('prep_time', '').strip()
+        servings = request.form.get('servings', '').strip()
+
+        photo = request.files.get('photo')
+
+        # Validate form data
+        if not title or not category or not ingredients or not instructions or not prep_time or not servings :
+            flash('Please fill in all required fields.', 'error')
+            return redirect(url_for('main.add_recipe'))
+        
+        try:
+            prep_time = int(prep_time)
+            servings = int(servings)
+        except ValueError:
+            flash('Prep time and servings must be valid numbers.', 'error')
+            return redirect(url_for('main.add_recipe'))
+        
+            # Handle file upload
+        image_filename = None
+        if photo and photo.filename:
+            if allowed_file(photo.filename):
+                filename: f"{current_user.id}_{secure_filename(photo.filename)}"
+                upload_folder = current_app.config['UPLOAD_FOLDER']
+                os.makedirs(upload_folder, exist_ok=True)
+                photo_path = os.path.join(upload_folder, filename)
+                photo.save(photo_path)
+
+                image_filename = filename
+            else:
+                flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
+                return redirect(url_for('main.add_recipe'))
+
+        # Create a new recipe and add to the database
+        new_recipe = Recipe(
+            title=title,
+            category=category,
+            ingredients=ingredients,
+            instructions=instructions,
+            prep_time=prep_time,
+            servings=servings,
+            image=image_filename,
+            user_id=current_user.id
+        )
+
+        db.session.add(new_recipe)
+        db.session.commit()
+
+        flash('Recipe added successfully!', 'success')
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('add_recipe.html')
 
 @main.route('/dashboard')
 @login_required
