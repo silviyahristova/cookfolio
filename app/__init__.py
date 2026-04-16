@@ -26,6 +26,11 @@ def create_app():
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
+    # File upload configuration, uploaded files will be stored in 'static/uploads' directory
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads')
+    # 16 MB limit for uploaded files
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  
+
     db.init_app(app)
 
     login_manager.init_app(app)
