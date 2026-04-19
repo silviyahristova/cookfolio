@@ -203,6 +203,11 @@ def add_recipe():
 def dashboard():
     return render_template('dashboard.html')
 
+@main.route('/meal-plans')
+@login_required
+def meal_plans():
+    return render_template('meal_plans.html')
+
 @main.route('/discover')
 def discover():
     return render_template('discover.html')
