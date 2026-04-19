@@ -3,7 +3,38 @@
 {% block title %}Cookfolio - Dashboard{% endblock %}
 
 {% block content %}
-    <h1>Dashboard</h1>
-    <p>Welcome to your dashboard! Here you can manage your recipes, meal plans, and more.</p>
+<section class="dashboard-section">
+    <div class="dashboard-container">
+        <div class="dashboard-content">
+            <div class="dashboard-left">
+                <div class="dashboard-welcome-text">
+                    <h1>Hello, {{ current_user.username }}!</h1>
+                    <p>Welcome to your dashboard!</p>
+                </div>
+            </div>
+        
+             <div class="dashboard-right">
+                <div class="dashboard-image">
+                    <picture>
+                        <source srcset="{{ url_for('static', filename='images/empty-dashboard.webp') }}" type="image/webp">
+                        <source srcset="{{ url_for('static', filename='images/empty-dashboard.png') }}" type="image/png">
+                        <img src="{{ url_for('static', filename='images/empty-dashboard.png') }}" alt="Cookfolio empty dashboard Image" class="page-picture">
+                    </picture>
+                </div>
+             </div>
+        
+            <div class="dashboard-left">
+                <div class="empty-dashboard">
+                    <p class="dashboard-empty-text">You haven't added any recipes yet.</p>
+                    <p>Start building your Cookfolio by adding your first recipe.</p>
+                    <div class="dashboard-buttons">
+                        <a href="{{ url_for('main.add_recipe') }}" class="btn btn-success">+ Add Your First Recipe</a>
+                        <p class="dashboard-or">or</p>
+                        <a href="{{ url_for('main.meal_plans') }}" class="btn btn-secondary">+ Create Meal Plan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
-
