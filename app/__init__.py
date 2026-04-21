@@ -19,10 +19,14 @@ db = SQLAlchemy(model_class=Base)
 def create_app():
     app = Flask(__name__,instance_relative_config=True)
 
-    app.config['SECRET_KEY'] = os.getenv('cookfolio_secret_key')
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
     # Database configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///project.db"
+    uri = os.environ.get('DATABASE_URL')
+    if uri and uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri or "sqlite:///project.db"
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
