@@ -6,7 +6,8 @@ from sqlalchemy.orm import DeclarativeBase
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
-load_dotenv()
+#Ensure that the .env file is loaded and correct DATABASE_URL is used
+load_dotenv(override=True)
 
 login_manager = LoginManager()
 migrate = Migrate()
@@ -27,7 +28,7 @@ def create_app():
         uri = uri.replace("postgres://", "postgresql://", 1)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = uri or "sqlite:///project.db"
-
+    print(f"Using database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # File upload configuration, uploaded files will be stored in 'static/uploads' directory
