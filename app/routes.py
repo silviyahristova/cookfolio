@@ -277,6 +277,29 @@ def edit_recipe(recipe_id):
 
         flash('Recipe updated successfully!', 'success')
         return redirect(url_for('main.view_recipe', recipe_id=recipe_id))
+    
+@main.route('/recipes/<int:recipe_id>/delete', methods=['POST'])
+@login_required
+def delete_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+
+    if recipe.user_id != current_user.id:
+        flash('You do not have permission to delete this recipe.', 'error')
+        return redirect(url_for('main.dashboard'))
+
+    # Delete image file if it exists
+    if recipe.image_filename:
+        upload_folder = current_app.config['UPLOAD_FOLDER']
+        image_path = os.path.join(upload_folder, recipe.image_filename)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+    db.session.delete(recipe)
+    db.session.commit()
+
+    flash('Recipe deleted successfully!', 'success')
+    return redirect(url_for('main.dashboard'))
+
         
 @main.route('/meal-plans')
 @login_required
