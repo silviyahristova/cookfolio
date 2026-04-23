@@ -204,6 +204,16 @@ def dashboard():
     recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.created_at.desc()).all()
     return render_template('dashboard.html', recipes=recipes)
 
+@main.route('/recipes/<int:recipe_id>')
+@login_required
+def view_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+
+    if recipe.user_id != current_user.id:
+        flash('You do not have permission to view this recipe.', 'error')
+        return redirect(url_for('main.dashboard'))
+    return render_template('view_recipe.html', recipe=recipe)
+
 @main.route('/meal-plans')
 @login_required
 def meal_plans():
