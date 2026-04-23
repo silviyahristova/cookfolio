@@ -163,7 +163,7 @@ def add_recipe():
             flash('Prep time and servings must be valid numbers.', 'error')
             return redirect(url_for('main.add_recipe'))
         
-            # Handle file upload
+        # Handle file upload
         image_filename = None
         if photo and photo.filename:
             if allowed_file(photo.filename):
@@ -263,7 +263,23 @@ def delete_recipe(recipe_id):
     flash('Recipe deleted successfully!', 'success')
     return redirect(url_for('main.dashboard'))
 
-        
+@main.route('/my-recipes')
+@login_required
+def my_recipes():
+    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.created_at.desc()).all()
+    return render_template('my_recipes.html', recipes=recipes)
+
+@main.route('/search')
+@login_required
+def search():
+    query = request.args.get('search', '').strip()
+    if not query:
+        return redirect(url_for('main.dashboard'))
+    
+    #search users recipes by title
+    results = Recipe.query.filter(Recipe.user_id == current_user.id, Recipe.title.ilike(f'%{query}%')).order_by(Recipe.created_at.desc()).all()
+    return render_template('search_results.html', query=query, results=results)
+
 @main.route('/meal-plans')
 @login_required
 def meal_plans():
