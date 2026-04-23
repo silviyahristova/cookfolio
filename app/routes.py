@@ -167,7 +167,7 @@ def add_recipe():
         image_filename = None
         if photo and photo.filename:
             if allowed_file(photo.filename):
-                filename: f"{current_user.id}_{secure_filename(photo.filename)}"
+                filename = f"{current_user.id}_{secure_filename(photo.filename)}"
                 upload_folder = current_app.config['UPLOAD_FOLDER']
                 os.makedirs(upload_folder, exist_ok=True)
                 photo_path = os.path.join(upload_folder, filename)
@@ -186,7 +186,7 @@ def add_recipe():
             instructions=instructions,
             prep_time=prep_time,
             servings=servings,
-            image=image_filename,
+            image_filename=image_filename,
             user_id=current_user.id
         )
 
@@ -201,7 +201,8 @@ def add_recipe():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.created_at.desc()).all()
+    return render_template('dashboard.html', recipes=recipes)
 
 @main.route('/meal-plans')
 @login_required
