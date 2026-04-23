@@ -214,6 +214,70 @@ def view_recipe(recipe_id):
         return redirect(url_for('main.dashboard'))
     return render_template('view_recipe.html', recipe=recipe)
 
+@main.route('/recipes/<int:recipe_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+
+    if recipe.user_id != current_user.id:
+        flash('You do not have permission to edit this recipe.', 'error')
+        return redirect(url_for('main.dashboard'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        category = request.form.get('category', '').strip()
+        ingredients = request.form.get('ingredients', '').strip()
+        instructions = request.form.get('instructions', '').strip()
+        prep_time = request.form.get('prep_time', '').strip()
+        servings = request.form.get('servings', '').strip()
+
+        photo = request.files.get('photo')
+
+        # Validate form data
+        if not title or not category or not ingredients or not instructions or not prep_time or not servings :
+            flash('Please fill in all required fields.', 'error')
+            return redirect(url_for('main.edit_recipe', recipe_id=recipe_id))
+        
+        try:
+            prep_time = int(prep_time)
+            servings = int(servings)
+        except ValueError:
+            flash('Prep time and servings must be valid numbers.', 'error')
+            return redirect(url_for('main.edit_recipe', recipe_id=recipe_id))
+        
+            # Handle file upload
+        if photo and photo.filename:
+            if allowed_file(photo.filename):
+                filename = f"{current_user.id}_{secure_filename(photo.filename)}"
+                upload_folder = current_app.config['UPLOAD_FOLDER']
+                os.makedirs(upload_folder, exist_ok=True)
+                photo_path = os.path.join(upload_folder, filename)
+                photo.save(photo_path)
+
+                # Delete old image file if it exists
+                if recipe.image_filename:
+                    old_image_path = os.path.join(upload_folder, recipe.image_filename)
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+
+                recipe.image_filename = filename
+            else:
+                flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
+                return redirect(url_for('main.edit_recipe', recipe_id=recipe_id))
+
+        # Update recipe details
+        recipe.title = title
+        recipe.category = category
+        recipe.ingredients = ingredients
+        recipe.instructions = instructions
+        recipe.prep_time = prep_time
+        recipe.servings = servings
+
+        db.session.commit()
+
+        flash('Recipe updated successfully!', 'success')
+        return redirect(url_for('main.view_recipe', recipe_id=recipe_id))
+        
 @main.route('/meal-plans')
 @login_required
 def meal_plans():
