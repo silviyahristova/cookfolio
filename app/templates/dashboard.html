@@ -28,8 +28,9 @@
                             {% endif %}
                         </a>
                         
-                        
-                        <p>{{ recipe.description[:100] }}{% if recipe.description|length > 100 %}...{% endif %}</p>
+                        <p><strong>Category:</strong> {{ recipe.category }}</p>
+                        <p><strong>Prep Time:</strong> {{ recipe.prep_time }} mins</p>
+                        <p><strong>Servings:</strong> {{ recipe.servings }}</p>
                         <div class="recipe-actions">
                             <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary">View</a>
                             <a href="{{ url_for('main.edit_recipe', recipe_id=recipe.id) }}" class="btn btn-secondary">Edit</a>
@@ -45,7 +46,6 @@
         <div class="dashboard-right">
             <!--meal plan grid-->
         </div>
-        {% endif %}
 
         {% else %}
         <div class="dashboard-content">
