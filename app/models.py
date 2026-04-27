@@ -38,7 +38,7 @@ class Recipe(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
-    category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), nullable=True)
+    category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), nullable=False)
     ingredients: Mapped[str] = mapped_column(String(1000), nullable=False)
     instructions: Mapped[str] = mapped_column(String(2000), nullable=False)
     prep_time: Mapped[int] = mapped_column(nullable=False)
