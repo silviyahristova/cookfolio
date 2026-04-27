@@ -141,9 +141,9 @@ def logout():
 @main.route('/add-recipe', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
-    # If GET request, show the add recipe form with category options
+    # If GET request, show the add recipe form with category options by orders
     if request.method == 'GET':
-        categories = Category.query.order_by(Category.name).all()
+        categories = Category.query.order_by(Category.order).all()
         return render_template('add_recipe.html', categories=categories)
 
     # If POST request, process the form submission
