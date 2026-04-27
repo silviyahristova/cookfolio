@@ -28,7 +28,7 @@ class Category(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(db.String(50), unique=True, nullable=False)
-    order: Mapped[int] = mapped_column(nullable=True) #Optional field to specify the order of categories in the dropdown menu
+    order: Mapped[int] = mapped_column(nullable=False) #Field to specify the order of categories in the dropdown menu
 
     #Relationship to recipe- one category can have many recipes, and each recipe belongs to one category
     recipes = db.relationship('Recipe', back_populates='category')
