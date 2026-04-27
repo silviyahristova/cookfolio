@@ -38,7 +38,7 @@ class Recipe(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
-    category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), nullable=False)
+    category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), nullable=True)
     ingredients: Mapped[str] = mapped_column(String(1000), nullable=False)
     instructions: Mapped[str] = mapped_column(String(2000), nullable=False)
     prep_time: Mapped[int] = mapped_column(nullable=False)
@@ -52,3 +52,13 @@ class Recipe(db.Model):
 
     #Relationship to user- many recipes can belong to one user, and each recipe belongs to one user
     user = db.relationship('User', back_populates='recipes')
+
+# Function to seed initial categories into the database
+def seed_categories():
+    categories = ['Breakfast', 'Lunch', 'Dinner', 'Dessert/Snack']
+    for name in categories:
+        existing_category = Category.query.filter_by(name=name).first()
+        if not existing_category:
+            new_category = Category(name=name)
+            db.session.add(new_category)
+    db.session.commit()
