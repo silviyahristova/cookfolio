@@ -293,8 +293,27 @@ def delete_recipe(recipe_id):
 @main.route('/my-recipes')
 @login_required
 def my_recipes():
-    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.created_at.desc()).all()
-    return render_template('my_recipes.html', recipes=recipes)
+
+    category_id = request.args.get('category_id', type=int)
+    search = request.args.get('search', '').strip()
+
+    #current_user's recipes query
+    query = Recipe.query.filter_by(user_id=current_user.id)
+
+    # Filter by category
+    if category_id:
+        query = query.filter_by(category_id=category_id)
+    
+    # Search by title
+    if search:
+        query = query.filter(Recipe.title.ilike(f'%{search}%'))
+
+    # Newest recipes first
+    recipes = query.order_by(Recipe.created_at.desc()).all()
+
+    categories = Category.query.order_by(Category.order).all()
+
+    return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search)
 
 @main.route('/search')
 @login_required
