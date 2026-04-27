@@ -8,6 +8,7 @@ from .models import User, Recipe, Category
 from . import db
 import re
 from functools import wraps
+from sqlalchemy import or_
 
 main = Blueprint('main', __name__)
 
@@ -304,9 +305,15 @@ def my_recipes():
     if category_id:
         query = query.filter_by(category_id=category_id)
     
-    # Search by title
+    # Search by title, ingredients or instructions
     if search:
-        query = query.filter(Recipe.title.ilike(f'%{search}%'))
+        query = query.filter(
+            or_(
+                Recipe.title.ilike(f'%{search}%'),
+                Recipe.ingredients.ilike(f'%{search}%'),
+                Recipe.instructions.ilike(f'%{search}%')
+            )
+        )
 
     # Newest recipes first
     recipes = query.order_by(Recipe.created_at.desc()).all()
