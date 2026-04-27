@@ -314,13 +314,20 @@ def my_recipes():
                 Recipe.instructions.ilike(f'%{search}%')
             )
         )
-
+    
     # Newest recipes first
     recipes = query.order_by(Recipe.created_at.desc()).all()
 
+    #Fetch categories in meal order for the dropdown menu
     categories = Category.query.order_by(Category.order).all()
 
-    return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search)
+    # Get recipe titles for datalist suggestions
+    recipe_titles = Recipe.query.with_entities(Recipe.title).filter_by(user_id=current_user.id).order_by(Recipe.title).all()
+    
+    # Convert list of tuples to list of strings
+    recipe_titles = [t[0] for t in recipe_titles]
+
+    return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search, recipe_titles=recipe_titles)
 
 @main.route('/search')
 @login_required
