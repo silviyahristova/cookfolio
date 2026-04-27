@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Recipe
+from .models import User, Recipe, Category
 from . import db
 import re
 from functools import wraps
@@ -141,9 +141,15 @@ def logout():
 @main.route('/add-recipe', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
+    # If GET request, show the add recipe form with category options
+    if request.method == 'GET':
+        categories = Category.query.order_by(Category.name).all()
+        return render_template('add_recipe.html', categories=categories)
+
+    # If POST request, process the form submission
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
-        category = request.form.get('category', '').strip()
+        category_id = request.form.get('category_id')
         ingredients = request.form.get('ingredients', '').strip()
         instructions = request.form.get('instructions', '').strip()
         prep_time = request.form.get('prep_time', '').strip()
@@ -152,7 +158,7 @@ def add_recipe():
         photo = request.files.get('photo')
 
         # Validate form data
-        if not title or not category or not ingredients or not instructions or not prep_time or not servings :
+        if not title or not category_id or not ingredients or not instructions or not prep_time or not servings :
             flash('Please fill in all required fields.', 'error')
             return redirect(url_for('main.add_recipe'))
         
@@ -181,7 +187,7 @@ def add_recipe():
         # Create a new recipe and add to the database
         new_recipe = Recipe(
             title=title,
-            category=category,
+            category_id=int(category_id),
             ingredients=ingredients,
             instructions=instructions,
             prep_time=prep_time,
@@ -190,6 +196,7 @@ def add_recipe():
             user_id=current_user.id
         )
 
+        # Save recipe to database
         db.session.add(new_recipe)
         db.session.commit()
 
@@ -201,7 +208,7 @@ def add_recipe():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.created_at.desc()).all()
+    recipes = Recipe.query.filter_by(user_id=current_user.id).all()
     return render_template('dashboard.html', recipes=recipes)
 
 @main.route('/recipes/<int:recipe_id>')
