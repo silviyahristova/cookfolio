@@ -208,9 +208,29 @@ def add_recipe():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    recipes = Recipe.query.filter_by(user_id=current_user.id).all()
-    return render_template('dashboard.html', recipes=recipes)
 
+    # Fetch the user's recipes ordered by creation date (newest first)
+    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.created_at.desc()).all()
+   
+    #Fetch categories in meal order
+    categories = Category.query.order_by(Category.order).all()
+
+    #each category has a image file
+    category_images = {
+        'Breakfast': 'breakfast-category',
+        'Lunch': 'lunch-category',
+        'Dinner': 'dinner-category',
+        'Dessert/Snack': 'dessert-category'
+    }
+
+    #count recipe in each category for the user
+    category_counts = {}
+    for category in categories:
+        count = Recipe.query.filter_by(user_id=current_user.id, category_id=category.id).count()
+        category_counts[category.id] = count
+
+    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images)
+    
 @main.route('/recipes/<int:recipe_id>')
 @login_required
 def view_recipe(recipe_id):
