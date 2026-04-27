@@ -28,6 +28,7 @@ class Category(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(db.String(50), unique=True, nullable=False)
+    order: Mapped[int] = mapped_column(nullable=True) #Optional field to specify the order of categories in the dropdown menu
 
     #Relationship to recipe- one category can have many recipes, and each recipe belongs to one category
     recipes = db.relationship('Recipe', back_populates='category')
@@ -55,10 +56,16 @@ class Recipe(db.Model):
 
 # Function to seed initial categories into the database
 def seed_categories():
-    categories = ['Breakfast', 'Lunch', 'Dinner', 'Dessert/Snack']
-    for name in categories:
-        existing_category = Category.query.filter_by(name=name).first()
+    categories = [
+        {"name": "Breakfast", "order": 1},
+        {"name": "Lunch", "order": 2},
+        {"name": "Dinner", "order": 3},
+        {"name": "Dessert/Snack", "order": 4},
+    ]
+    for item in categories:
+        existing_category = Category.query.filter_by(name=item["name"]).first()
+
         if not existing_category:
-            new_category = Category(name=name)
+            new_category = Category(name=item["name"], order=item["order"])
             db.session.add(new_category)
     db.session.commit()
