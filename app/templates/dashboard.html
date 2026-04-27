@@ -60,42 +60,43 @@
             <div class="dashboard-main-grid">
 
                 <!--show latest recipe and view all recipe link-->
-                <div class="dasboard-card recipes-card">
+                <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
                         <h2>My Recipes</h2>
-                        <a href="{{ url_for('main.my_recipes') }}" class="card-link">View All &gt;</a>
+                        <a href="{{ url_for('main.my_recipes') }}" class="card-link">View All Recipes &gt;</a>
                     </div>
                         
                     {% if recipes %}
-                        <div class="recipe-grid">
-                            {% for recipe in recipes [:3] %}
-                                <article class="recipe-card">
-                                    <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="recipe-card-link">
-                                        <div class="recipe-card-image-container">
-                                            {% if recipe.image_filename %}
-                                                <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} Image" class="recipe-card-image">
-                                            {% else %}
-                                                <div class="recipe-card-placeholder">
-                                                    <span>No image</span>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <h3>{{ recipe.title }}</h3>
-                                    </a>
-                                </article>
+                        <div class="category-card-grid">
+                            {% for category in categories %}
+                                <div class="category-card">
+                                    <div class="category-card-image">
+                                        {% set image_file = category_images.get(category.name, 'category-placeholder') %}
+                                        <picture>
+                                            <source srcset="{{ url_for('static', filename='images/' ~ image_file ~ '.webp') }}" type="image/webp">
+                                            <source srcset="{{ url_for('static', filename='images/' ~ image_file ~ '.png') }}" type="image/png">
+                                            <img src="{{ url_for('static', filename='images/' ~ image_file ~ '.png') }}" alt="{{ category.name }} category image" class="category-card-picture">
+                                        </picture>
+                                    </div>
+                                    <div class="category-card-content">
+                                        <h3>{{ category.name }}</h3>
+                                        <p>{{ category_counts.get(category.id, 0) }} recipes</p>
+                                        <a href="{{ url_for('main.my_recipes', category_id=category.id) }}" class="category-card-link">View {{ category.name}} recipes &gt;</a>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </div>
                     
                     {% else %}
                         <div class="no-recipes">
-                            <p class="no-recipes-text">You haven't added any recipes yet.</p>
+                            <p class="dashboard-empty-text">You haven't added any recipes yet.</p>
                             <a href="{{ url_for('main.add_recipe') }}" class="btn btn-success">+ Add Your First Recipe</a>
                         </div>
                     {% endif %}
                 </div>       
             
                 <!--meal planner-->
-                <div class="dasboard-card recipes-card">
+                <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
                         <h2>My Meal Planner</h2>
                         <a href="{{ url_for('main.meal_plans') }}" class="card-link">View All &gt;</a>
@@ -107,18 +108,19 @@
                     
                     {% else %}
                         <div class="no-meal-plans">
-                            <p>You haven't created any meal plans yet.</p>
+                            <p class="dashboard-empty-text">Your planner is empty.</p>
+                            <a href="{{ url_for('main.meal_plans') }}" class="btn btn-success">Go to Meal Planner</a>
                         </div>
                     {% endif %}
                 </div>
             
                 <!--quick access-->
-                <div class="dasboard-card recipes-card">
+                <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
                         <h2>Quick Access</h2>
                     </div>
                     <div class="quick-access-grid">
-                        <a href="{{ url_for('main.add_recipe') }}" class="quick-access-link">+ Add New Recipe</a>
+                        <a href="{{ url_for('main.add_recipe') }}" class="quick-access-link">Add New Recipe</a>
                         <a href="{{ url_for('main.meal_plans') }}" class="quick-access-link">Meal Planner</a>
                     </div>
                 </div>
