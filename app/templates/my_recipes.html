@@ -3,7 +3,135 @@
 {% block title %}Cookfolio - My Recipes{% endblock %}
 
 {% block content %}
+    <section class="all-recipes-section">
+        <div class="all-recipes-container">
+            <div class="all-recipes-text"">
+                <h1>My Recipes</h1>
+                <p>Manage and organize your recipe collection.</p>
+            </div>
 
-<h1>My Recipes</h1>
+            <!--search bar and category dropdown menu-->
+            <div class="recipe-search">
+                <form action="{{ url_for('main.my_recipes') }}" method="GET" aria-label="Search and filter recipes" class="recipe-search-form">
+                    <div class="recipe-search-row">
+                        <input type="text" name="search" placeholder="Search my recipes..." aria-label="Search recipes" value="{{ request.args.get('search', '') }}" list="recipe-suggestions" autocomplete="off" class="dashboard-search-input">
+                        <button type="submit" class="recipe-search-btn" aria-label="Search recipes">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <!-- Clear search button -->
+                        {% if request.args.get('search') %}
+                            <a href="{{ url_for('main.my_recipes', category_id=selected_category_id) }}" class="clear-search" aria-label="Clear search">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Category Dropdown -->
+                    <div class="dashboard-category-row">
+                        <div class="category-dropdown">
+                            <select name="category_id" class="category-dropdown-select" aria-label="Category select" onchange="this.form.search.value='';this.form.submit();">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if selected_category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 
+                    <!-- Clear filters button -->
+                    {% if request.args.get('search') or selected_category_id %}
+                        <div class="clear-filters">
+                            <a href="{{ url_for('main.my_recipes') }}" class="btn btn-secondary clear-filters-btn">Clear Filters</a>
+                        </div>
+                    {% endif %}
+                </form>
+
+                <div class="divider-btn"></div>
+                <div class="dashboard-buttons">
+                    <a href="{{ url_for('main.add_recipe') }}" class="btn btn-success">+ Create Recipe</a>
+                </div>
+                <div class="divider-btn"></div>
+            </div>
+
+            {% if recipes.items %}
+                <div class="all-recipes-grid">
+                    {% for recipe in recipes.items %}
+                        <div class="recipe-card">
+                            <div class="recipe-card-image">
+                                {% if recipe.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                                {% else %}
+                                    <picture>
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                        <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                    </picture>
+                                {% endif %}
+                            </div>
+                            <div class="recipe-card-content">
+                                <h2>{{ recipe.title }}</h2>
+                                <span>{{ recipe.category.name }}</span>
+                                <div class="recipe-card-meta">
+                                    <span>{{ recipe.prep_time }} mins</span>
+                                    <span>{{ recipe.servings }} servings</span>
+                                </div>
+                                <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!--add recipe link after last added recipe-->
+                    {% if recipes.items and not recipes.has_next %}
+                        <div class="recipe-card add-recipe-card">
+                            <picture>
+                                <source srcset="{{ url_for('static', filename='images/no-recipes-found.webp') }}" type="image/webp">
+                                <source srcset="{{ url_for('static', filename='images/no-recipes-found.png') }}" type="image/png">
+                                <img src="{{ url_for('static', filename='images/no-recipes-found.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                            </picture>
+                            <div class="dashboard-buttons">
+                                <a href="{{ url_for('main.add_recipe') }}" class="btn btn-success card-btn">+ Add Another Recipe</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    {% if recipes.has_prev %}
+                        <a href="{{ url_for('main.my_recipes', page=recipes.prev_num, search=request.args.get('search'), category_id=selected_category_id) }}">< Previous</a>
+                    {% else %}
+                        <span class="disabled">< Previous</span>
+                    {% endif %}
+
+                    {% for p in recipes.iter_pages() %}
+                        {% if p %}
+                            <a href="{{ url_for('main.my_recipes', page=p, search=request.args.get('search'), category_id=selected_category_id) }}" class="{% if p == recipes.page %}active{% endif %}">{{ p }}</a> 
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if recipes.has_next %}
+                        <a href="{{ url_for('main.my_recipes', page=recipes.next_num, search=request.args.get('search'), category_id=selected_category_id) }}">Next ></a>
+                    {% else %}
+                        <span class="disabled">Next ></span>
+                    {% endif %}
+                </div>
+
+            {% else %}
+                <div class="no-recipes-found">
+                    <div class="dashboard-image">
+                        <picture>
+                            <source srcset="{{ url_for('static', filename='images/no-recipes-found.webp') }}" type="image/webp">
+                            <source srcset="{{ url_for('static', filename='images/no-recipes-found.png') }}" type="image/png">
+                            <img src="{{ url_for('static', filename='images/no-recipes-found.png') }}" alt="Cookfolio no recipes found Image" class="page-picture">
+                        </picture>
+                    </div>
+                    <div class="empty-dashboard">
+                        <p class="dashboard-empty-text">No recipes yet.</p>
+                        <p>Create and manage your personal recipes.</p>
+                        <a href="{{ url_for('main.add_recipe') }}" class="btn btn-success">+ Add Your First Recipe</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}
