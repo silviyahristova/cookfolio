@@ -9,3 +9,4 @@ instance/
 .DS_Store
 playwright-test-results/
 screenshots/
+app/static/uploads/
