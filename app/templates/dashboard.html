@@ -49,8 +49,8 @@
 
             <!--search bar-->
             <div class="dashboard-search">
-                <form action="{{ url_for('main.search') }}" method="GET" class="dashboard-search-form">
-                    <input type="text" name="search" placeholder="Search recipes..." value="{{ request.args.get('search', '') }}" class="dashboard-search-input">
+                <form action="{{ url_for('main.search') }}" method="GET" aria-label="Search global recipes" class="dashboard-search-form">
+                    <input type="text" name="search" placeholder="Search recipes..." aria-label="Search for recipes" value="{{ request.args.get('search', '') }}" class="dashboard-search-input">
                     <button type="submit" class="dashboard-search-button" aria-label="Search recipes">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
@@ -71,7 +71,7 @@
                             {% for category in categories %}
                                 <div class="category-card">
                                     <div class="category-card-image">
-                                        {% set image_file = category_images.get(category.name, 'category-placeholder') %}
+                                        {% set image_file = category_images.get(category.name, 'image-placeholder') %}
                                         <picture>
                                             <source srcset="{{ url_for('static', filename='images/' ~ image_file ~ '.webp') }}" type="image/webp">
                                             <source srcset="{{ url_for('static', filename='images/' ~ image_file ~ '.png') }}" type="image/png">
