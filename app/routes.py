@@ -297,6 +297,7 @@ def my_recipes():
 
     category_id = request.args.get('category_id', type=int)
     search = request.args.get('search', '').strip()
+    page = request.args.get('page', 1, type=int)
 
     #current_user's recipes query
     query = Recipe.query.filter_by(user_id=current_user.id)
@@ -315,8 +316,8 @@ def my_recipes():
             )
         )
     
-    # Newest recipes first
-    recipes = query.order_by(Recipe.created_at.desc()).all()
+    # Newest recipes first, 8 recipes per page
+    recipes = query.order_by(Recipe.created_at.desc()).paginate(page=page, per_page=8)
 
     #Fetch categories in meal order for the dropdown menu
     categories = Category.query.order_by(Category.order).all()
