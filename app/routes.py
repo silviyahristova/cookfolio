@@ -207,7 +207,7 @@ def add_recipe():
         flash('Recipe added successfully!', 'success')
         return redirect(url_for('main.dashboard'))
 
-    return render_template('recipe-form.html', form_type='add', categories=Category.query.order_by(Category.order).all())
+    return render_template('recipe_form.html', form_type='add', categories=Category.query.order_by(Category.order).all())
 
 # Dashboard route to show user's recipes and categories with counts
 @main.route('/dashboard')
@@ -302,7 +302,7 @@ def edit_recipe(recipe_id):
         flash('Recipe updated successfully!', 'success')
         return redirect(url_for('main.view_recipe', recipe_id=recipe_id))
     
-    return render_template('recipe-form.html', form_type='edit', recipe=recipe, categories=Category.query.order_by(Category.order).all())
+    return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=Category.query.order_by(Category.order).all())
 
 # Delete recipe route
 @main.route('/recipes/<int:recipe_id>/delete', methods=['POST'])
