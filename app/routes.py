@@ -334,7 +334,7 @@ def edit_recipe(recipe_id):
                 recipe.image_filename = filename
             else:
                 flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
-                return redirect(url_for('main.edit_recipe', recipe_id=recipe_id))
+                return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
 
         db.session.commit() 
 
