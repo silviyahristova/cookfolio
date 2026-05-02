@@ -1,4 +1,5 @@
 import os
+from unicodedata import category
 from flask import Blueprint , render_template, request, flash, redirect, url_for, session
 from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
@@ -37,6 +38,7 @@ def admin_required(view_function):
 def admin_dashboard():
     return render_template('admin_dashboard.html')
 
+#main home route
 @main.route('/')
 def home():
     return render_template('index.html')
@@ -138,14 +140,15 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
 
-#recipe routes
+#Recipe routes
+# Add recipe route with GET and POST methods
 @main.route('/add-recipe', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
     # If GET request, show the add recipe form with category options by orders
     if request.method == 'GET':
         categories = Category.query.order_by(Category.order).all()
-        return render_template('add_recipe.html', categories=categories)
+        return render_template('recipe-form.html', form_type='add', categories=categories)
 
     # If POST request, process the form submission
     if request.method == 'POST':
@@ -204,8 +207,9 @@ def add_recipe():
         flash('Recipe added successfully!', 'success')
         return redirect(url_for('main.dashboard'))
 
-    return render_template('add_recipe.html')
+    return render_template('recipe-form.html', form_type='add', categories=Category.query.order_by(Category.order).all())
 
+# Dashboard route to show user's recipes and categories with counts
 @main.route('/dashboard')
 @login_required
 def dashboard():
@@ -231,7 +235,8 @@ def dashboard():
         category_counts[category.id] = count
 
     return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images)
-    
+
+# View recipe details route
 @main.route('/recipes/<int:recipe_id>')
 @login_required
 def view_recipe(recipe_id):
@@ -243,6 +248,7 @@ def view_recipe(recipe_id):
     
     return render_template('view_recipe.html', recipe=recipe)
 
+# Edit recipe route with GET and POST methods
 @main.route('/recipes/<int:recipe_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(recipe_id):
@@ -254,21 +260,51 @@ def edit_recipe(recipe_id):
 
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
-        category = request.form.get('category', '').strip()
+        category_id = request.form.get('category_id', '').strip()
         ingredients = request.form.get('ingredients', '').strip()
         instructions = request.form.get('instructions', '').strip()
         prep_time = request.form.get('prep_time', '').strip()
         servings = request.form.get('servings', '').strip()
 
         photo = request.files.get('photo')
+        
+        # Update recipe details
+        recipe.title = title
+        recipe.category_id = int(category_id)
+        recipe.ingredients = ingredients
+        recipe.instructions = instructions
+        recipe.prep_time = int(prep_time)
+        recipe.servings = int(servings)
+
+        # Handle file upload
+        if photo and photo.filename:
+            if allowed_file(photo.filename):
+                # Delete old image file if it exists
+                if recipe.image_filename:
+                    upload_folder = current_app.config['UPLOAD_FOLDER']
+                    old_image_path = os.path.join(upload_folder, recipe.image_filename)
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+
+                filename = f"{current_user.id}_{secure_filename(photo.filename)}"
+                upload_folder = current_app.config['UPLOAD_FOLDER']
+                os.makedirs(upload_folder, exist_ok=True)
+                photo_path = os.path.join(upload_folder, filename)
+                photo.save(photo_path)
+
+                recipe.image_filename = filename
+            else:
+                flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
+                return redirect(url_for('main.edit_recipe', recipe_id=recipe_id))
 
         db.session.commit() 
 
         flash('Recipe updated successfully!', 'success')
         return redirect(url_for('main.view_recipe', recipe_id=recipe_id))
     
-    return render_template('edit_recipe.html', recipe=recipe)
-    
+    return render_template('recipe-form.html', form_type='edit', recipe=recipe, categories=Category.query.order_by(Category.order).all())
+
+# Delete recipe route
 @main.route('/recipes/<int:recipe_id>/delete', methods=['POST'])
 @login_required
 def delete_recipe(recipe_id):
@@ -291,6 +327,7 @@ def delete_recipe(recipe_id):
     flash('Recipe deleted successfully!', 'success')
     return redirect(url_for('main.dashboard'))
 
+# My recipes route with category filter, search and pagination
 @main.route('/my-recipes')
 @login_required
 def my_recipes():
@@ -330,6 +367,7 @@ def my_recipes():
 
     return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search, recipe_titles=recipe_titles)
 
+# Search route to search user's recipes by title, ingredients or instructions
 @main.route('/search')
 @login_required
 def search():
