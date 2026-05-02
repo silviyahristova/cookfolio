@@ -148,7 +148,7 @@ def add_recipe():
     # If GET request, show the add recipe form with category options by orders
     if request.method == 'GET':
         categories = Category.query.order_by(Category.order).all()
-        return render_template('recipe-form.html', form_type='add', categories=categories)
+        return render_template('recipe_form.html', form_type='add', categories=categories)
 
     # If POST request, process the form submission
     if request.method == 'POST':
@@ -161,17 +161,43 @@ def add_recipe():
 
         photo = request.files.get('photo')
 
+        categories = Category.query.order_by(Category.order).all()
+
         # Validate form data
         if not title or not category_id or not ingredients or not instructions or not prep_time or not servings :
             flash('Please fill in all required fields.', 'error')
-            return redirect(url_for('main.add_recipe'))
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+        
+        if len(title) < 3:
+            flash('Title must be at least 3 characters long.', 'error')
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+        
+        if len(title) > 100:
+            flash('Title cannot be longer than 100 characters.', 'error')
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
         try:
             prep_time = int(prep_time)
             servings = int(servings)
         except ValueError:
             flash('Prep time and servings must be valid numbers.', 'error')
-            return redirect(url_for('main.add_recipe'))
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+        
+        if prep_time < 1:
+            flash('Prep time must be greater than 0.', 'error')
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+        
+        if prep_time > 1440:
+            flash('Prep time cannot be longer than 24 hours.', 'error')
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+        
+        if servings < 1:
+            flash('Servings must be a greater than 0.', 'error')
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+        
+        if servings > 100:
+            flash('Servings cannot be more than 100.', 'error')
+            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
         # Handle file upload
         image_filename = None
@@ -186,7 +212,7 @@ def add_recipe():
                 image_filename = filename
             else:
                 flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
-                return redirect(url_for('main.add_recipe'))
+                return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
 
         # Create a new recipe and add to the database
         new_recipe = Recipe(
@@ -205,9 +231,9 @@ def add_recipe():
         db.session.commit()
 
         flash('Recipe added successfully!', 'success')
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('main.view_recipe', recipe_id=new_recipe.id))
 
-    return render_template('recipe_form.html', form_type='add', categories=Category.query.order_by(Category.order).all())
+    return render_template('recipe_form.html', form_type='add', categories=categories)
 
 # Dashboard route to show user's recipes and categories with counts
 @main.route('/dashboard')
