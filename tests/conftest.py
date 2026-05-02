@@ -13,19 +13,21 @@ from app.models import User
 def app():
     db_fd, db_path = tempfile.mkstemp()
 
+    os.environ['TESTING'] = '1'
+    os.environ['DATABASE_URL'] = 'sqlite:///' + str(db_path)
+
     app = create_app()
     app.config.update({
-        'TESTING': True
+        'TESTING': True,
+        'WTF_CSRF_ENABLED': False,
+        'SQLALCHEMY_DATABASE_URI': 'sqlite:///' + str(db_path)
         })
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+
     with app.app_context():
         db.create_all()
         yield app
         db.session.remove()
         db.drop_all()
-    
-    os.close(db_fd)
-    os.unlink(db_path)
 
 @pytest.fixture
 def client(app):
