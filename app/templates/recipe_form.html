@@ -14,7 +14,7 @@
                     <div class="recipe-left">
                         <div class="form-group">
                             <label for="title">Recipe Title:</label>
-                            <input type="text" id="title" name="title" value="{{recipe.title if form_type == 'edit' else ''}}" placeholder="Enter recipe title" required>
+                            <input type="text" id="title" name="title" value="{{ form_data.title if form_data else recipe.title if form_type == 'edit' else '' }}" placeholder="Enter recipe title" required>
                         </div>
                         
                         <div class="form-group">
@@ -29,9 +29,9 @@
                         <div class="form-group">
                             <label for="category_id">Category:</label>
                             <select id="category_id" name="category_id" required>
-                                <option value="" disabled {% if form_type == 'edit' %}selected{% endif %}>Select category</option>
+                                <option value="" disabled {% if not form_data and form_type != 'edit' %}selected{% endif %}>Select category</option>
                                 {% for category in categories %}
-                                    <option value="{{ category.id }}" {% if form_type == 'edit' and recipe.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                    <option value="{{ category.id }}" {% if form_data and form_data.category_id == category.id %}selected{% elif form_type == 'edit' and not form_data and recipe.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -39,11 +39,11 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="prep_time">Prep Time: </label>
-                                <input type="number" id="prep_time" name="prep_time" value="{{ recipe.prep_time if form_type == 'edit' else '' }}" placeholder="e.g., 15" min="1" required>
+                                <input type="number" id="prep_time" name="prep_time" value="{% if form_data %}{{ form_data.prep_time }}{% elif form_type == 'edit' %}{{ recipe.prep_time }}{% endif %}" placeholder="e.g., 15" min="1" required>
                             </div>
                             <div class="form-group">
                                 <label for="servings">Servings:</label>
-                                <input type="number" id="servings" name="servings" value="{{ recipe.servings if form_type == 'edit' else '' }}" placeholder="e.g., 4" min="1" required>
+                                <input type="number" id="servings" name="servings" value="{% if form_data %}{{ form_data.servings }}{% elif form_type == 'edit' %}{{ recipe.servings }}{% endif %}" placeholder="e.g., 4" min="1" required>
                             </div>
                         </div>
                     </div>
@@ -51,12 +51,12 @@
                     <div class="recipe-right">
                         <div class="form-group">
                             <label for="ingredients">Ingredients:</label>
-                            <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients" required>{{ recipe.ingredients if form_type == 'edit' else '' }}</textarea>
+                            <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients" required>{% if form_data %}{{ form_data.ingredients }}{% elif form_type == 'edit' %}{{ recipe.ingredients }}{% endif %}</textarea>
                         </div>
                             
                         <div class="form-group">
                             <label for="instructions">Instructions:</label>
-                            <textarea id="instructions" name="instructions" placeholder="Enter cooking instructions" required>{{ recipe.instructions if form_type == 'edit' else '' }}</textarea>
+                            <textarea id="instructions" name="instructions" placeholder="Enter cooking instructions" required>{% if form_data %}{{ form_data.instructions }}{% elif form_type == 'edit' %}{{ recipe.instructions }}{% endif %}</textarea>
                         </div>
 
                         <div class="form-actions">
