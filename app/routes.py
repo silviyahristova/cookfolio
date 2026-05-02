@@ -168,12 +168,8 @@ def add_recipe():
             flash('Please fill in all required fields.', 'error')
             return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
-        if len(title) < 3:
-            flash('Title must be at least 3 characters long.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
-        
-        if len(title) > 100:
-            flash('Title cannot be longer than 100 characters.', 'error')
+        if len(title) < 3 or len(title) > 100:
+            flash('Title must be between 3 and 100 characters long.', 'error')
             return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
         try:
@@ -183,20 +179,12 @@ def add_recipe():
             flash('Prep time and servings must be valid numbers.', 'error')
             return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
-        if prep_time < 1:
-            flash('Prep time must be greater than 0.', 'error')
+        if prep_time < 1 or prep_time > 1440:
+            flash('Prep time must be between 1 and 1440 minutes.', 'error')
             return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
-        if prep_time > 1440:
-            flash('Prep time cannot be longer than 24 hours.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
-        
-        if servings < 1:
-            flash('Servings must be a greater than 0.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
-        
-        if servings > 100:
-            flash('Servings cannot be more than 100.', 'error')
+        if servings < 1 or servings > 100:
+            flash('Servings must be between 1 and 100.', 'error')
             return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
         
         # Handle file upload
@@ -279,6 +267,7 @@ def view_recipe(recipe_id):
 @login_required
 def edit_recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
+    categories = Category.query.order_by(Category.order).all()
 
     if recipe.user_id != current_user.id:
         flash('You do not have permission to edit this recipe.', 'error')
@@ -293,6 +282,30 @@ def edit_recipe(recipe_id):
         servings = request.form.get('servings', '').strip()
 
         photo = request.files.get('photo')
+        
+        # Validate form data
+        if not title or not category_id or not ingredients or not instructions or not prep_time or not servings :
+            flash('Please fill in all required fields.', 'error')
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+        
+        if len(title) < 3 or len(title) > 100:
+            flash('Title must be between 3 and 100 characters long.', 'error')
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+        
+        try:
+            prep_time = int(prep_time)
+            servings = int(servings)
+        except ValueError:
+            flash('Prep time and servings must be valid numbers.', 'error')
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+        
+        if prep_time < 1 or prep_time > 1440:
+            flash('Prep time must be between 1 and 1440 minutes.', 'error')
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+        
+        if servings < 1 or servings > 100:
+            flash('Servings must be between 1 and 100.', 'error')
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
         
         # Update recipe details
         recipe.title = title
@@ -328,7 +341,7 @@ def edit_recipe(recipe_id):
         flash('Recipe updated successfully!', 'success')
         return redirect(url_for('main.view_recipe', recipe_id=recipe_id))
     
-    return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=Category.query.order_by(Category.order).all())
+    return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories)
 
 # Delete recipe route
 @main.route('/recipes/<int:recipe_id>/delete', methods=['POST'])
