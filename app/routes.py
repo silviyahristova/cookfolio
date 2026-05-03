@@ -254,7 +254,10 @@ def dashboard():
 @main.route('/recipes/<int:recipe_id>')
 @login_required
 def view_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe = db.session.get(Recipe, recipe_id)
+    if not recipe:
+        flash('Recipe not found.', 'error')
+        return redirect(url_for('main.dashboard'))
 
     if recipe.user_id != current_user.id:
         flash('You do not have permission to view this recipe.', 'error')
@@ -266,7 +269,11 @@ def view_recipe(recipe_id):
 @main.route('/recipes/<int:recipe_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe = db.session.get(Recipe, recipe_id)
+    if not recipe:
+        flash('Recipe not found.', 'error')
+        return redirect(url_for('main.dashboard'))
+    
     categories = Category.query.order_by(Category.order).all()
 
     if recipe.user_id != current_user.id:
@@ -347,7 +354,10 @@ def edit_recipe(recipe_id):
 @main.route('/recipes/<int:recipe_id>/delete', methods=['POST'])
 @login_required
 def delete_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe = db.session.get(Recipe, recipe_id)
+    if not recipe:
+        flash('Recipe not found.', 'error')
+        return redirect(url_for('main.dashboard'))
 
     if recipe.user_id != current_user.id:
         flash('You do not have permission to delete this recipe.', 'error')
