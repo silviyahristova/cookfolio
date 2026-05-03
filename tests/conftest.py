@@ -38,7 +38,7 @@ def test_user(app):
         user = User(username='testuser', email='testuser@test.com', password=generate_password_hash('testpassword'))
         db.session.add(user)
         db.session.commit()
-        return user
+        return user.id
 
 #fixture to create a recipe for testing the dashboard page
 @pytest.fixture
@@ -64,7 +64,17 @@ def test_recipe(app, test_user):
         db.session.commit()
         
         return recipe.id
-    
+
+#fixture to login the test user for testing the dashboard page
+@pytest.fixture
+def logged_in_client(client, test_user):
+    client.post('/login', data={
+        'username': 'testuser',
+        'email': 'testuser@test.com',
+        'password': 'testpassword'
+    }, follow_redirects=True)
+    return client
+
 # Fixture to create a test client for making requests to the app
 @pytest.fixture
 def client(app):
