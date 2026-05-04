@@ -31,6 +31,12 @@ def app():
         db.session.remove()
         db.drop_all()
 
+#fixture to provide a database session for tests that need to interact with the database
+@pytest.fixture
+def db_session(app):
+    with app.app_context():
+        yield db.session
+        
 # Fixture to create a test user for login tests
 @pytest.fixture
 def test_user(app):
