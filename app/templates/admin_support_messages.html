@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Cookfolio - Admin Support Messages{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="dashboard-container">
+        <div class="dashboard-text">
+            <h1>Admin Support Messages</h1>
+            <p>Here you can view and manage support messages sent by users.</p>
+        </div>
+        {% if support_messages %}
+        <ul class="list-group">
+            {% for message in support_messages.items %}
+                <li class="list-group-item">
+                    <strong>{{ message.name }}</strong> - {{ message.email }}
+                    <p>{{ message.message }}</p>
+                    <small class="text-muted">Created at: {{ message.created_at }}</small>
+                    <a href="{{ url_for('main.admin_view_support_message_details', message_id=message.id) }}" class="btn btn-primary">View</a>
+                    <form method="POST" action="{{ url_for('main.admin_delete_support_message', message_id=message.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-secondary" onclick="return confirm('Are you sure you want to delete this message?')">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No support messages found.</p>
+        {% endif %}
+        <!-- Pagination -->
+        {% if support_messages.pages > 1 %}
+            <div class="pagination">
+                    {% if support_messages.has_prev %}
+                        <a href="{{ url_for('main.admin_view_support_messages', page=support_messages.prev_num) }}">< Previous</a>
+                    {% else %}
+                        <span class="disabled">< Previous</span>
+                    {% endif %}
+
+                    {% for p in support_messages.iter_pages() %}
+                        {% if p %}
+                            <a href="{{ url_for('main.admin_view_support_messages', page=p) }}" class="{% if p == support_messages.page %}active{% endif %}">{{ p }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if support_messages.has_next %}
+                        <a href="{{ url_for('main.admin_view_support_messages', page=support_messages.next_num) }}">Next ></a>
+                    {% else %}
+                        <span class="disabled">Next ></span>
+                    {% endif %}
+                </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
