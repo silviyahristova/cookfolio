@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Recipe, Category
+from .models import User, Recipe, Category, SupportMessage
 from . import db
 import re
 from functools import wraps
@@ -437,6 +437,49 @@ def meal_plans():
 def discover():
     return render_template('discover.html')
 
-@main.route('/support')
+@main.route('/support', methods=['GET', 'POST'])
 def support():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+
+        # Validate form data
+        if not name or not email or not subject or not message:
+            flash('All fields are required.', 'error')
+            return render_template('support.html', form_data=request.form)
+        
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_pattern, email):
+            flash('Please enter a valid email address.', 'error')
+            return render_template('support.html', form_data=request.form)
+        
+        if len(subject) < 3 or len(subject) > 200:
+            flash('Subject must be between 3 and 200 characters long.', 'error')
+            return render_template('support.html', form_data=request.form)
+        
+        if len(message) < 10 or len(message) > 2000:
+            flash('Message must be between 10 and 2000 characters long.', 'error')
+            return render_template('support.html', form_data=request.form)
+        
+        if len(name) < 3 or len(name) > 100:
+            flash('Name must be between 3 and 100 characters long.', 'error')
+            return render_template('support.html', form_data=request.form)
+        
+        # Create a new support message and add to the database
+        support_message = SupportMessage(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+            user_id=current_user.id if current_user.is_authenticated else None
+        )
+
+        db.session.add(support_message)
+        db.session.commit()
+
+        flash('Your message has been sent. We will get back to you shortly.', 'success')
+        return redirect(url_for('main.support'))
+    
     return render_template('support.html')
