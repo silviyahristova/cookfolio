@@ -1,7 +1,9 @@
 from sqlalchemy import String, Boolean, DateTime, ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_login import UserMixin
 from . import db, login_manager
+from datetime import datetime
+from typing import List, Optional
 
 # User model
 class User(db.Model, UserMixin):
@@ -13,9 +15,14 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(),nullable=False)
+    support_messages: Mapped[List['SupportMessage']] = relationship('SupportMessage', back_populates='user', cascade='all, delete-orphan')
 
     #Relationship to recipe- one user can have many recipes, and each recipe belongs to one user
-    recipes = db.relationship('Recipe', back_populates='user')
+    recipes = db.relationship('Recipe', back_populates='user', cascade='all, delete-orphan')
+
+    #Method to check if user is admin
+    def is_admin_user(self):
+        return self.is_admin
 
 # Flask-Login user loader
 @login_manager.user_loader
@@ -31,7 +38,7 @@ class Category(db.Model):
     order: Mapped[int] = mapped_column(nullable=False) #Field to specify the order of categories in the dropdown menu
 
     #Relationship to recipe- one category can have many recipes, and each recipe belongs to one category
-    recipes = db.relationship('Recipe', back_populates='category')
+    recipes = db.relationship('Recipe', back_populates='category', cascade='all, delete-orphan')
 
 # Recipe model
 class Recipe(db.Model):
@@ -53,6 +60,19 @@ class Recipe(db.Model):
 
     #Relationship to user- many recipes can belong to one user, and each recipe belongs to one user
     user = db.relationship('User', back_populates='recipes')
+
+#Support message model for contact form
+class SupportMessage(db.Model):
+    __tablename__ = 'support_messages'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), nullable=False)
+    subject: Mapped[str] = mapped_column(String(200), nullable=False)
+    message: Mapped[str] = mapped_column(String(2000), nullable=False)
+    created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(),nullable=False)
+    user_id: Mapped[Optional[int]] = mapped_column(ForeignKey('users.id'), nullable=True)
+    user: Mapped[Optional['User']] = relationship('User', back_populates='support_messages')
 
 # Function to seed initial categories into the database
 def seed_categories():
