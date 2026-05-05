@@ -38,6 +38,46 @@ def admin_required(view_function):
 def admin_dashboard():
     return render_template('admin_dashboard.html')
 
+#admin support messages route
+@main.route('/admin/support-messages')
+@login_required
+@admin_required
+def admin_view_support_messages():
+    page = request.args.get('page', 1, type=int)
+
+    support_messages = SupportMessage.query.order_by(SupportMessage.created_at.desc()).paginate(page=page, per_page=5, error_out=False)
+
+    return render_template('admin_support_messages.html', support_messages=support_messages)
+
+#admin view support message details route
+@main.route('/admin/support-messages/<int:message_id>')
+@login_required
+@admin_required
+def admin_view_support_message_details(message_id):
+    support_message = db.session.get(SupportMessage, message_id)
+
+    if not support_message:
+        flash('Support message not found.', 'error')
+        return redirect(url_for('main.admin_view_support_messages'))
+    
+    return render_template('admin_support_message_details.html', support_message=support_message)
+
+#admin delete support message route
+@main.route('/admin/support-messages/<int:message_id>/delete', methods=['POST'])
+@login_required
+@admin_required
+def admin_delete_support_message(message_id):
+    support_message = db.session.get(SupportMessage, message_id)
+    if not support_message:
+        flash('Support message not found.', 'error')
+        return redirect(url_for('main.admin_view_support_messages'))
+    
+    db.session.delete(support_message)
+    db.session.commit()
+
+    flash('Support message deleted successfully!', 'success')
+    return redirect(url_for('main.admin_view_support_messages'))
+
 #main home route
 @main.route('/')
 def home():
