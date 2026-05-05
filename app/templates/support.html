@@ -3,7 +3,41 @@
 {% block title %}Cookfolio - Support{% endblock %}
 
 {% block content %}
-    <h1>Contact us!</h1>
-    <p>Need help? Send us a message .</p>
-    <p>If you have a questions or expirience any issues, please contact us using the form below.</p>
+<section class="support-section">
+    <div class="support-container">
+        <div class="support-text">
+            <h1>Contact us!</h1>
+            <p>Need help? Send us a message .</p>
+            <p>If you have a questions or expirience any issues, please contact us using the form below.</p>
+
+            <form method="POST" action="{{ url_for('main.support') }}" class="support-form", novalidate>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" value="{{form_data.name if form_data else''}}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" value="{{form_data.email if form_data else''}}" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Enter the subject of your message" value="{{form_data.subject if form_data else''}}" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Describe your issue or question..." required>{{form_data.message if form_data else''}}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="support-btn">Send Message</button>
+            </form>
+        </div>
+                    
+        <div class="support-image">
+            <picture>
+                <source srcset="{{ url_for('static', filename='images/support-hero-image.webp') }}" type="image/webp">
+                <source srcset="{{ url_for('static', filename='images/support-hero-image.png') }}" type="image/png">
+                <img src="{{ url_for('static', filename='images/support-hero-image.png') }}" alt="Cookfolio support hero Image" class="page-picture">
+            </picture>
+        </div>
+    </div>
 {% endblock %}
