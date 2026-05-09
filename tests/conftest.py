@@ -22,7 +22,8 @@ def app():
     app.config.update({
         'TESTING': True,
         'WTF_CSRF_ENABLED': False,
-        'SQLALCHEMY_DATABASE_URI': 'sqlite:///' + str(db_path)
+        'SQLALCHEMY_DATABASE_URI': 'sqlite:///' + str(db_path),
+        'PROPAGATE_EXCEPTIONS': False # Ensure exceptions are not propagated to the test client, allowing error handlers to be tested, mainly the 500 error handler
         })
 
     with app.app_context():
