@@ -1,6 +1,6 @@
 import os
 from unicodedata import category
-from flask import Blueprint , render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, app , render_template, request, flash, redirect, url_for, session, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 from werkzeug.utils import secure_filename
@@ -27,7 +27,7 @@ def admin_required(view_function):
             return redirect(url_for('main.login'))
         if not current_user.is_admin:
             flash('You do not have permission to access this page.', 'error')
-            return redirect(url_for('main.home'))
+            abort(403)
         return view_function(*args, **kwargs)
     return wrapped_view_function
 
@@ -36,6 +36,9 @@ def admin_required(view_function):
 @login_required
 @admin_required
 def admin_dashboard():
+    if not current_user.is_admin:
+        abort(403)
+        
     return render_template('admin_dashboard.html')
 
 #admin support messages route
@@ -522,4 +525,17 @@ def support():
         flash('Your message has been sent. We will get back to you shortly.', 'success')
         return redirect(url_for('main.support'))
     
-    return render_template('support.html')
+    return render_template('support.html')#
+
+#Error handlers
+@main.app_errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+@main.app_errorhandler(403)
+def forbidden(error):
+    return render_template('403.html'), 403
+
+@main.app_errorhandler(500)
+def internal_server_error(error):
+    return render_template('500.html'), 500
