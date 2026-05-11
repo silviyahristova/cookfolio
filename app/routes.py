@@ -299,6 +299,7 @@ def dashboard():
 @login_required
 def view_recipe(recipe_id):
     recipe = db.session.get(Recipe, recipe_id)
+    is_imported_recipe = recipe.image_url is not None
     if not recipe:
         flash('Recipe not found.', 'error')
         return redirect(url_for('main.dashboard'))
@@ -307,7 +308,7 @@ def view_recipe(recipe_id):
         flash('You do not have permission to view this recipe.', 'error')
         return redirect(url_for('main.dashboard'))
     
-    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=False)
+    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=False, is_imported_recipe=is_imported_recipe)
 
 # Edit recipe route with GET and POST methods
 @main.route('/recipes/<int:recipe_id>/edit', methods=['GET', 'POST'])
@@ -418,7 +419,7 @@ def delete_recipe(recipe_id):
     db.session.commit()
 
     flash('Recipe deleted successfully!', 'success')
-    return redirect(url_for('main.dashboard'))
+    return redirect(url_for('main.my_recipes'))
 
 # My recipes route with category filter, search and pagination
 @main.route('/my-recipes')
@@ -598,6 +599,11 @@ def import_discover_recipe(meal_id):
         if ingredient and ingredient.strip():
             ingredients.append(f"{measurement.strip()} {ingredient.strip()}")
 
+    instructions_steps = []
+    for step in meal.get('strInstructions', '').split('\r\n'):
+        if step.strip():
+            instructions_steps.append(step.strip())
+
     #Map API category to user's category, if not found assign to first category
     category_mapping = {
         'Breakfast': 'Breakfast',
@@ -629,7 +635,7 @@ def import_discover_recipe(meal_id):
         title=meal.get('strMeal'),
         category_id=category.id ,
         ingredients="\n".join(ingredients),
-        instructions=meal.get('strInstructions'),
+        instructions="\n".join(instructions_steps),
         prep_time=30,  # Default prep time for imported recipes
         servings=4,   # Default servings for imported recipes
         image_url=meal.get('strMealThumb'),
