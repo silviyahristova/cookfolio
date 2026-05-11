@@ -54,6 +54,7 @@ class Recipe(db.Model):
     image_filename: Mapped[str] = mapped_column(String(255), nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(),nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
+    image_url: Mapped[Optional[str]] = mapped_column(String(255), nullable=True) # New field to store image URL for API recipes
 
     #Relationship to category- many recipes can belong to one category, and each recipe belongs to one category
     category = db.relationship('Category', back_populates='recipes')
