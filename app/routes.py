@@ -7,9 +7,10 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Recipe, Category, SupportMessage
 from . import db
-import re
+import re, requests
 from functools import wraps
 from sqlalchemy import or_
+
 
 main = Blueprint('main', __name__)
 
@@ -306,7 +307,7 @@ def view_recipe(recipe_id):
         flash('You do not have permission to view this recipe.', 'error')
         return redirect(url_for('main.dashboard'))
     
-    return render_template('view_recipe.html', recipe=recipe)
+    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=False)
 
 # Edit recipe route with GET and POST methods
 @main.route('/recipes/<int:recipe_id>/edit', methods=['GET', 'POST'])
@@ -476,10 +477,89 @@ def search():
 def meal_plans():
     return render_template('meal_plans.html')
 
+# Discover route to show recipes from the API with category filter, search and pagination
 @main.route('/discover')
 def discover():
-    return render_template('discover.html')
+    search_query = request.args.get('search', '').strip()
+    selected_category = request.args.get('category', '').strip()
+    meals = []
+    
+    #Get API category
+    category_response = requests.get("https://www.themealdb.com/api/json/v1/1/categories.php")
 
+    api_categories = []
+
+    if category_response.status_code == 200:
+        category_data = category_response.json()
+        api_categories = [category['strCategory'] for category in category_data.get('categories', [])]
+
+    # If a category is selected, filter meals by that category, otherwise search by query or show all meals
+    if selected_category:
+        api_url = f"https://www.themealdb.com/api/json/v1/1/filter.php?c={selected_category}"
+
+    # If search query is provided, search meals by name, otherwise show all meals
+    elif search_query:
+        api_url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search_query}"
+    else:        
+        api_url = "https://www.themealdb.com/api/json/v1/1/search.php?s="
+
+    response = requests.get(api_url)
+
+    if response.status_code == 200:
+        data = response.json()
+        meals = data.get('meals') or []
+
+    #Pagination for API results, 8 meals per page
+    page = request.args.get('page', 1, type=int)
+    per_page = 8
+    
+    start = (page - 1) * per_page
+    end = start + per_page
+
+    total_meals = len(meals)
+    total_pages = (total_meals + per_page - 1) // per_page
+    meals = meals[start:end]
+
+    return render_template('discover.html', meals=meals, search_query=search_query, api_categories=api_categories, selected_category=selected_category, page=page, total_pages=total_pages)
+
+# View API discover recipe details route
+@main.route('/discover/<int:meal_id>')
+def view_discover_recipe(meal_id):
+    api_url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}"
+    response = requests.get(api_url)
+
+    if response.status_code != 200:
+        abort(404)
+
+    data = response.json()
+    meals = data.get('meals') or []
+    if not meals:
+        abort(404)
+    
+    meal = meals[0]
+
+    recipe = {
+        'title': meal.get('strMeal'),
+        'description':f"{meal.get('strArea')} recipe",
+        'category': meal.get('strCategory'),
+        'image': meal.get('strMealThumb'),
+        'ingredients': "",
+        'instructions': meal.get('strInstructions'),
+        'source': meal.get('strSource'),
+        'youtube': meal.get('strYoutube')
+    }
+
+    # Extract ingredients and measurements
+    ingredients = []
+    for i in range(1, 21):
+        ingredient = meal.get(f'strIngredient{i}')
+        measurement = meal.get(f'strMeasure{i}')
+        if ingredient and ingredient.strip():
+            ingredients.append(f"{measurement.strip()} {ingredient.strip()}")
+    recipe['ingredients'] = "\n".join(ingredients)
+    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=True)
+
+# Support route with GET and POST methods
 @main.route('/support', methods=['GET', 'POST'])
 def support():
     if request.method == 'POST':
