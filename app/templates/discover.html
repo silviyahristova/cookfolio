@@ -3,6 +3,106 @@
 {% block title %}Cookfolio - Discover{% endblock %}
 
 {% block content %}
-    <h1>Discover Recipes</h1>
-    <p>Find new recipes and import them to your collection.</p>
+<section class="discover-section">
+    <div class="discover-container">
+        <div class="discover-text">
+            <h1>Discover Recipes</h1>
+            <p>Find new recipes ideas from TheMealDB and import them to your collection.</p>
+        </div>
+
+        <div class="recipe-search">
+            <form action="{{ url_for('main.discover') }}" method="GET" aria-label="Search API recipes" class="recipe-search-form">
+                <div class="recipe-search-row">
+                    <input type="text" name="search" placeholder="Search recipe ideas..." aria-label="Search recipes" value="{{ request.args.get('search', '') }}" list="recipe-suggestions" autocomplete="off" class="dashboard-search-input">
+                    <button type="submit" class="recipe-search-btn" aria-label="Search recipes">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <!-- Clear search button -->
+                    {% if request.args.get('search') %}
+                        <a href="{{ url_for('main.discover') }}" class="clear-search" aria-label="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Category Dropdown -->
+                <div class="dashboard-category-row">
+                    <div class="category-dropdown">
+                        <select name="category" class="category-dropdown-select" aria-label="Category select" onchange="this.form.search.value='';this.form.submit();">
+                            <option value="">All Categories</option>
+                            {% for category in api_categories %}
+                                <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Clear filters button -->
+                {% if request.args.get('search') or selected_category %}
+                    <div class="clear-filters">
+                        <a href="{{ url_for('main.discover') }}" class="btn btn-secondary clear-filters-btn">Clear Filters</a>
+                    </div>
+                {% endif %}
+
+            </form>
+            <div class="divider-btn"></div>
+        </div>
+        
+        {% if meals %}
+            <div class="discover-grid">
+                {% for meal in meals %}
+                    <div class="discover-card">
+                        <div class="discover-card-image">
+                            <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }} image" class="discover-card-picture" onerror="this.onerror=null; this.src='static', filename='images/image-placeholder.png';">
+                        </div>
+                        <div class="discover-card-content">
+                            <h2>{{ meal.strMeal }}</h2>
+                            {% if meal.strCategory %}
+                                <span>{{ meal.strArea }} - {{ meal.strCategory }}</span>
+                            {% endif %}
+                            <a href="{{ url_for('main.view_discover_recipe', meal_id=meal.idMeal) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Pagination -->
+            {% if total_pages > 1 %}
+                <div class="pagination">
+                    {% if page > 1 %}
+                        <a href="{{ url_for('main.discover', page=page - 1, search=request.args.get('search'), category=selected_category) }}">< Previous</a>
+                    {% else %}
+                        <span class="disabled">< Previous</span>
+                    {% endif %}
+
+                    {% for p in range(1, total_pages + 1) %}
+                        {% if p %}
+                            <a href="{{ url_for('main.discover', page=p, search=request.args.get('search'), category=selected_category) }}" class="{% if p == page %}active{% endif %}">{{ p }}</a> 
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page < total_pages %}
+                        <a href="{{ url_for('main.discover', page=page + 1, search=request.args.get('search'), category=selected_category) }}">Next ></a>
+                    {% else %}
+                        <span class="disabled">Next ></span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="no-recipes-found">
+                <div class="dashboard-image">
+                    <picture>
+                        <source srcset="{{ url_for('static', filename='images/no-recipes-found.webp') }}" type="image/webp">
+                        <source srcset="{{ url_for('static', filename='images/no-recipes-found.png') }}" type="image/png">
+                        <img src="{{ url_for('static', filename='images/no-recipes-found.png') }}" alt="Cookfolio no recipes found Image" class="page-picture">
+                    </picture>
+                </div>
+                <div class="empty-dashboard">
+                    <p class="dashboard-empty-text">No recipes found.</p>
+                    <p>We couldn't find any recipes matching your search. Try a different keyword or browse another category.</p>
+                    <a href="{{ url_for('main.discover') }}" class="btn btn-success">Discover Recipes</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}
