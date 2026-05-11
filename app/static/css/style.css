@@ -1314,7 +1314,8 @@ header {
 }
 
 .view-recipe-steps li,
-.view-recipe-list li {
+.view-recipe-list li,
+.api-instructions {
     margin-bottom: 1rem;
     color: #1a1919;
     font-size: 1.2rem;
@@ -2034,7 +2035,8 @@ header {
     }
 
     .view-recipe-list li,
-    .view-recipe-steps li {
+    .view-recipe-steps li,
+    .api-instructions {
         font-size: 1.2rem;
         margin-bottom: 1rem;
     }
