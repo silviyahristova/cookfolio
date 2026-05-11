@@ -539,6 +539,7 @@ def view_discover_recipe(meal_id):
     meal = meals[0]
 
     recipe = {
+        'id': meal.get('idMeal'),
         'title': meal.get('strMeal'),
         'description':f"{meal.get('strArea')} recipe",
         'category': meal.get('strCategory'),
@@ -557,7 +558,89 @@ def view_discover_recipe(meal_id):
         if ingredient and ingredient.strip():
             ingredients.append(f"{measurement.strip()} {ingredient.strip()}")
     recipe['ingredients'] = "\n".join(ingredients)
-    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=True)
+
+    already_imported = None
+    if current_user.is_authenticated:
+        already_imported = Recipe.query.filter_by(user_id=current_user.id, title=meal.get('strMeal')).first()
+
+    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=True, already_imported=already_imported)
+
+#Import API recipe route
+@main.route('/discover/<int:meal_id>/import', methods=['POST'])
+@login_required
+def import_discover_recipe(meal_id):
+    api_url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}"
+    response = requests.get(api_url)
+
+    if response.status_code != 200:
+        flash('Failed to fetch recipe details from API.', 'error')
+        return redirect(url_for('main.discover'))
+
+    data = response.json()
+    meals = data.get('meals') or []
+
+    if not meals:
+        flash('Recipe not found in API.', 'error')
+        return redirect(url_for('main.discover'))
+    
+    meal = meals[0]
+
+    # Check if the recipe already exists in the user's collection based on title
+    existing_recipe = Recipe.query.filter_by(user_id=current_user.id, title=meal.get('strMeal')).first()
+    if existing_recipe:
+        flash('You have already imported this recipe.', 'warning')
+        return redirect(url_for('main.view_recipe', recipe_id=existing_recipe.id))
+    
+    ingredients = []
+    for i in range(1, 21):
+        ingredient = meal.get(f'strIngredient{i}')
+        measurement = meal.get(f'strMeasure{i}')
+        if ingredient and ingredient.strip():
+            ingredients.append(f"{measurement.strip()} {ingredient.strip()}")
+
+    #Map API category to user's category, if not found assign to first category
+    category_mapping = {
+        'Breakfast': 'Breakfast',
+        'Lunch': 'Lunch',
+        'Dinner': 'Dinner',
+        'Dessert': 'Dessert/Snack',
+        'Snack': 'Dessert/Snack',
+        'Miscellaneous': 'Dinner',
+        'Starter': 'Lunch',
+        'Side': 'Lunch',
+        'Pasta': 'Dinner',
+        'Vegan': 'Dinner',
+        'Vegetarian': 'Dinner',
+        'Gluten-Free': 'Dinner',
+        'Seafood': 'Dinner',
+        'Beef': 'Dinner',
+        'Chicken': 'Dinner',
+        'Lamb': 'Dinner',
+        'Pork': 'Dinner',
+        'Goat': 'Dinner',
+    }
+
+    api_category = meal.get('strCategory')
+    category_name = category_mapping.get(api_category, 'Dinner')
+    category = Category.query.filter_by(name=category_name).first()
+
+    # Create a new recipe based on the API data
+    imported_recipe = Recipe(
+        title=meal.get('strMeal'),
+        category_id=category.id ,
+        ingredients="\n".join(ingredients),
+        instructions=meal.get('strInstructions'),
+        prep_time=30,  # Default prep time for imported recipes
+        servings=4,   # Default servings for imported recipes
+        image_url=meal.get('strMealThumb'),
+        user_id=current_user.id
+    )
+
+    db.session.add(imported_recipe)
+    db.session.commit()
+
+    flash('Recipe imported successfully!', 'success')
+    return redirect(url_for('main.view_recipe', recipe_id=imported_recipe.id))
 
 # Support route with GET and POST methods
 @main.route('/support', methods=['GET', 'POST'])
