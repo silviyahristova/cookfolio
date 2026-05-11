@@ -10,9 +10,19 @@
                 <div class="view-recipe-left">
                     <div class="view-recipe-image">
                         {% if is_api_recipe and recipe.image %}
-                            <img src="{{ recipe.image }}" alt="{{ recipe.title }} Image" class="view-recipe-picture">
+                            <picture>
+                                <source srcset="{{ recipe.image }}" type="image/webp">
+                                <source srcset="{{ recipe.image }}" type="image/png">
+                                <img src="{{ recipe.image }}" alt="{{ recipe.title }} Image" class="view-recipe-picture">
+                            </picture>
+                        {% elif recipe.image_url %}
+                            <picture>
+                                <source srcset="{{ recipe.image_url }}" type="image/webp">
+                                <source srcset="{{ recipe.image_url }}" type="image/png">
+                                <img src="{{ recipe.image_url }}" alt="{{ recipe.title }} Image" class="view-recipe-picture">
+                            </picture>
                         {% elif recipe.image_filename %}
-                             <picture>
+                            <picture>
                                 <source srcset="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" type="image/webp">
                                 <source srcset="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" type="image/png">
                                 <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} Image" class="view-recipe-picture">
@@ -51,8 +61,13 @@
                     <div class="divider-btn"></div>
 
                     <div class="view-recipe-actions">
-                        {% if is_api_recipe %}
-                            <a href="#" class="btn btn-success">Import Recipe</a>
+                        {% if already_imported %}
+                            <button type="button" class="btn btn-secondary" disabled>Already Imported</button>
+                            <a href="{{ url_for('main.view_recipe', recipe_id=already_imported.id) }}" class="btn btn-primary">View imported recipe</a>
+                        {% elif is_api_recipe %}
+                            <form method="POST" action="{{ url_for('main.import_discover_recipe', meal_id=recipe['id']) }}">
+                                <button type="submit" class="btn btn-success">Import Recipe</button>
+                            </form>
                             <a href="#" class="btn btn-secondary">Add to Meal Planner</a>
                         {% else %}
                             <a href="{{ url_for('main.edit_recipe', recipe_id=recipe.id) }}" class="btn btn-primary">Edit Recipe</a>
@@ -100,6 +115,11 @@
                         <section class="view-recipe-block">
                             <div class="divider-btn"></div>
                             <h2>Instructions</h2>
+                            {% if recipe.source %}
+                                <a href="{{ recipe.source }}" target="_blank" class="recipe-card-link">Full Recipe &gt;</a>
+                            {% elif recipe.youtube %}
+                                <a href="{{ recipe.youtube }}" target="_blank" class="recipe-card-link">Watch Video &gt;</a>
+                            {% endif %}
                             {% if recipe.instructions %}
                                 {% if is_api_recipe %}
                                     <div class="api-instuctions">{{ recipe.instructions|replace('\r\n\r\n', '<br><br>')|replace('\r\n', '.  ')|safe }}</div>

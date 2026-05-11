@@ -58,6 +58,17 @@
                     {% for recipe in recipes.items %}
                         <div class="recipe-card">
                             <div class="recipe-card-image">
+                                {% if recipe.image_url %}
+                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                                {% elif recipe.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                                {% else %}
+                                    <picture>
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                        <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                    </picture>
+                                {% endif %}
                                 {% if recipe.image_filename %}
                                     <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
                                 {% else %}
