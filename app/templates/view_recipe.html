@@ -48,7 +48,7 @@
                         {% if is_api_recipe %}
                             <div class="view-recipe-meta">
                                 <p><strong>Cuisine:</strong><br> {{ recipe.description }} </p>
-                                <p><strong>Source:</strong><br> TheMealDB </p>
+                                <p><strong>Source:</strong><br> {{recipe.source_name if recipe.source_name else 'TheMealDB'}} </p>
                             </div>
                         {% else %}
                             <div class="view-recipe-meta">
@@ -65,9 +65,15 @@
                             <button type="button" class="btn btn-secondary" disabled>Already Imported</button>
                             <a href="{{ url_for('main.view_recipe', recipe_id=already_imported.id) }}" class="btn btn-primary">View imported recipe</a>
                         {% elif is_api_recipe %}
+                        {% if recipe.api_source == 'spoonacular' %}
+                            <form method="POST" action="{{ url_for('main.import_spoonacular_recipe', recipe_id=recipe.id) }}">
+                                <button type="submit" class="btn btn-success">Import Recipe</button>
+                            </form>
+                        {% else %}
                             <form method="POST" action="{{ url_for('main.import_discover_recipe', meal_id=recipe['id']) }}">
                                 <button type="submit" class="btn btn-success">Import Recipe</button>
                             </form>
+                        {% endif %}
                             <a href="#" class="btn btn-secondary">Add to Meal Planner</a>
                         {% else %}
                             <a href="{{ url_for('main.edit_recipe', recipe_id=recipe.id) }}" class="btn btn-primary">Edit Recipe</a>

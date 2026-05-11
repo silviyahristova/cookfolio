@@ -510,6 +510,43 @@ def discover():
         data = response.json()
         meals = data.get('meals') or []
 
+        for meal in meals:
+            meal['api_source'] = 'themealdb'
+
+    #Spoonacular API
+    spoonacular_api_key = os.getenv('SPOONACULAR_API_KEY')
+    if spoonacular_api_key:
+        if search_query:
+            spoonacular_url = f"https://api.spoonacular.com/recipes/complexSearch?query={search_query}&number=8&apiKey={spoonacular_api_key}"
+        elif selected_category:
+            spoonacular_url = f"https://api.spoonacular.com/recipes/complexSearch?type={selected_category}&number=8&apiKey={spoonacular_api_key}"
+        else:
+            spoonacular_url = f"https://api.spoonacular.com/recipes/random?number=8&apiKey={spoonacular_api_key}"
+        
+        spoonacular_response = requests.get(spoonacular_url)
+
+        if spoonacular_response.status_code == 200:
+            spoonacular_data = spoonacular_response.json()
+            if search_query or selected_category:
+                spoonacular_results = spoonacular_data.get('results') or []
+            else:
+                spoonacular_results = spoonacular_data.get('recipes') or []
+            for recipe in spoonacular_results:
+                meals.append({
+                    'idMeal': recipe.get('id'),
+                    'strMeal': recipe.get('title'),
+                    'strCategory': recipe.get('dishTypes')[0] if recipe.get('dishTypes') else 'Recipe',
+                    'strArea': recipe.get('cuisines', ['Unknown'])[0] if recipe.get('cuisines') else 'Spoonacular',
+                    'strMealThumb': recipe.get('image'),
+                    'strIngredients': "\n".join([ingredient.get('original') for ingredient in recipe.get('extendedIngredients', []) if ingredient.get('original')]),
+                    'strInstructions': recipe.get('instructions'),
+                    'strSource': recipe.get('sourceUrl'),
+                    'strYoutube': f"https://www.youtube.com/watch?v={recipe.get('id')}",
+                    'api_source': 'spoonacular'
+                })
+        else:
+            spoonacular_results = []
+    
     #Pagination for API results, 8 meals per page
     page = request.args.get('page', 1, type=int)
     per_page = 8
@@ -523,7 +560,7 @@ def discover():
 
     return render_template('discover.html', meals=meals, search_query=search_query, api_categories=api_categories, selected_category=selected_category, page=page, total_pages=total_pages)
 
-# View API discover recipe details route
+# View TheMeal DB API discover recipe details route
 @main.route('/discover/<int:meal_id>')
 def view_discover_recipe(meal_id):
     api_url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}"
@@ -566,7 +603,7 @@ def view_discover_recipe(meal_id):
 
     return render_template('view_recipe.html', recipe=recipe, is_api_recipe=True, already_imported=already_imported)
 
-#Import API recipe route
+#Import TheMealDB API recipe route
 @main.route('/discover/<int:meal_id>/import', methods=['POST'])
 @login_required
 def import_discover_recipe(meal_id):
@@ -640,6 +677,95 @@ def import_discover_recipe(meal_id):
         servings=4,   # Default servings for imported recipes
         image_url=meal.get('strMealThumb'),
         user_id=current_user.id
+    )
+
+    db.session.add(imported_recipe)
+    db.session.commit()
+
+    flash('Recipe imported successfully!', 'success')
+    return redirect(url_for('main.view_recipe', recipe_id=imported_recipe.id))
+
+# View Spoonacular API discover recipe details route
+@main.route('/discover/spoonacular/<int:recipe_id>')
+def view_spoonacular_recipe(recipe_id):
+    spoonacular_api_key = os.getenv('SPOONACULAR_API_KEY')
+    api_url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={spoonacular_api_key}"
+    response = requests.get(api_url)
+
+    if response.status_code != 200:
+        abort(404)
+
+    data = response.json()
+
+    ingredients = []
+
+    for item in data.get('extendedIngredients', []):
+        if item.get('original'):
+            ingredients.append(item['original'])
+
+    recipe = {
+        'id': data.get('id'),
+        'title': data.get('title'),
+        'description': data.get("cuisines")[0] if data.get("cuisines") else "Unknown" + " recipe",
+        'category': data.get('dishTypes') [0] if data.get('dishTypes') else 'Recipe',
+        'image_url': data.get('image'),
+        'ingredients': "\n".join(ingredients),
+        'instructions': data.get('instructions'),
+        'source': data.get('sourceUrl'),
+        'source_name': 'Spoonacular',
+        'api_source': 'spoonacular'
+    }
+
+    already_imported = None
+    if current_user.is_authenticated:
+        already_imported = Recipe.query.filter_by(user_id=current_user.id, title=data.get('title')).first()
+
+    return render_template('view_recipe.html', recipe=recipe, is_api_recipe=True, already_imported=already_imported)
+
+#Import Spoonacular API recipe route
+@main.route('/discover/spoonacular/<int:recipe_id>/import', methods=['POST'])
+@login_required
+def import_spoonacular_recipe(recipe_id):
+    api_url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={os.getenv('SPOONACULAR_API_KEY')}"
+    response = requests.get(api_url)
+
+    if response.status_code != 200:
+        flash('Failed to fetch recipe details from API.', 'error')
+        return redirect(url_for('main.discover'))
+    
+    data = response.json()
+
+    ingredients = []
+    for item in data.get('extendedIngredients', []):
+        if item.get('original'):
+            ingredients.append(item['original'])
+
+    # Check if the recipe already exists in the user's collection based on title
+    existing_recipe = Recipe.query.filter_by(user_id=current_user.id, title=data.get('title')).first()
+    if existing_recipe:
+        flash('You have already imported this recipe.', 'warning')
+        return redirect(url_for('main.view_recipe', recipe_id=existing_recipe.id))
+    
+    #Map API category to user's category, if not found assign to first category
+    category_mapping = {
+        'Breakfast': 'Breakfast',
+        'Lunch': 'Lunch',
+        'Dinner': 'Dinner',
+        'Dessert': 'Dessert/Snack',
+        'Snack': 'Dessert/Snack',
+    }
+
+    category = Category.query.filter_by(name=category_mapping.get(data.get('dishTypes')[0], 'Dinner')).first()
+
+    imported_recipe = Recipe(
+        title=data.get('title'),  
+        category_id=category.id,
+        ingredients="\n".join(ingredients),
+        instructions=data.get('instructions'),
+        prep_time=30,  # Default prep time for imported recipes
+        servings=4,   # Default servings for imported recipes
+        image_url=data.get('image'),
+        user_id=current_user.id 
     )
 
     db.session.add(imported_recipe)

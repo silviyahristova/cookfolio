@@ -7,7 +7,7 @@
     <div class="discover-container">
         <div class="discover-text">
             <h1>Discover Recipes</h1>
-            <p>Find new recipes ideas from TheMealDB and import them to your collection.</p>
+            <p>Find new recipes ideas from TheMealDB  and Spoonacular and import them to your collection.</p>
         </div>
 
         <div class="recipe-search">
@@ -60,7 +60,11 @@
                             {% if meal.strCategory %}
                                 <span>{{ meal.strArea }} - {{ meal.strCategory }}</span>
                             {% endif %}
-                            <a href="{{ url_for('main.view_discover_recipe', meal_id=meal.idMeal) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                            {% if meal.api_source == 'spoonacular' %}
+                                <a href="{{ url_for('main.view_spoonacular_recipe', recipe_id=meal.idMeal) }}" class="recipe-card-link">View Recipe &gt;</a>
+                            {% else %}
+                                <a href="{{ url_for('main.view_discover_recipe', meal_id=meal.idMeal) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
