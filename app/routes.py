@@ -9,8 +9,8 @@ from .models import User, Recipe, Category, SupportMessage
 from . import db
 import re, requests
 from functools import wraps
-from sqlalchemy import or_
-
+from sqlalchemy import join, or_
+from math import ceil
 
 main = Blueprint('main', __name__)
 
@@ -461,17 +461,114 @@ def my_recipes():
 
     return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search, recipe_titles=recipe_titles)
 
-# Search route to search user's recipes by title, ingredients or instructions
+#Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
+def search_api_recipes(search_query, api_page=1):
+    
+    api_per_page = 8
+    offset = (api_page - 1) * api_per_page
+    start = (api_page - 1) * api_per_page
+    end = start + api_per_page
+
+    all_recipes = []
+
+    #Search TheMealDB API
+    mealdb_url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search_query}"
+    mealdb_response = requests.get(mealdb_url, timeout=5)
+
+    if mealdb_response.status_code == 200:
+        mealdb_data = mealdb_response.json()
+        mealdb_recipes = mealdb_data.get('meals') or []
+        for meal in mealdb_recipes:
+            recipe = {
+                "id": meal.get('idMeal'),
+                "title": meal.get('strMeal'),
+                "image_url": meal.get('strMealThumb'),
+                "category": meal.get('strCategory'),
+                "cuisine": meal.get('strArea'),
+                "prep_time": 30,
+                "servings": 4,
+                "api_source": "themealdb"
+            }
+            all_recipes.append(recipe)
+
+    #Search Spoonacular API
+    spoonacular_url = f"https://api.spoonacular.com/recipes/complexSearch?query={search_query}&number={api_per_page}&apiKey={os.getenv('SPOONACULAR_API_KEY')}"
+    spoonacular_params = {
+        'query': search_query,
+        'number': api_per_page,
+        'offset': offset,
+        'addRecipeInformation': True,
+        'apiKey': os.getenv('SPOONACULAR_API_KEY')
+    }
+
+    spoonacular_response = requests.get(spoonacular_url, params=spoonacular_params, timeout=5)
+
+    if spoonacular_response.status_code == 200:
+        spoonacular_data = spoonacular_response.json()
+        spoonacular_recipes = spoonacular_data.get('results') or []
+        for recipe in spoonacular_recipes:
+            recipe["api_source"] = "spoonacular"
+            recipe["source_name"] = recipe.get("sourceName", "Spoonacular")
+            recipe["cuisine"] = ",".join(recipe.get("cuisines", [])) or "Spoonacular Recipe"
+            recipe["title"] = recipe.get("title", "Untitled Recipe")
+            recipe["image_url"] = recipe.get("image", "")
+            recipe["category"] = recipe.get("dishTypes", ["Unknown"])[0] if recipe.get("dishTypes") else "Unknown"
+            recipe["prep_time"] = recipe.get("readyInMinutes", 30)
+            recipe["servings"] = recipe.get("servings", 4)
+
+            all_recipes.append(recipe)
+
+    return all_recipes[start:end], len(all_recipes)
+
+# Search route to search recipe globally- users recipes and API recipes, search by title, ingredients and instructions, show results in a separate page with pagination
 @main.route('/search')
 @login_required
 def search():
-    query = request.args.get('search', '').strip()
-    if not query:
-        return redirect(url_for('main.dashboard'))
-    
-    #search users recipes by title
-    results = Recipe.query.filter(Recipe.user_id == current_user.id, Recipe.title.ilike(f'%{query}%')).order_by(Recipe.created_at.desc()).all()
-    return render_template('search_results.html', query=query, results=results)
+    search_query = request.args.get('search', '').strip()
+    category_id = request.args.get('category_id', "").strip()
+    page= request.args.get('page', 1, type=int)
+    api_page = request.args.get('api_page', 1, type=int)
+    api_per_page = 8
+
+    user_recipes = None
+    api_recipes = []
+    api_total = 0
+    api_total_pages = 1
+
+    categories = Category.query.order_by(Category.order).all()
+
+    #saved recipes query
+    user_query = Recipe.query.filter(Recipe.user_id == current_user.id)
+
+    #search filter
+    if search_query:
+        user_query = Recipe.query.filter(Recipe.user_id == current_user.id, db.or_(Recipe.title.ilike(f'%{search_query}%'), Recipe.ingredients.ilike(f'%{search_query}%'), Recipe.instructions.ilike(f'%{search_query}%')))
+
+    #category filter
+    selected_category = None
+    category_name = ""
+
+    if category_id:
+        selected_category = Category.query.get(category_id)
+        if selected_category:
+            category_name = selected_category.name
+            user_query = user_query.filter(Recipe.category_id == category_id)
+        
+    #pagination for user recipes, 8 recipes per page, newest first
+    user_recipes = user_query.order_by(Recipe.created_at.desc()).paginate(page=page, per_page=8, error_out=False)
+
+    #API recipes search and pagination
+    api_search_query = search_query or "soup"  # Default search query to show some results when search is empty
+    api_recipes, api_total = search_api_recipes(api_search_query, api_page)
+    api_total_pages =max(1, ceil(api_total / api_per_page))
+
+    if api_total_pages == 0:
+        api_page = 1
+    elif api_page > api_total_pages:
+            
+        return redirect(url_for('main.search', search=search_query, category_id=category_id, page=page, api_page=api_total_pages))
+
+    return render_template('search_results.html',user_recipes=user_recipes, api_recipes=api_recipes, search_query=search_query, category_id=category_id, selected_category=selected_category, categories=categories, page=page, api_page=api_page, api_total_pages=api_total_pages)
 
 @main.route('/meal-plans')
 @login_required
