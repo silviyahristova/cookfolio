@@ -49,21 +49,23 @@
         </div>
         
         {% if meals %}
-            <div class="discover-grid">
+            <div class="all-recipes-grid">
                 {% for meal in meals %}
-                    <div class="discover-card">
-                        <div class="discover-card-image">
-                            <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }} image" class="discover-card-picture" onerror="this.onerror=null; this.src='static', filename='images/image-placeholder.png';">
+                    <div class="recipe-card">
+                        <div class="recipe-card-image">
+                            <img src="{{ meal.image_url }}" alt="{{ meal.title }} image" class="recipe-card-picture" onerror="this.onerror=null; this.src='static', filename='images/image-placeholder.png';">
                         </div>
-                        <div class="discover-card-content">
-                            <h2>{{ meal.strMeal }}</h2>
-                            {% if meal.strCategory %}
-                                <span>{{ meal.strArea }} - {{ meal.strCategory }}</span>
-                            {% endif %}
+                        <div class="recipe-card-content">
+                            <h2>{{ meal.title }}</h2>
+                            <span>{{ meal.category }}</span>
+                            <div class="recipe-card-meta">
+                                <span>{{ meal.prep_time }} mins</span>
+                                <span>{{ meal.servings }} servings</span>
+                            </div>
                             {% if meal.api_source == 'spoonacular' %}
-                                <a href="{{ url_for('main.view_spoonacular_recipe', recipe_id=meal.idMeal) }}" class="recipe-card-link">View Recipe &gt;</a>
+                                <a href="{{ url_for('main.view_spoonacular_recipe', recipe_id=meal.id) }}" class="recipe-card-link">View Recipe &gt;</a>
                             {% else %}
-                                <a href="{{ url_for('main.view_discover_recipe', meal_id=meal.idMeal) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                                <a href="{{ url_for('main.view_discover_recipe', meal_id=meal.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
                             {% endif %}
                         </div>
                     </div>
@@ -72,20 +74,18 @@
             <!-- Pagination -->
             {% if total_pages > 1 %}
                 <div class="pagination">
-                    {% if page > 1 %}
-                        <a href="{{ url_for('main.discover', page=page - 1, search=request.args.get('search'), category=selected_category) }}">< Previous</a>
+                    {% if api_page > 1 %}
+                        <a href="{{ url_for('main.discover', api_page=api_page - 1, search=request.args.get('search')) }}">< Previous</a>
                     {% else %}
                         <span class="disabled">< Previous</span>
                     {% endif %}
 
                     {% for p in range(1, total_pages + 1) %}
-                        {% if p %}
-                            <a href="{{ url_for('main.discover', page=p, search=request.args.get('search'), category=selected_category) }}" class="{% if p == page %}active{% endif %}">{{ p }}</a> 
-                        {% endif %}
+                        <a href="{{ url_for('main.discover', api_page=p, search=request.args.get('search')) }}" class="{% if p == api_page %}active{% endif %}">{{ p }}</a> 
                     {% endfor %}
 
-                    {% if page < total_pages %}
-                        <a href="{{ url_for('main.discover', page=page + 1, search=request.args.get('search'), category=selected_category) }}">Next ></a>
+                    {% if api_page < total_pages %}
+                        <a href="{{ url_for('main.discover', api_page=api_page + 1, search=request.args.get('search')) }}">Next ></a>
                     {% else %}
                         <span class="disabled">Next ></span>
                     {% endif %}
