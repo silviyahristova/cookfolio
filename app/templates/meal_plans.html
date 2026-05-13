@@ -27,22 +27,59 @@
                 
                 <div class="dashboard-left">
                     <div class="empty-dashboard">
-                        <p class="dashboard-empty-text">You haven't added any meal plans yet.</p>
-                        <p>Start building your meal plans by creating your first one.</p>
-                        <div class="dashboard-buttons">
-                            <a href="{{ url_for('main.add_meal_plan') }}" class="btn btn-success">+ Create Meal Plan</a>
-                        </div>
+                        {% if has_recipes %}
+                            <p class="dashboard-empty-text">You haven't created any meal plans yet.</p>
+                            <p>Start building your meal plans by creating your first one.</p>
+                            <div class="dashboard-buttons">
+                                <a href="{{ url_for('main.add_meal_plan') }}" class="btn btn-success">+ Create Meal Plan</a>
+                            </div>
+                        {% else %}
+                            <p class="dashboard-empty-text">You haven't created any meal plans yet.</p>
+                            <p>Start by adding your own recipe or discovering recipe ideas, then create your first meal plan.</p>
+                            <div class="dashboard-buttons">
+                                <a href="{{ url_for('main.add_recipe') }}" class="btn btn-success">+ Add Your First Recipe</a>
+                                <p class="dashboard-or">or</p>
+                                <a href="{{ url_for('main.discover') }}" class="btn btn-secondary">Discover Recipe Ideas</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         {% endif %}
 
         {% if meal_plans %}
-        <div class="meal-plan-text">
-            <h1>My Meal Plans</h1>
-            <p>Plan your meals for the week.</p>
-        </div>
-        
+            <div class="meal-plan-text">
+                <h1>My Meal Plans</h1>
+                <p>Plan your meals for the week.</p>
+            </div>
+            <div class="all-recipes-grid">
+                {% for meal_plan in meal_plans %}
+                    <div class="recipe-card">
+                        <div class="recipe-card-image">
+                            {% if meal_plan.recipe.image_url %}
+                                <img src="{{ meal_plan.recipe.image_url }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
+                            {% elif meal_plan.recipe.image_filename %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ meal_plan.recipe.image_filename) }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
+                            {% else %}
+                                <picture>
+                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                    <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                </picture>
+                            {% endif %}
+                        </div>
+                    <div class="recipe-card-content">
+                        <h2>{{ meal_plan.recipe.title }}</h2>
+                        <p>{{ meal_plan.meal_type|capitalize }} on {{ meal_plan.meal_date.strftime('%B %d, %Y') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+            
+        {% if meal_plans|length > 8 %}
+            <div class="view-all-link">
+                <a href="{{ url_for('main.meal_plans') }}" class="card-link">View All &gt;</a>
+            </div>
         {% endif %}
     </div>
 </section>
