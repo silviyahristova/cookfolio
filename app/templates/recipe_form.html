@@ -1,6 +1,6 @@
 {%extends 'base.html' %}
 
-{% block title %}Cookfolio - Add Recipe{% endblock %}
+{% block title %}{% if form_type == 'edit' %}Cookfolio - Edit Recipe{% else %}Cookfolio - Add Recipe{% endif %}{% endblock %}
 
 {% block content %}
 <section class="add-recipe-section">
