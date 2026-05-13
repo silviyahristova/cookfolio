@@ -3,6 +3,47 @@
 {% block title %}Cookfolio - Meal Plans{% endblock %}
 
 {% block content %}
-    <h1>My Meal Plans</h1>
-    <p>Manage your meal plans and view your scheduled meals.</p>
+<section class="meal-plan-section">
+    <div class="meal-plan-container">
+        <!-- Empty Meal Plans Content -->
+        {% if not meal_plans %}
+            <div class="dashboard-content">
+                <div class="dashboard-left">
+                    <div class="dashboard-welcome-text">
+                        <h1>My Meal Plans</h1>
+                        <p>Plan your meals for the week.</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-right">
+                    <div class="empty-dashboard">
+                        <picture>
+                            <source srcset="{{ url_for('static', filename='images/empty-dashboard.webp') }}" type="image/webp">
+                            <source srcset="{{ url_for('static', filename='images/empty-dashboard.png') }}" type="image/png">
+                            <img src="{{ url_for('static', filename='images/empty-dashboard.png') }}" alt="Cookfolio empty dashboard Image" class="page-picture">
+                        </picture>
+                    </div>
+                </div>
+                
+                <div class="dashboard-left">
+                    <div class="empty-dashboard">
+                        <p class="dashboard-empty-text">You haven't added any meal plans yet.</p>
+                        <p>Start building your meal plans by creating your first one.</p>
+                        <div class="dashboard-buttons">
+                            <a href="{{ url_for('main.add_meal_plan') }}" class="btn btn-success">+ Create Meal Plan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if meal_plans %}
+        <div class="meal-plan-text">
+            <h1>My Meal Plans</h1>
+            <p>Plan your meals for the week.</p>
+        </div>
+        
+        {% endif %}
+    </div>
+</section>
 {% endblock %}
