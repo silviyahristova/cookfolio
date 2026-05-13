@@ -525,7 +525,8 @@ def search_api_recipes(search_query, api_page=1):
 @login_required
 def search():
     search_query = request.args.get('search', '').strip()
-    category_id = request.args.get('category_id', "").strip()
+    categories = Category.query.order_by(Category.order).all()
+    selected_category = selected_category = request.args.get('category', '').strip()
     page= request.args.get('page', 1, type=int)
     api_page = request.args.get('api_page', 1, type=int)
     api_per_page = 8
@@ -535,30 +536,44 @@ def search():
     api_total = 0
     api_total_pages = 1
 
-    categories = Category.query.order_by(Category.order).all()
+    #Get API category
+    category_response = requests.get("https://www.themealdb.com/api/json/v1/1/categories.php")
+
+    api_categories = []
+
+    if category_response.status_code == 200:
+        category_data = category_response.json()
+        api_categories = [category['strCategory'] for category in category_data.get('categories', [])]
+
+    #Get user category
+    user_categories = [category.name for category in categories]
+
+    all_categories = sorted(set(api_categories + user_categories))
+
+    # If a category is selected, filter meals by that category, otherwise search by query or show all meals
+    if selected_category:
+        api_search_query = selected_category
+    elif search_query:
+        api_search_query = search_query
+    else:
+        api_search_query = "chicken"  # Default search query to show some results when search is empty
 
     #saved recipes query
     user_query = Recipe.query.filter(Recipe.user_id == current_user.id)
 
     #search filter
     if search_query:
-        user_query = Recipe.query.filter(Recipe.user_id == current_user.id, db.or_(Recipe.title.ilike(f'%{search_query}%'), Recipe.ingredients.ilike(f'%{search_query}%'), Recipe.instructions.ilike(f'%{search_query}%')))
-
-    #category filter
-    selected_category = None
-    category_name = ""
-
-    if category_id:
-        selected_category = Category.query.get(category_id)
-        if selected_category:
-            category_name = selected_category.name
-            user_query = user_query.filter(Recipe.category_id == category_id)
+        user_query = Recipe.query.filter(db.or_(Recipe.title.ilike(f'%{search_query}%'), Recipe.ingredients.ilike(f'%{search_query}%'), Recipe.instructions.ilike(f'%{search_query}%')))
         
+    #category filter
+    if selected_category:
+        user_query = user_query.join(Category).filter(Category.name == selected_category)
+
     #pagination for user recipes, 8 recipes per page, newest first
     user_recipes = user_query.order_by(Recipe.created_at.desc()).paginate(page=page, per_page=8, error_out=False)
 
     #API recipes search and pagination
-    api_search_query = search_query or "soup"  # Default search query to show some results when search is empty
+    
     api_recipes, api_total = search_api_recipes(api_search_query, api_page)
     api_total_pages =max(1, ceil(api_total / api_per_page))
 
@@ -566,9 +581,9 @@ def search():
         api_page = 1
     elif api_page > api_total_pages:
             
-        return redirect(url_for('main.search', search=search_query, category_id=category_id, page=page, api_page=api_total_pages))
+        return redirect(url_for('main.search', search=search_query, page=page, api_page=api_total_pages))
 
-    return render_template('search_results.html',user_recipes=user_recipes, api_recipes=api_recipes, search_query=search_query, category_id=category_id, selected_category=selected_category, categories=categories, page=page, api_page=api_page, api_total_pages=api_total_pages)
+    return render_template('search_results.html',user_recipes=user_recipes, api_recipes=api_recipes, search_query=search_query, selected_category=selected_category,api_categories=api_categories, categories=all_categories, page=page, api_page=api_page, api_total_pages=api_total_pages)
 
 @main.route('/meal-plans')
 @login_required
@@ -580,6 +595,8 @@ def meal_plans():
 def discover():
     search_query = request.args.get('search', '').strip()
     selected_category = request.args.get('category', '').strip()
+    api_page = request.args.get('api_page', 1, type=int)
+    api_per_page = 8
     meals = []
     
     #Get API category
@@ -593,69 +610,16 @@ def discover():
 
     # If a category is selected, filter meals by that category, otherwise search by query or show all meals
     if selected_category:
-        api_url = f"https://www.themealdb.com/api/json/v1/1/filter.php?c={selected_category}"
-
-    # If search query is provided, search meals by name, otherwise show all meals
+        api_search_query = selected_category
     elif search_query:
-        api_url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search_query}"
-    else:        
-        api_url = "https://www.themealdb.com/api/json/v1/1/search.php?s="
+        api_search_query = search_query
+    else:
+        api_search_query = "chicken"  # Default search query to show some results when search is empty
 
-    response = requests.get(api_url)
+    meals, api_total = search_api_recipes(api_search_query, api_page)
+    total_pages = max(1, ceil(api_total / api_per_page))
 
-    if response.status_code == 200:
-        data = response.json()
-        meals = data.get('meals') or []
-
-        for meal in meals:
-            meal['api_source'] = 'themealdb'
-
-    #Spoonacular API
-    spoonacular_api_key = os.getenv('SPOONACULAR_API_KEY')
-    if spoonacular_api_key:
-        if search_query:
-            spoonacular_url = f"https://api.spoonacular.com/recipes/complexSearch?query={search_query}&number=8&apiKey={spoonacular_api_key}"
-        elif selected_category:
-            spoonacular_url = f"https://api.spoonacular.com/recipes/complexSearch?type={selected_category}&number=8&apiKey={spoonacular_api_key}"
-        else:
-            spoonacular_url = f"https://api.spoonacular.com/recipes/random?number=8&apiKey={spoonacular_api_key}"
-        
-        spoonacular_response = requests.get(spoonacular_url)
-
-        if spoonacular_response.status_code == 200:
-            spoonacular_data = spoonacular_response.json()
-            if search_query or selected_category:
-                spoonacular_results = spoonacular_data.get('results') or []
-            else:
-                spoonacular_results = spoonacular_data.get('recipes') or []
-            for recipe in spoonacular_results:
-                meals.append({
-                    'idMeal': recipe.get('id'),
-                    'strMeal': recipe.get('title'),
-                    'strCategory': recipe.get('dishTypes')[0] if recipe.get('dishTypes') else 'Recipe',
-                    'strArea': recipe.get('cuisines', ['Unknown'])[0] if recipe.get('cuisines') else 'Spoonacular',
-                    'strMealThumb': recipe.get('image'),
-                    'strIngredients': "\n".join([ingredient.get('original') for ingredient in recipe.get('extendedIngredients', []) if ingredient.get('original')]),
-                    'strInstructions': recipe.get('instructions'),
-                    'strSource': recipe.get('sourceUrl'),
-                    'strYoutube': f"https://www.youtube.com/watch?v={recipe.get('id')}",
-                    'api_source': 'spoonacular'
-                })
-        else:
-            spoonacular_results = []
-    
-    #Pagination for API results, 8 meals per page
-    page = request.args.get('page', 1, type=int)
-    per_page = 8
-    
-    start = (page - 1) * per_page
-    end = start + per_page
-
-    total_meals = len(meals)
-    total_pages = (total_meals + per_page - 1) // per_page
-    meals = meals[start:end]
-
-    return render_template('discover.html', meals=meals, search_query=search_query, api_categories=api_categories, selected_category=selected_category, page=page, total_pages=total_pages)
+    return render_template('discover.html', meals=meals, search_query=search_query, selected_category=selected_category, categories=api_categories, api_categories=api_categories, api_page=api_page, total_pages=total_pages)
 
 # View TheMeal DB API discover recipe details route
 @main.route('/discover/<int:meal_id>')
