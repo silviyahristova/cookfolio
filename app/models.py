@@ -45,7 +45,7 @@ class Recipe(db.Model):
     __tablename__ = 'recipes'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(100), nullable=False)
+    title: Mapped[str] = mapped_column(String(150), nullable=False)
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), nullable=False)
     ingredients: Mapped[str] = mapped_column(db.Text, nullable=False)
     instructions: Mapped[str] = mapped_column(db.Text, nullable=False)
@@ -54,7 +54,7 @@ class Recipe(db.Model):
     image_filename: Mapped[str] = mapped_column(String(255), nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(),nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
-    image_url: Mapped[Optional[str]] = mapped_column(String(255), nullable=True) # New field to store image URL for API recipes
+    image_url: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True) # New field to store image URL for API recipes
 
     #Relationship to category- many recipes can belong to one category, and each recipe belongs to one category
     category = db.relationship('Category', back_populates='recipes')
