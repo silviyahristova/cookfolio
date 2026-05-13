@@ -2,7 +2,7 @@ from sqlalchemy import String, Boolean, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_login import UserMixin
 from . import db, login_manager
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
 # User model
@@ -19,6 +19,9 @@ class User(db.Model, UserMixin):
 
     #Relationship to recipe- one user can have many recipes, and each recipe belongs to one user
     recipes = db.relationship('Recipe', back_populates='user', cascade='all, delete-orphan')
+
+    #Relationship to meal plan- one user can have many meal plans, and each meal plan belongs to one user
+    meal_plans = db.relationship('MealPlan', back_populates='user', cascade='all, delete-orphan')
 
     #Method to check if user is admin
     def is_admin_user(self):
@@ -61,6 +64,26 @@ class Recipe(db.Model):
 
     #Relationship to user- many recipes can belong to one user, and each recipe belongs to one user
     user = db.relationship('User', back_populates='recipes')
+
+    #Relationship to meal plan- one recipe can have many meal plans, and each meal plan belongs to one recipe
+    meal_plans = db.relationship('MealPlan', back_populates='recipe', cascade='all, delete-orphan')
+
+#Meal plan model
+class MealPlan(db.Model):
+    __tablename__ = 'meal_plans'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    meal_date: Mapped[date] = mapped_column(nullable=False)
+    meal_type: Mapped[str] = mapped_column(String(50), nullable=False) #Breakfast, Lunch, Dinner, or Dessert/Snack
+    created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(),nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
+    recipe_id: Mapped[int] = mapped_column(ForeignKey('recipes.id'), nullable=False)
+
+    #Relationship to user- many meal plans can belong to one user, and each meal plan belongs to one user
+    user = db.relationship('User', back_populates='meal_plans')
+
+    #Relationship to recipe- many meal plans can belong to one recipe, and each meal plan belongs to one recipe
+    recipe = db.relationship('Recipe', back_populates='meal_plans')
 
 #Support message model for contact form
 class SupportMessage(db.Model):
