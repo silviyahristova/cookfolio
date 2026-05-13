@@ -4,6 +4,177 @@
 
 {% block content %}
 
-<h1>Search Results</h1>
+<section class="search-results-section">
+    <div class="search-container">
+        <div class="search-text">
+            <h1>Search Results</h1>
+            <p>Find recipes that match your search query.</p>
+        </div>
 
+        <!--search bar and category dropdown menu-->
+        <div class="recipe-search">
+            <form action="{{ url_for('main.search') }}" method="GET" aria-label="Search and filter recipes" class="recipe-search-form">
+                <div class="recipe-search-row">
+                    <input type="text" name="search" placeholder="Search my recipes..." aria-label="Search recipes" value="{{ request.args.get('search', '') }}" list="recipe-suggestions" autocomplete="off" class="dashboard-search-input">
+                    <button type="submit" class="recipe-search-btn" aria-label="Search recipes">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <!-- Clear search button -->
+                    {% if request.args.get('search') %}
+                        <a href="{{ url_for('main.search') }}" class="clear-search" aria-label="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                    
+                <!-- Category Dropdown -->
+                <div class="dashboard-category-row">
+                    <div class="category-dropdown">
+                        <select name="category_id" class="category-dropdown-select" aria-label="Category select" onchange="this.form.search.value='';this.form.submit();">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if selected_category_id == category.id|string %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Clear filters button -->
+                {% if request.args.get('search') or selected_category_id %}
+                    <div class="clear-filters">
+                        <a href="{{ url_for('main.search') }}" class="btn btn-secondary clear-filters-btn">Clear Filters</a>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+
+        {% if user_recipes and user_recipes.items %}
+            <div class="dashboard-section-header">
+                <h2>Your Recipes</h2>
+            </div>
+            <div class="all-recipes-grid">
+                    {% for recipe in user_recipes.items %}
+                        <div class="recipe-card">
+                            <div class="recipe-card-image">
+                                {% if recipe.image_url %}
+                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                                {% elif recipe.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                                {% else %}
+                                    <picture>
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                        <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                    </picture>
+                                {% endif %}
+                                {% if recipe.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ recipe.image_filename) }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                                {% else %}
+                                    <picture>
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                        <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                    </picture>
+                                {% endif %}
+                            </div>
+                            <div class="recipe-card-content">
+                                <h2>{{ recipe.title }}</h2>
+                                <span>{{ recipe.category.name }}</span>
+                                <div class="recipe-card-meta">
+                                    <span>{{ recipe.prep_time }} mins</span>
+                                    <span>{{ recipe.servings }} servings</span>
+                                </div>
+                                <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                
+            </div>
+            <!-- Pagination for user recipes -->
+            {% if user_recipes and user_recipes.pages > 1 %}
+                <div class="pagination">
+                    {% if user_recipes.has_prev %}
+                        <a href="{{ url_for('main.search', page=user_recipes.prev_num, search=request.args.get('search'), category_id=selected_category_id) }}">< Previous</a>
+                    {% else %}
+                        <span class="disabled">< Previous</span>
+                    {% endif %}
+
+                    {% for p in user_recipes.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                        {% if p %}
+                            <a href="{{ url_for('main.search', page=p, search=request.args.get('search'), category_id=selected_category_id) }}" class="{% if p == user_recipes.page %}active{% endif %}">{{ p }}</a> 
+                        {% else %}
+                            <span class="ellipsis">...</span>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if user_recipes.has_next %}
+                        <a href="{{ url_for('main.search', page=user_recipes.next_num, search=request.args.get('search'), category_id=selected_category_id) }}">Next ></a>
+                    {% else %}
+                        <span class="disabled">Next ></span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-dashboard dashboard-section-header">
+                <h2>Your Recipes</h2>
+                <p class="dashboard-empty-text">No saved recipes found matching your search query.</p>
+            </div>
+        {% endif %}
+        
+        <!--API recipe section-->
+        {% if api_recipes %}
+            <div class="dashboard-section-header">
+                <h2>Recipe Ideas</h2>
+            </div>
+            <div class="all-recipes-grid">
+                {% for recipe in api_recipes %}
+                    <div class="recipe-card">
+                        <div class="recipe-card-image">
+                            {% if recipe.image_url %}
+                                <img src="{{ recipe.image_url }}" alt="{{ recipe.title }} image" class="recipe-card-picture">
+                            {% else %}
+                                <picture>
+                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                    <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                </picture>
+                            {% endif %}
+                        </div>
+                        <div class="recipe-card-content">
+                            <h2>{{ recipe.title }}</h2>
+                            <span>{{ recipe.category }}</span>
+                            <div class="recipe-card-meta">
+                                <span>{{ recipe.prep_time }} mins</span>
+                                <span>{{ recipe.servings }} servings</span>
+                            </div>
+                        </div>
+                        {% if recipe.api_source == 'spoonacular' %}
+                            <a href="{{ url_for('main.view_spoonacular_recipe', recipe_id=recipe.id) }}" class="recipe-card-link">View Recipe &gt;</a>
+                        {% elif recipe.api_source == 'themealdb' %}
+                            <a href="{{ url_for('main.view_discover_recipe', meal_id=recipe.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination for API recipes -->
+            {% if api_total_pages > 1 %}
+                <div class="pagination">
+                    {% if api_page > 1 %}
+                        <a href="{{ url_for('main.search', search=request.args.get('search'),category_id=request.args.get('category_id'), page=page, api_page=api_page - 1) }}">Previous</a>
+                    {% endif %}
+                    <span>Page {{ api_page }} of {{ api_total_pages }}</span>
+                    {% if api_page < api_total_pages %}
+                        <a href="{{ url_for('main.search', search=request.args.get('search'),category_id=request.args.get('category_id'), page=page, api_page=api_page + 1) }}">Next</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-dashboard dashboard-section-header">
+                <h2>Recipe Ideas</h2>
+                <p class="dashboard-empty-text">No recipe ideas found matching your search query.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}
