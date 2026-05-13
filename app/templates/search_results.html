@@ -30,17 +30,17 @@
                 <!-- Category Dropdown -->
                 <div class="dashboard-category-row">
                     <div class="category-dropdown">
-                        <select name="category_id" class="category-dropdown-select" aria-label="Category select" onchange="this.form.search.value='';this.form.submit();">
+                        <select name="category" class="category-dropdown-select" aria-label="Category select" onchange="this.form.search.value='';this.form.submit();">
                             <option value="">All Categories</option>
                             {% for category in categories %}
-                                <option value="{{ category.id }}" {% if selected_category_id == category.id|string %}selected{% endif %}>{{ category.name }}</option>
+                                <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
 
                 <!-- Clear filters button -->
-                {% if request.args.get('search') or selected_category_id %}
+                {% if request.args.get('search') or selected_category %}
                     <div class="clear-filters">
                         <a href="{{ url_for('main.search') }}" class="btn btn-secondary clear-filters-btn">Clear Filters</a>
                     </div>
@@ -94,21 +94,21 @@
             {% if user_recipes and user_recipes.pages > 1 %}
                 <div class="pagination">
                     {% if user_recipes.has_prev %}
-                        <a href="{{ url_for('main.search', page=user_recipes.prev_num, search=request.args.get('search'), category_id=selected_category_id) }}">< Previous</a>
+                        <a href="{{ url_for('main.search', page=user_recipes.prev_num, search=request.args.get('search'), category=selected_category) }}">< Previous</a>
                     {% else %}
                         <span class="disabled">< Previous</span>
                     {% endif %}
 
                     {% for p in user_recipes.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                         {% if p %}
-                            <a href="{{ url_for('main.search', page=p, search=request.args.get('search'), category_id=selected_category_id) }}" class="{% if p == user_recipes.page %}active{% endif %}">{{ p }}</a> 
+                            <a href="{{ url_for('main.search', page=p, search=request.args.get('search'), category=selected_category) }}" class="{% if p == user_recipes.page %}active{% endif %}">{{ p }}</a> 
                         {% else %}
                             <span class="ellipsis">...</span>
                         {% endif %}
                     {% endfor %}
 
                     {% if user_recipes.has_next %}
-                        <a href="{{ url_for('main.search', page=user_recipes.next_num, search=request.args.get('search'), category_id=selected_category_id) }}">Next ></a>
+                        <a href="{{ url_for('main.search', page=user_recipes.next_num, search=request.args.get('search'), category=selected_category) }}">Next ></a>
                     {% else %}
                         <span class="disabled">Next ></span>
                     {% endif %}
@@ -161,11 +161,19 @@
             {% if api_total_pages > 1 %}
                 <div class="pagination">
                     {% if api_page > 1 %}
-                        <a href="{{ url_for('main.search', search=request.args.get('search'),category_id=request.args.get('category_id'), page=page, api_page=api_page - 1) }}">Previous</a>
+                        <a href="{{ url_for('main.search', api_page=api_page - 1, search=request.args.get('search')) }}">< Previous</a>
+                    {% else %}
+                        <span class="disabled">< Previous</span>
                     {% endif %}
-                    <span>Page {{ api_page }} of {{ api_total_pages }}</span>
+
+                    {% for p in range(1, api_total_pages + 1) %}
+                        <a href="{{ url_for('main.search', api_page=p, search=request.args.get('search')) }}" class="{% if p == api_page %}active{% endif %}">{{ p }}</a> 
+                    {% endfor %}
+
                     {% if api_page < api_total_pages %}
-                        <a href="{{ url_for('main.search', search=request.args.get('search'),category_id=request.args.get('category_id'), page=page, api_page=api_page + 1) }}">Next</a>
+                        <a href="{{ url_for('main.search', api_page=api_page + 1, search=request.args.get('search')) }}">Next ></a>
+                    {% else %}
+                        <span class="disabled">Next ></span>
                     {% endif %}
                 </div>
             {% endif %}
