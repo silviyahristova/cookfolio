@@ -1,0 +1,43 @@
+{%extends 'base.html' %}
+
+{% block title %}Cookfolio - Add Meal Plan{% endblock %}
+
+{% block content %}
+<section class="add-recipe-section">
+    <div class="add-recipe-container">
+        <div class="add-recipe-text">
+            <h1>Add Meal Plan</h1>
+            <p>Fill out the details below to create a new meal plan.</p>
+            <form method="POST" action="{{ url_for('main.add_meal_plan') }}" class="add-recipe-form">
+                <div class="form-group">
+                    <label for="recipe_id">Recipe:</label>
+                    <select id="recipe_id" name="recipe_id" required>
+                        <option value="">Select a recipe</option>
+                        {% for recipe in recipes %}
+                            <option value="{{ recipe.id }}">{{ recipe.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="meal_type">Meal Type:</label>
+                    <select id="meal_type" name="meal_type" required>
+                        <option value="">Select a meal type</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="dessert/snack">Dessert/Snack</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="meal_date">Date</label>
+                    <input type="date" id="meal_date" name="meal_date" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success" id="save-recipe-button">Save Meal Plan</button>
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
