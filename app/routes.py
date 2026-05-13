@@ -5,12 +5,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Recipe, Category, SupportMessage
+from .models import User, Recipe, Category, SupportMessage, MealPlan
 from . import db
 import re, requests
 from functools import wraps
 from sqlalchemy import join, or_
 from math import ceil
+from datetime import datetime, date, timedelta
 
 main = Blueprint('main', __name__)
 
@@ -461,6 +462,24 @@ def my_recipes():
 
     return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search, recipe_titles=recipe_titles)
 
+@main.route('/meal-plans')
+@login_required
+def meal_plans():
+    today = date.today()
+
+    start_of_week = today - timedelta(days=today.weekday())
+    end_of_week = start_of_week + timedelta(days=6)
+
+    meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= start_of_week, MealPlan.meal_date <= end_of_week).join(Recipe).order_by(MealPlan.meal_date, MealPlan.meal_type).all()
+    
+    return render_template('meal_plans.html', start_of_week=start_of_week, end_of_week=end_of_week, meal_plans=meal_plans)
+
+@main.route('/meal-plans/add', methods=['GET', 'POST'])
+@login_required
+def add_meal_plan():
+    render_template('add_meal_plan.html')
+
+    
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
     
@@ -584,11 +603,6 @@ def search():
         return redirect(url_for('main.search', search=search_query, page=page, api_page=api_total_pages))
 
     return render_template('search_results.html',user_recipes=user_recipes, api_recipes=api_recipes, search_query=search_query, selected_category=selected_category,api_categories=api_categories, categories=all_categories, page=page, api_page=api_page, api_total_pages=api_total_pages)
-
-@main.route('/meal-plans')
-@login_required
-def meal_plans():
-    return render_template('meal_plans.html')
 
 # Discover route to show recipes from the API with category filter, search and pagination
 @main.route('/discover')
