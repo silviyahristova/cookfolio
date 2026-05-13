@@ -471,15 +471,49 @@ def meal_plans():
     end_of_week = start_of_week + timedelta(days=6)
 
     meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= start_of_week, MealPlan.meal_date <= end_of_week).join(Recipe).order_by(MealPlan.meal_date, MealPlan.meal_type).all()
-    
-    return render_template('meal_plans.html', start_of_week=start_of_week, end_of_week=end_of_week, meal_plans=meal_plans)
+    has_recipes = Recipe.query.filter_by(user_id=current_user.id).first() is not None
+
+    return render_template('meal_plans.html', start_of_week=start_of_week, end_of_week=end_of_week, meal_plans=meal_plans, has_recipes=has_recipes)
 
 @main.route('/meal-plans/add', methods=['GET', 'POST'])
 @login_required
 def add_meal_plan():
-    render_template('add_meal_plan.html')
+    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.title).all()
 
+    if not recipes:
+        flash('You need to have at least one recipe to add a meal plan. Please add a recipe first.', 'error')
+        return redirect(url_for('main.meal_plans'))
     
+    if request.method == 'POST':
+        recipe_id = request.form.get('recipe_id')
+        meal_date = request.form.get('meal_date')
+        meal_type = request.form.get('meal_type')
+
+        if not recipe_id or not meal_date or not meal_type:
+            flash('Please fill in all fields.', 'error')
+            return render_template('add_meal_plan.html', recipes=recipes)
+
+        try:
+            meal_date = datetime.strptime(meal_date, '%Y-%m-%d').date()
+        except ValueError:
+            flash('You can only add meal plans for valid dates.', 'error')
+            return render_template('add_meal_plan.html', recipes=recipes)
+
+        new_meal_plan = MealPlan(
+            user_id=current_user.id,
+            recipe_id=int(recipe_id),
+            meal_date=meal_date,
+            meal_type=meal_type
+        )
+
+        db.session.add(new_meal_plan)
+        db.session.commit()
+
+        flash('Meal plan added successfully!', 'success')
+        return redirect(url_for('main.meal_plans'))
+
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, form_type='add')
+
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
     
