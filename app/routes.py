@@ -462,18 +462,32 @@ def my_recipes():
 
     return render_template('my_recipes.html', recipes=recipes, categories=categories, selected_category_id=category_id, search=search, recipe_titles=recipe_titles)
 
+# Meal plans routes
 @main.route('/meal-plans')
 @login_required
 def meal_plans():
+    week_start_str = request.args.get('week_start')
     today = date.today()
 
-    start_of_week = today - timedelta(days=today.weekday())
+    if week_start_str:
+        start_of_week = datetime.strptime(week_start_str, '%Y-%m-%d').date()
+    else:
+        start_of_week = today - timedelta(days=today.weekday())
+    
     end_of_week = start_of_week + timedelta(days=6)
+
+    #paginate weeks
+    previous_week = start_of_week - timedelta(days=7)
+    next_week = start_of_week + timedelta(days=7)
+
+    #create list with all 7days
+    week_days = [(start_of_week + timedelta(days=i)) for i in range(7)]
 
     meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= start_of_week, MealPlan.meal_date <= end_of_week).join(Recipe).order_by(MealPlan.meal_date, MealPlan.meal_type).all()
     has_recipes = Recipe.query.filter_by(user_id=current_user.id).first() is not None
+    has_meal_plans = MealPlan.query.filter_by(user_id=current_user.id).first() is not None
 
-    return render_template('meal_plans.html', start_of_week=start_of_week, end_of_week=end_of_week, meal_plans=meal_plans, has_recipes=has_recipes)
+    return render_template('meal_plans.html',week_days=week_days, start_of_week=start_of_week, end_of_week=end_of_week, previous_week=previous_week, next_week=next_week, meal_plans=meal_plans, has_recipes=has_recipes, has_meal_plans=has_meal_plans, today=today)
 
 @main.route('/meal-plans/add', methods=['GET', 'POST'])
 @login_required
@@ -493,12 +507,33 @@ def add_meal_plan():
             flash('Please fill in all fields.', 'error')
             return render_template('add_meal_plan.html', recipes=recipes)
 
+        #convert meal_date string to date object and validate that it's not in the past
         try:
             meal_date = datetime.strptime(meal_date, '%Y-%m-%d').date()
         except ValueError:
             flash('You can only add meal plans for valid dates.', 'error')
             return render_template('add_meal_plan.html', recipes=recipes)
 
+        #prevent past date meal plans
+        if meal_date < date.today():
+            flash('You can only add meal plans for today or future dates.', 'error')
+            return render_template('add_meal_plan.html', recipes=recipes)
+        
+        # prevent duplicates meal category for the same day
+        existing_meal_category = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, meal_type=meal_type).first()
+
+        if existing_meal_category:
+            flash(f'You already have a {meal_type} planned for {meal_date}. Please edit it instead.', 'warning')
+            return redirect(url_for('main.add_meal_plan'))
+
+        #prevent same recipe been planned more than once on the same day
+        existing_recipe_for_day = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, recipe_id=int(recipe_id)).first()
+
+        if existing_recipe_for_day:
+            flash(f'You already have this recipe planned for {meal_date}. Please choose a different recipe.', 'warning')
+            return redirect(url_for('main.add_meal_plan'))
+
+        #create new meal plan and save to database
         new_meal_plan = MealPlan(
             user_id=current_user.id,
             recipe_id=int(recipe_id),
@@ -512,7 +547,7 @@ def add_meal_plan():
         flash('Meal plan added successfully!', 'success')
         return redirect(url_for('main.meal_plans'))
 
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, form_type='add')
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today())
 
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
