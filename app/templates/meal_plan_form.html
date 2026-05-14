@@ -1,39 +1,39 @@
 {%extends 'base.html' %}
 
-{% block title %}Cookfolio - Add Meal Plan{% endblock %}
+{% block title %}{% if meal_plan %}Cookfolio - Edit Meal Plan{% else %}Cookfolio - Add Meal Plan{% endif %}{% endblock %}
 
 {% block content %}
 <section class="add-recipe-section">
     <div class="add-recipe-container">
         <div class="add-recipe-text">
-            <h1>Add Meal Plan</h1>
-            <p>Fill out the details below to create a new meal plan.</p>
-            <form method="POST" action="{{ url_for('main.add_meal_plan') }}" class="add-recipe-form">
+            <h1>{% if meal_plan %}Edit Meal Plan{% else %}Add Meal Plan{% endif %}</h1>
+            <p>{% if meal_plan %}Update the details below to edit your meal plan.{% else %}Fill out the details below to create a new meal plan.{% endif %}</p>
+            <form method="POST" action="{% if meal_plan %}{{ url_for('main.edit_meal_plan', meal_plan_id=meal_plan.id) }}{% else %}{{ url_for('main.add_meal_plan') }}{% endif %}" class="add-recipe-form">
                 <div class="form-group">
                     <label for="recipe_id">Recipe:</label>
                     <select id="recipe_id" name="recipe_id" required>
                         <option value="">Select a recipe</option>
                         {% for recipe in recipes %}
-                            <option value="{{ recipe.id }}">{{ recipe.title }}</option>
+                            <option value="{{ recipe.id }}" {% if meal_plan and meal_plan.recipe_id == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="meal_type">Meal Type:</label>
+                    <label for="meal_type">Meal Category:</label>
                     <select id="meal_type" name="meal_type" required>
-                        <option value="">Select a meal type</option>
-                        <option value="breakfast">Breakfast</option>
-                        <option value="lunch">Lunch</option>
-                        <option value="dinner">Dinner</option>
-                        <option value="dessert/snack">Dessert/Snack</option>
+                        <option value="">Select a meal category</option>
+                        <option value="breakfast" {% if meal_plan and meal_plan.meal_type == 'breakfast' %}selected{% endif %}>Breakfast</option>
+                        <option value="lunch" {% if meal_plan and meal_plan.meal_type == 'lunch' %}selected{% endif %}>Lunch</option>
+                        <option value="dinner" {% if meal_plan and meal_plan.meal_type == 'dinner' %}selected{% endif %}>Dinner</option>
+                        <option value="dessert/snack" {% if meal_plan and meal_plan.meal_type == 'dessert/snack' %}selected{% endif %}>Dessert/Snack</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="meal_date">Date</label>
-                    <input type="date" id="meal_date" name="meal_date" required>
+                    <input type="date" id="meal_date" name="meal_date" min="{{ today }}" value="{% if meal_plan %}{{ meal_plan.meal_date }}{% else %}{{ today }}{% endif %}" required>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-success" id="save-recipe-button">Save Meal Plan</button>
+                    <button type="submit" class="btn btn-success" id="save-recipe-button">{% if meal_plan %}Update Meal Plan{% else %}Save Meal Plan{% endif %}</button>
                     <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
                 </div>
             </form>
