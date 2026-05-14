@@ -549,6 +549,25 @@ def add_meal_plan():
 
     return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today())
 
+#View meal plan details route
+@main.route('/meal-plans/day/<meal_date>')
+@login_required
+def view_day_meal_plan(meal_date):
+
+    meal_plan = MealPlan.query.filter_by(meal_date=meal_date).first()
+    selected_date = datetime.strptime(meal_date, '%Y-%m-%d').date()
+    day_meals = MealPlan.query.filter_by(user_id=current_user.id, meal_date=selected_date).join(Recipe).order_by(MealPlan.meal_type).all()
+
+    if not meal_plan:
+        flash('Meal plan not found.', 'error')
+        return redirect(url_for('main.meal_plans'))
+
+    if meal_plan.user_id != current_user.id:
+        flash('You do not have permission to view this meal plan.', 'error')
+        return redirect(url_for('main.meal_plans'))
+    
+    return render_template('view_day_meal_plan.html', meal_plan=meal_plan, day_meals=day_meals, selected_date=selected_date)
+
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
     
