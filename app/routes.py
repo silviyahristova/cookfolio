@@ -489,6 +489,7 @@ def meal_plans():
 
     return render_template('meal_plans.html',week_days=week_days, start_of_week=start_of_week, end_of_week=end_of_week, previous_week=previous_week, next_week=next_week, meal_plans=meal_plans, has_recipes=has_recipes, has_meal_plans=has_meal_plans, today=today)
 
+# Add meal plan route with GET and POST methods
 @main.route('/meal-plans/add', methods=['GET', 'POST'])
 @login_required
 def add_meal_plan():
@@ -567,6 +568,42 @@ def view_day_meal_plan(meal_date):
         return redirect(url_for('main.meal_plans'))
     
     return render_template('view_day_meal_plan.html', meal_plan=meal_plan, day_meals=day_meals, selected_date=selected_date)
+
+# Edit meal plan route with GET and POST methods
+@main.route('/meal-plans/<int:meal_plan_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_meal_plan(meal_plan_id):
+    meal_plan = MealPlan.query.get_or_404(meal_plan_id)
+
+    if not meal_plan:
+        flash('Meal plan not found.', 'error')
+        return redirect(url_for('main.meal_plans'))
+
+    if meal_plan.user_id != current_user.id:
+        flash('You do not have permission to edit this meal plan.', 'error')
+        return redirect(url_for('main.meal_plans'))
+
+    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.title).all()
+
+    if request.method == 'POST':
+        recipe_id = request.form.get('recipe_id')
+        meal_type = request.form.get('meal_type')
+        meal_date = datetime.strptime(request.form.get('meal_date'), '%Y-%m-%d').date()
+
+        if meal_date < date.today():
+            flash('You can only set meal plans for today or future dates.', 'error')
+            return redirect(url_for('main.edit_meal_plan', meal_plan_id=meal_plan_id))
+
+        meal_plan.recipe_id = int(recipe_id)
+        meal_plan.meal_date = meal_date
+        meal_plan.meal_type = meal_type
+
+        db.session.commit()
+
+        flash('Meal plan updated successfully!', 'success')
+        return redirect(url_for('main.meal_plans'))
+
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today())
 
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
