@@ -1,0 +1,27 @@
+{%- extends "base.html" -%}
+
+{%- block title -%}Cookfolio - View Meal Plan{%- endblock -%}
+
+{%- block content -%}
+
+<section class="view-meal-plan-section">
+    <div class="view-meal-plan-container">
+        <div class="view-meal-plan-text">
+            {% if meal_plan.recipe.image_url %}
+                <img src="{{ meal_plan.recipe.image_url }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
+            {% elif meal_plan.recipe.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' ~ meal_plan.recipe.image_filename) }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
+            {% else %}
+                <picture>
+                    <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                    <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                    <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                </picture>
+            {% endif %}
+            <h1>{{ meal_plan.recipe.title }}</h1>
+            <p>{{ meal_plan.meal_type|capitalize }} on {{ meal_plan.meal_date.strftime('%A, %d %B %Y') }}</p>
+            <a href="{{ url_for('main.view_recipe', recipe_id=meal_plan.recipe.id) }}" class="btn btn-primary">View Recipe</a>
+            <a href="{{ url_for('main.edit_meal_plan', meal_plan_id=meal_plan.id) }}" class="btn btn-secondary">Edit Meal Plan</a>
+        </div>
+    </div>
+{% endblock %}
