@@ -494,6 +494,7 @@ def meal_plans():
 @login_required
 def add_meal_plan():
     recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.title).all()
+    selected_date = request.args.get('meal_date') or date.today()
 
     if not recipes:
         flash('You need to have at least one recipe to add a meal plan. Please add a recipe first.', 'error')
@@ -503,36 +504,37 @@ def add_meal_plan():
         recipe_id = request.form.get('recipe_id')
         meal_date = request.form.get('meal_date')
         meal_type = request.form.get('meal_type')
+        selected_date = meal_date
 
         if not recipe_id or not meal_date or not meal_type:
             flash('Please fill in all fields.', 'error')
-            return render_template('add_meal_plan.html', recipes=recipes)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, form_data=request.form)
 
         #convert meal_date string to date object and validate that it's not in the past
         try:
             meal_date = datetime.strptime(meal_date, '%Y-%m-%d').date()
         except ValueError:
             flash('You can only add meal plans for valid dates.', 'error')
-            return render_template('add_meal_plan.html', recipes=recipes)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, form_data=request.form)
 
         #prevent past date meal plans
         if meal_date < date.today():
             flash('You can only add meal plans for today or future dates.', 'error')
-            return render_template('add_meal_plan.html', recipes=recipes)
+            return render_template('meal_plan_form.html', recipes=recipes,meal_type=meal_type, selected_date=selected_date, form_data=request.form)
         
         # prevent duplicates meal category for the same day
         existing_meal_category = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, meal_type=meal_type).first()
 
         if existing_meal_category:
-            flash(f'You already have a {meal_type} planned for {meal_date}. Please edit it instead.', 'warning')
-            return redirect(url_for('main.add_meal_plan'))
+            flash(f'You already have a {meal_type} planned for {meal_date.strftime("%d.%m.%Y")}. Please edit it instead.', 'warning')
+            return render_template('meal_plan_form.html', recipes=recipes,meal_type=meal_type, selected_date=selected_date, form_data=request.form)
 
         #prevent same recipe been planned more than once on the same day
         existing_recipe_for_day = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, recipe_id=int(recipe_id)).first()
 
-        if existing_recipe_for_day:
-            flash(f'You already have this recipe planned for {meal_date}. Please choose a different recipe.', 'warning')
-            return redirect(url_for('main.add_meal_plan'))
+        if existing_recipe_for_day:        
+            flash(f'You already have this recipe planned for {meal_date.strftime("%d.%m.%Y")}. Please choose a different recipe.', 'warning')   
+            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, form_data=request.form)
 
         #create new meal plan and save to database
         new_meal_plan = MealPlan(
@@ -547,8 +549,7 @@ def add_meal_plan():
 
         flash('Meal plan added successfully!', 'success')
         return redirect(url_for('main.meal_plans'))
-
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today())
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, form_data=request.form)
 
 #View meal plan details route
 @main.route('/meal-plans/day/<meal_date>')
@@ -567,7 +568,7 @@ def view_day_meal_plan(meal_date):
         flash('You do not have permission to view this meal plan.', 'error')
         return redirect(url_for('main.meal_plans'))
     
-    return render_template('view_day_meal_plan.html', meal_plan=meal_plan, day_meals=day_meals, selected_date=selected_date)
+    return render_template('view_day_meal_plan.html', meal_plan=meal_plan, day_meals=day_meals)
 
 # Edit meal plan route with GET and POST methods
 @main.route('/meal-plans/<int:meal_plan_id>/edit', methods=['GET', 'POST'])
@@ -589,11 +590,37 @@ def edit_meal_plan(meal_plan_id):
         recipe_id = request.form.get('recipe_id')
         meal_type = request.form.get('meal_type')
         meal_date = datetime.strptime(request.form.get('meal_date'), '%Y-%m-%d').date()
+        selected_date = meal_plan.meal_date
 
+        # Validate form data
+        if not recipe_id or not meal_type or not meal_date:
+            flash('Please fill in all fields.', 'error')
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+        
+        try:
+            meal_date = datetime.strptime(request.form.get('meal_date'), '%Y-%m-%d').date()
+        except ValueError:
+            flash('You can only set meal plans for valid dates.', 'error')
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+        
         if meal_date < date.today():
             flash('You can only set meal plans for today or future dates.', 'error')
-            return redirect(url_for('main.edit_meal_plan', meal_plan_id=meal_plan_id))
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
 
+        # prevent duplicates meal category for the same day
+        existing_meal_category = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, meal_type=meal_type).first()
+        
+        if existing_meal_category and existing_meal_category.id != meal_plan_id:
+            flash(f'You already have a {meal_type} planned for {meal_date.strftime("%d.%m.%Y")}. Please choose a different meal type or edit the existing one.', 'warning')
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+        
+        #prevent same recipe been planned more than once on the same day
+        existing_recipe_for_day = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, recipe_id=int(recipe_id)).first()
+        
+        if existing_recipe_for_day and existing_recipe_for_day.id != meal_plan_id:
+            flash(f'You already have this recipe planned for {meal_date}. Please choose a different recipe.', 'warning')
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+        
         meal_plan.recipe_id = int(recipe_id)
         meal_plan.meal_date = meal_date
         meal_plan.meal_type = meal_type
@@ -603,7 +630,7 @@ def edit_meal_plan(meal_plan_id):
         flash('Meal plan updated successfully!', 'success')
         return redirect(url_for('main.meal_plans'))
 
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today())
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=meal_plan.meal_date, form_data=None)
 
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
