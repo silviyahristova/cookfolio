@@ -84,10 +84,10 @@
                         
                         <footer class="meal-day-footer">
                             {% if meals_for_day %}
-                                <a href="{{ url_for('main.view_day_meal_plan', meal_date=day) }}" class="btn btn-primary">{%if day < today %}View Past Meals{% else %}View Meals{% endif %}</a>
+                                <a href="{{ url_for('main.view_day_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-primary">{%if day < today %}View Past Meals{% else %}View Meals{% endif %}</a>
                             {%endif%}
                             {% if day >= today and not full_day_planned %}
-                                <a href="{{ url_for('main.add_meal_plan', meal_date=day) }}" class="btn btn-success">+ Add Meal</a>
+                                <a href="{{ url_for('main.add_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-success">+ Add Meal</a>
                             {% endif %}
                         </footer>
                     </article>
