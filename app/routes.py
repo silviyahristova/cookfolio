@@ -681,10 +681,6 @@ def edit_meal_plan(meal_plan_id):
 def delete_meal_plan(meal_plan_id):
     meal_plan = MealPlan.query.get_or_404(meal_plan_id)
     meal_date = meal_plan.meal_date
-    
-    if not meal_plan:
-        flash('Meal plan not found.', 'error')
-        return redirect(url_for('main.meal_plans'))
 
     if meal_plan.user_id != current_user.id:
         flash('You do not have permission to delete this meal plan.', 'error')
