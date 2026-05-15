@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             message.style.transition = 'opacity 0.5s ease';
             message.style.opacity = '0';
+            message.style.pointerEvents = 'none'; // Prevent interaction while fading out
+
+            // Remove the message from the DOM after the fade-out transition
+            setTimeout(function() {
+                message.remove();
+            }, 500); // Match the duration of the CSS transition
         }, 5000);
     });
 });
