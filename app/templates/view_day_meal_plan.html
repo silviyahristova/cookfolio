@@ -1,27 +1,92 @@
 {%- extends "base.html" -%}
 
-{%- block title -%}Cookfolio - View Meal Plan{%- endblock -%}
+{%- block title -%}Cookfolio - Day Meal Plan{%- endblock -%}
 
 {%- block content -%}
 
 <section class="view-meal-plan-section">
     <div class="view-meal-plan-container">
-        <div class="view-meal-plan-text">
-            {% if meal_plan.recipe.image_url %}
-                <img src="{{ meal_plan.recipe.image_url }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
-            {% elif meal_plan.recipe.image_filename %}
-                <img src="{{ url_for('static', filename='uploads/' ~ meal_plan.recipe.image_filename) }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
-            {% else %}
-                <picture>
-                    <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
-                    <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
-                    <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
-                </picture>
-            {% endif %}
-            <h1>{{ meal_plan.recipe.title }}</h1>
-            <p>{{ meal_plan.meal_type|capitalize }} on {{ meal_plan.meal_date.strftime('%A, %d %B %Y') }}</p>
-            <a href="{{ url_for('main.view_recipe', recipe_id=meal_plan.recipe.id) }}" class="btn btn-primary">View Recipe</a>
-            <a href="{{ url_for('main.edit_meal_plan', meal_plan_id=meal_plan.id) }}" class="btn btn-secondary">Edit Meal Plan</a>
+        <div class="view-meal-day-plan-header">
+            <div>
+                <h1>Meals for {{ selected_date.strftime('%A') }}</h1>
+                <p>{{ selected_date.strftime('%d.%m.%Y') }}</p>
+            </div>
+            <a href="{{ url_for('main.meal_plans') }}" class="card-link">Back to Meal Planner &gt;</a>
         </div>
+        {% if day_meals %}
+            <div class="view-meal-day-grid">
+                {% for meal_type in meal_types %}
+                    {% set meal = meals_by_type.get(meal_type) %}
+                    {% if meal %}
+                        <div class="view-meal-day-card">
+                            <div>
+                                <h2>{{ meal_type|title }}</h2>
+                            </div>
+                            <div class="view-meal-day-card-image">
+                                {% if meal.recipe.image_url %}
+                                    <img src="{{ meal.recipe.image_url }}" alt="{{ meal.recipe.title }} image" class="recipe-card-picture">
+                                {% elif meal.recipe.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{ meal.recipe.title }} image" class="recipe-card-picture">
+                                {% else %}
+                                    <picture>
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                        <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                        <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
+                                    </picture>
+                                {% endif %}
+                            </div>
+                            <div class="view-meal-day-card-content">
+                                <h2>{{ meal.recipe.title }}</h2>
+                                <div class="view-meal-day-card-meta">
+                                    <span>{{ meal.recipe.prep_time }} mins</span>
+                                    <span>{{ meal.recipe.servings }} servings</span>
+                                </div>
+                                <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                            </div>
+                            <div class="view-recipe-actions">
+                                <a href="{{ url_for('main.edit_meal_plan', meal_plan_id=meal.id) }}" class="btn btn-primary">Edit Meal</a>
+
+                                <div class="delete-section">
+                                <input type="checkbox" id="confirm-delete" hidden>
+                                <label for="confirm-delete" class="btn btn-secondary">Delete Meal</label>
+                                <div class="delete-confirmation">
+                                    <div class="delete-content" area-labelledby="delete-confirmation">
+                                        {% if meal.recipe.image_url %}
+                                            <img src="{{ meal.recipe.image_url }}" alt="{{meal.recipe.title}}" class="confirm-image">
+                                        {% elif meal.recipe.image_filename %}
+                                            <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{meal.recipe.title}}" class="confirm-image">
+                                        {% endif %}
+                                        <h1>{{ meal.recipe.title }}</h1>
+                                        <p>Are you sure you want to delete {{ meal.recipe.title }} for {{ selected_date.strftime("%d.%m.%Y") }}?</p>
+                                        <div class="confirm-actions">
+                                            <form method="POST" action="{{ url_for('main.delete_meal_plan', meal_plan_id=meal.id) }}">
+                                                <button type="submit" class="btn btn-primary">Yes, Delete</button>
+                                            </form>
+                                            <label for="confirm-delete" class="btn btn-secondary">Cancel</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    {% else%}
+                        <div class="view-meal-day-card empty-meal-day-card">
+                            <div class="empty-card-content">
+                                <h2>{{ meal_type|capitalize }}</h2>
+                                <p>No {{ meal_type.lower() }} planned for this day.</p>
+                                {% if selected_date >= today %}
+                                    <a href="{{ url_for('main.add_meal_plan', meal_date=selected_date, meal_type=meal_type) }}" class="btn btn-success">+ Add {{ meal_type|capitalize }}</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-dashboard my-5">
+                <p class="dashboard-empty-text">No meals planned for this day.</p>
+                <a href="{{ url_for('main.add_meal_plan', meal_date=selected_date) }}" class="btn btn-success">+ Add Meal</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
