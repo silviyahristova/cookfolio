@@ -6,7 +6,7 @@
 <section class="meal-plan-section">
     <div class="meal-plan-container">
         <!-- Empty Meal Plans Content -->
-        {% if not meal_plans %}
+        {% if not has_meal_plans %}
             <div class="dashboard-content">
                 <div class="dashboard-left">
                     <div class="dashboard-welcome-text">
@@ -45,40 +45,53 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
-
-        {% if meal_plans %}
+        {% else %}
+            <!-- Meal Plans Content -->
             <div class="meal-plan-text">
                 <h1>My Meal Plans</h1>
                 <p>Plan your meals for the week.</p>
+        
+                <div class="meal-week-navigation">
+                    <a href="{{ url_for('main.meal_plans', week_start=previous_week) }}" class="week-btn" >&lt; </a>
+                    <div class="meal-week-range">
+                        <span>{{ start_of_week.strftime('%d.%m.%Y') }} - {{ end_of_week.strftime('%d.%m.%Y') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.meal_plans', week_start=next_week) }}" class="week-btn"> &gt;</a>
+                </div>
             </div>
-            <div class="all-recipes-grid">
-                {% for meal_plan in meal_plans %}
-                    <div class="recipe-card">
-                        <div class="recipe-card-image">
-                            {% if meal_plan.recipe.image_url %}
-                                <img src="{{ meal_plan.recipe.image_url }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
-                            {% elif meal_plan.recipe.image_filename %}
-                                <img src="{{ url_for('static', filename='uploads/' ~ meal_plan.recipe.image_filename) }}" alt="{{ meal_plan.recipe.title }} image" class="recipe-card-picture">
+            <div class="meal-week-grid">
+                {% for day in week_days %}
+                    {% set meals_for_day = meal_plans|selectattr("meal_date", "equalto", day)|list %}
+                        {% set full_day_planned = meals_for_day|length >= 4 %}
+                    <article class="meal-day-card {% if day == today %}today-card{% endif %}">
+                        <header class="meal-day-header">
+                            <h2>{{ day.strftime("%A") }}</h2>
+                            <p>{{ day.strftime("%d.%m.%Y") }}</p>
+                        </header>
+                        
+                        <div class="meal-day-content">
+                            {% if meals_for_day %}
+                                {% for meal in meals_for_day %}
+                                    <div class="meal-category-row">
+                                        <span class="meal-category">{{ meal.meal_type|capitalize }}</span>
+                                        <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="meal-plan-link">{{ meal.recipe.title }} &gt;</a>
+                                    </div>
+                                {% endfor %}
                             {% else %}
-                                <picture>
-                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
-                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
-                                    <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="recipe-card-picture">
-                                </picture>
+                                <p class="no-meals-text">{% if day < today %}No meals were planned for this day.{% else %}No meals planned yet.{% endif %}</p>
                             {% endif %}
                         </div>
-                    <div class="recipe-card-content">
-                        <h2>{{ meal_plan.recipe.title }}</h2>
-                        <p>{{ meal_plan.meal_type|capitalize }} on {{ meal_plan.meal_date.strftime('%B %d, %Y') }}</p>
-                    </div>
+                        
+                        <footer class="meal-day-footer">
+                            {% if meals_for_day %}
+                                <a href="{{ url_for('main.view_day_meal_plan', meal_date=day) }}" class="btn btn-primary">{%if day < today %}View Past Meals{% else %}View Meals{% endif %}</a>
+                            {%endif%}
+                            {% if day >= today and not full_day_planned %}
+                                <a href="{{ url_for('main.add_meal_plan', meal_date=day) }}" class="btn btn-success">+ Add Meal</a>
+                            {% endif %}
+                        </footer>
+                    </article>
                 {% endfor %}
-            </div>
-        {% endif %}
-            
-        {% if meal_plans|length > 8 %}
-            <div class="view-all-link">
-                <a href="{{ url_for('main.meal_plans') }}" class="card-link">View All &gt;</a>
             </div>
         {% endif %}
     </div>
