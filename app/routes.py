@@ -12,6 +12,7 @@ from functools import wraps
 from sqlalchemy import join, or_
 from math import ceil
 from datetime import datetime, date, timedelta
+from collections import defaultdict
 
 main = Blueprint('main', __name__)
 
@@ -293,7 +294,24 @@ def dashboard():
         count = Recipe.query.filter_by(user_id=current_user.id, category_id=category.id).count()
         category_counts[category.id] = count
 
-    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images)
+    # Get meal plans for the current week
+    today = date.today()
+    week_start = today - timedelta(days=today.weekday())
+    week_end = week_start + timedelta(days=6)
+
+    # Join MealPlan with Recipe to get recipe details in the same query and order by meal date and meal type
+    meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= week_start, MealPlan.meal_date <= week_end).join(Recipe).order_by(MealPlan.meal_date.asc()).all()
+
+    # show today,tomorrow and day after tommorw on dashboard
+    preview_days = []
+
+    for i in range(3):
+        preview_date = today + timedelta(days=i)
+
+        day_meals = [meal_plan for meal_plan in meal_plans if meal_plan.meal_date == preview_date]
+        preview_days.append({"date": preview_date, "meals": day_meals})
+
+    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images, meal_plans=meal_plans, preview_days=preview_days, today=today)
 
 # View recipe details route
 @main.route('/recipes/<int:recipe_id>')
@@ -485,7 +503,21 @@ def meal_plans():
 
     meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= start_of_week, MealPlan.meal_date <= end_of_week).join(Recipe).order_by(MealPlan.meal_date, MealPlan.meal_type).all()
     has_recipes = Recipe.query.filter_by(user_id=current_user.id).first() is not None
-    has_meal_plans = MealPlan.query.filter_by(user_id=current_user.id).first() is not None
+    has_meal_plans = MealPlan.query.filter_by(user_id=current_user.id).first() is not None 
+
+    #meal category order 
+    meal_category_order = {
+        'Breakfast': 1,
+        'breakfast': 1,
+        'Lunch': 2,
+        'lunch': 2,
+        'Dinner': 3,
+        'dinner': 3,
+        'Dessert/Snack': 4,
+        'dessert/snack': 4
+    }
+
+    meal_plans = sorted(meal_plans, key=lambda mp: (mp.meal_date, meal_category_order.get(mp.meal_type, 99)))
 
     return render_template('meal_plans.html',week_days=week_days, start_of_week=start_of_week, end_of_week=end_of_week, previous_week=previous_week, next_week=next_week, meal_plans=meal_plans, has_recipes=has_recipes, has_meal_plans=has_meal_plans, today=today)
 
