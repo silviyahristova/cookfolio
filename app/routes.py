@@ -588,7 +588,7 @@ def add_meal_plan():
 @login_required
 def view_day_meal_plan(meal_date):
 
-    meal_plan = MealPlan.query.filter_by(meal_date=meal_date).first()
+    meal_plan = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date).first()
     selected_date = datetime.strptime(meal_date, '%Y-%m-%d').date()
     day_meals = MealPlan.query.filter_by(user_id=current_user.id, meal_date=selected_date).join(Recipe).order_by(MealPlan.meal_type).all()
 
