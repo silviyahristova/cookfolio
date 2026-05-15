@@ -393,7 +393,8 @@ header {
 .support-container,
 .error-container,
 .discover-container,
-.search-container {
+.search-container,
+.meal-plan-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -412,7 +413,8 @@ header {
 .support-text,
 .error-text,
 .discover-text,
-.search-text {
+.search-text,
+.meal-plan-text {
     text-align: center;
 }
 
@@ -715,7 +717,8 @@ header {
 /*Dashboard*/
 /*Empty dashboard*/
 
-.dashboard-section {
+.dashboard-section,
+.meal-plan-container {
     min-height: 80vh;
     display: flex;
     align-items: center;
@@ -745,7 +748,7 @@ header {
     overflow: hidden;
 }
 
-.dashboard-image .page-picture {
+.dashboard-image .page-picture{
     width: 100%;
     max-width: 380px;
     height: auto;
@@ -761,6 +764,11 @@ header {
 .dashboard-empty-text{
     color: #1a1919;
     font-weight: 700;
+}
+
+.empty-dashboard .page-picture {
+    width: 100%;
+    max-width: 380px;
 }
 
 .dashboard-buttons {
@@ -836,7 +844,6 @@ header {
     grid-template-columns: 1fr;
     gap: 1rem;
     width: 100%;
-    max-width: 1100px;
     margin: 0 auto;
 }
 
@@ -1403,6 +1410,141 @@ header {
     max-width: 150px;
 }
 
+/*Meal Planner page*/
+.meal-week-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.week-btn,
+.meal-week-range {
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    background-color: #fff;
+    text-decoration: none;
+    color: #1a1919;
+    font-weight: 600;
+}
+
+.meal-week-navigation a {
+    color: #1a1919;
+    text-decoration: none;
+}
+
+.meal-week-navigation a:hover {
+    color: #1a1919;
+    text-decoration: none;
+}
+
+.meal-week-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.meal-day-card {
+    background: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 16px;
+    padding: 1rem;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    min-width: 280px;
+}
+
+.today-card {
+    border: 2px solid #E53935;
+    background-color: #fff6f6;
+}
+
+.meal-day-header {
+    text-align: center;
+}
+
+.meal-day-header h2 {
+    color: #1a1919;
+    font-weight: 600;
+}
+
+.meal-day-header p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.meal-day-content span {
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.meal-plan-link {
+    color: #1a1919;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    text-align: left;
+}
+
+.meal-plan-link:hover {
+    color: #E53935;
+    text-decoration: none;
+}
+
+.meal-day-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.meal-day-footer .btn{
+    display: flex;
+}
+
+.meal-category-row {
+    margin-bottom: 1.3rem;
+    text-align: left;
+}
+
+.meal-category {
+    display: block;
+    color: #222;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.meal-recipe {
+    display: block;
+    color: #666;
+    font-size: 1rem;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+}
+
+.no-meal-text {
+    text-align: center;
+    color: #1a1919;
+    font-size: 1rem;
+    margin-top: 3rem;
+}
+
+.meal-day-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
 /*Error page*/
 
 .error-image {
@@ -1454,6 +1596,38 @@ header {
 /*Media Queries*/
 
 /*Mobile*/
+@media (min-width: 375px) {
+    .meal-day-card {
+        min-width: 330px;
+    }
+}
+
+@media (min-width: 576px) {
+    .category-card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .all-recipes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .meal-week-grid {
+        display: grid;
+        grid-template-columns: repeat(2 , 1fr);
+        gap: 1.5rem;
+    }
+
+    .meal-day-card {
+        min-height: 400px;
+        min-width: auto;
+    }
+
+    .meal-day-card:nth-child(7) {
+        transform: translateX(50%);
+    }
+}
 
 @media (max-width: 768px) {
     .logo {
@@ -1623,6 +1797,16 @@ header {
     .support-container{
         max-width: 500px;
     }
+
+    .meal-week-grid {
+        display: grid;
+        grid-template-columns: repeat(2 , 1fr);
+        gap: 1.5rem;
+    }
+
+    .meal-day-card {
+        min-height: 400px;
+    }
 }
 
 @media (max-width: 992px) {
@@ -1751,7 +1935,8 @@ header {
     .register-image img,
     .login-image img,
     .support-image img,
-    .error-image img {
+    .error-image img,
+    .empty-dashboard img {
         width: 100%;
         height: 100%;
         object-fit: contain;
@@ -1842,6 +2027,11 @@ header {
         transform-origin: center;
     }
 
+    .empty-dashboard .page-picture {
+        width: 100%;
+        display: inherit;
+    }
+
     .dashboard-buttons {
         align-items: center;
     }
@@ -1869,7 +2059,7 @@ header {
     }
 
     .dashboard-main-grid{
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr 1fr;
         align-items: stretch;
     }
 
@@ -2079,6 +2269,32 @@ header {
 
     .error-text a {
         margin: 2rem;
+    }
+
+    .meal-week-grid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .meal-day-card {
+        grid-column: span 2;
+        min-height: 600px;
+        min-width: 220px;
+    }
+
+    .meal-day-card:nth-child(5) {
+        grid-column: 2/ span 2;
+    }
+
+    .meal-day-card:nth-child(6) {
+        grid-column: 4/ span 2;
+    }
+
+    .meal-day-card:nth-child(7) {
+        grid-column: 6/ span 2;
+        transform: none;
     }
 }
 
