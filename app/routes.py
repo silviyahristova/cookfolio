@@ -527,6 +527,7 @@ def meal_plans():
 def add_meal_plan():
     recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.title).all()
     selected_date = request.args.get('meal_date') or date.today()
+    selected_meal_type = request.args.get('meal_type')
 
     if not recipes:
         flash('You need to have at least one recipe to add a meal plan. Please add a recipe first.', 'error')
@@ -580,8 +581,9 @@ def add_meal_plan():
         db.session.commit()
 
         flash('Meal plan added successfully!', 'success')
-        return redirect(url_for('main.meal_plans'))
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, form_data=request.form)
+        return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date.strftime('%Y-%m-%d')))
+    
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, selected_meal_type=selected_meal_type, form_data=request.form)
 
 #View meal plan details route
 @main.route('/meal-plans/day/<meal_date>')
@@ -600,7 +602,16 @@ def view_day_meal_plan(meal_date):
         flash('You do not have permission to view this meal plan.', 'error')
         return redirect(url_for('main.meal_plans'))
     
-    return render_template('view_day_meal_plan.html', meal_plan=meal_plan, day_meals=day_meals)
+    # Join MealPlan with Recipe to get recipe details in the same query and order by meal type
+    day_meals = MealPlan.query.filter_by(user_id=current_user.id, meal_date=selected_date).join(Recipe).order_by(MealPlan.meal_type).all()
+    day_meals = sorted(day_meals, key=lambda meal_plan: {'breakfast': 1, 'lunch': 2, 'dinner': 3, 'dessert/snack': 4}.get(meal_plan.meal_type, 99))
+
+    #meal category order for missing categories in the day meal plan
+    meal_types = ["breakfast", "lunch", "dinner", "dessert/snack"]
+
+    meals_by_type = {meal.meal_type.lower(): meal for meal in day_meals}
+
+    return render_template('view_day_meal_plan.html', meal_plan=meal_plan, day_meals=day_meals, selected_date=selected_date, meals_by_type=meals_by_type, meal_types=meal_types, today=date.today())
 
 # Edit meal plan route with GET and POST methods
 @main.route('/meal-plans/<int:meal_plan_id>/edit', methods=['GET', 'POST'])
@@ -660,9 +671,30 @@ def edit_meal_plan(meal_plan_id):
         db.session.commit()
 
         flash('Meal plan updated successfully!', 'success')
-        return redirect(url_for('main.meal_plans'))
+        return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date.strftime('%Y-%m-%d')))
 
     return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=meal_plan.meal_date, form_data=None)
+
+# Delete meal plan route
+@main.route('/meal-plans/<int:meal_plan_id>/delete', methods=['POST'])
+@login_required
+def delete_meal_plan(meal_plan_id):
+    meal_plan = MealPlan.query.get_or_404(meal_plan_id)
+    meal_date = meal_plan.meal_date
+    
+    if not meal_plan:
+        flash('Meal plan not found.', 'error')
+        return redirect(url_for('main.meal_plans'))
+
+    if meal_plan.user_id != current_user.id:
+        flash('You do not have permission to delete this meal plan.', 'error')
+        return redirect(url_for('main.meal_plans'))
+
+    db.session.delete(meal_plan)
+    db.session.commit()
+
+    flash('Meal plan deleted successfully!', 'success')
+    return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date.strftime('%Y-%m-%d')))
 
 #Helper function to search recipes from TheMealDB and Spoonacular APIs by title, ingredients and instructions
 def search_api_recipes(search_query, api_page=1):
