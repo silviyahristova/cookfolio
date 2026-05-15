@@ -73,8 +73,10 @@
                 <!--show latest recipe and view all recipe link-->
                 <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
-                        <h2>My Recipes</h2>
-                        <p>You have {{ recipes|length }} recipes.</p>
+                        <div>
+                            <h2>My Recipes</h2>
+                            <p>You have {{ recipes|length }} recipes.</p>
+                        </div>
                         <a href="{{ url_for('main.my_recipes') }}" class="card-link">View All Recipes &gt;</a>
                     </div>
                         
@@ -115,11 +117,13 @@
                 <!--meal planner-->
                 <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
-                        <h2>My Meal Planner</h2>
-                        <p>You have {{ meal_plans|length }} meals planned this week.</p>
+                        <div>
+                            <h2>My Meal Planner</h2>
+                            <p>You have {{ meal_plans|length }} meals planned this week.</p>
+                        </div>
                         <a href="{{ url_for('main.meal_plans') }}" class="card-link">View All Meal Plans &gt;</a>
                     </div>
-                    {% if preview_days %}
+                    {% if meal_plans|length > 0 %}
                         <div class="meal-plan-preview-grid">
                             {% for day in preview_days %}
                                 <article class="meal-plan-preview-card">
@@ -138,14 +142,9 @@
                                             </div>
                                         {% endfor %}
                                     {% else %}
-                                        <div class="empty-dashboard">
-                                            <picture>
-                                                <source srcset="{{ url_for('static', filename='images/no-recipes-found.webp') }}" type="image/webp">
-                                                <source srcset="{{ url_for('static', filename='images/no-recipes-found.png') }}" type="image/png">
-                                                <img src="{{ url_for('static', filename='images/no-recipes-found.png') }}" alt="Cookfolio no recipes Image" class="page-picture">
-                                            </picture>
-                                            <p class="dashboard-empty-text">You haven't planned any meals for today.</p>
-                                            <a href="{{ url_for('main.add_meal_plan') }}" class="btn btn-success">+ Add Meal</a>
+                                        <div class="empty-dashboard my-5">
+                                            <p class="dashboard-empty-text">You haven't planned<br> any meals for today.</p>
+                                            <a href="{{ url_for('main.add_meal_plan', meal_date=day.date) }}" class="btn btn-success">+ Add Meal</a>
                                         </div>
                                     {% endif %}
                                 </article>

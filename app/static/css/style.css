@@ -723,6 +723,7 @@ header {
     display: flex;
     align-items: center;
     padding: 2rem 1rem 0 1rem;
+    justify-content: center;
 }
 
 .dashboard-container {
@@ -768,7 +769,7 @@ header {
 
 .empty-dashboard .page-picture {
     width: 100%;
-    max-width: 380px;
+    max-width: 300px;
 }
 
 .dashboard-buttons {
@@ -971,7 +972,6 @@ header {
     display: flex;
     flex-direction: column;
     text-align: center;
-    transition: 0.2s;
     width: 100%;
 }
 
@@ -2162,9 +2162,25 @@ header {
         margin-bottom: 2rem;
     }
 
-    .dashboard-main-grid{
-        grid-template-columns: 1fr 1fr;
-        align-items: stretch;
+    .category-card-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .meal-plan-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .meal-plan-preview-card:last-child {
+        transform: none; 
+    }
+
+    .dashboard-section-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .recipe-card{
