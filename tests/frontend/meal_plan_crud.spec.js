@@ -183,3 +183,34 @@ test('cancel edit returns user to meal plan page', async ({page}) => {
 
     await expect(page).toHaveURL(/\/meal-plans\/\d+\/edit/); // Check that we are back on the meal plans page
 });
+
+test('delete meal plan removes it from meal plan page', async ({page}) => {
+    const uniqueID = Date.now().toString().slice(-6);
+    const username = `testuser${uniqueID}`;
+    const email = `${username}@example.com`;
+    const password = 'password123';
+
+    await registerUser(page, username, email, password);
+    await loginUser(page, username, password);
+
+    // Create a recipe to use in the meal plan
+    const firstRecipeTitle = await createRecipeForMealPlan(page);
+
+    // Add a meal plan
+    const mealPlanDetails = await addMealPlan(page, {mealType: 'dinner', recipe: firstRecipeTitle});
+
+    // Check that the meal plan appears on the meal plan page with correct details
+    await expect(page.locator('.view-meal-day-card', {hasText: firstRecipeTitle})).toBeVisible();
+
+    const mealCard = page.locator('.view-meal-day-card', {hasText: firstRecipeTitle});
+    // Delete the meal plan
+    await page.once('dialog', async dialog => {
+        expect(dialog.message()).toMatch(/are you sure you want to delete/i);
+        await dialog.accept();
+    });
+
+    await mealCard.getByText('Delete Meal').click(); // Click the Delete button for the meal plan
+    await page.getByRole('button', {name: /yes,\s*delete/i}).click(); // Confirm deletion in the dialog
+    // Check that the meal plan is removed from the meal plan page
+    await expect(page.locator('.view-meal-day-card', {hasText: firstRecipeTitle})).not.toBeVisible();
+});
