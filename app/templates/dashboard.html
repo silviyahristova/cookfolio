@@ -123,7 +123,7 @@
                         </div>
                         <a href="{{ url_for('main.meal_plans') }}" class="card-link">View All Meal Plans &gt;</a>
                     </div>
-                    {% if meal_plans|length > 0 %}
+                    {% if weekly_meal_plans|length > 0 %}
                         <div class="meal-plan-preview-grid">
                             {% for day in preview_days %}
                                 <article class="meal-plan-preview-card">
