@@ -299,19 +299,26 @@ def dashboard():
     week_start = today - timedelta(days=today.weekday())
     week_end = week_start + timedelta(days=6)
 
+    # Dashboard preview days
+    preview_start = today
+    preview_end = today + timedelta(days=2)
+
     # Join MealPlan with Recipe to get recipe details in the same query and order by meal date and meal type
-    meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= week_start, MealPlan.meal_date <= week_end).join(Recipe).order_by(MealPlan.meal_date.asc()).all()
+    weekly_meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= week_start, MealPlan.meal_date <= week_end).join(Recipe).order_by(MealPlan.meal_date.asc()).all()
+
+    # Get meal plans for the preview days and order by meal date and meal type
+    meal_plans = MealPlan.query.filter(MealPlan.user_id == current_user.id, MealPlan.meal_date >= preview_start, MealPlan.meal_date <= preview_end).join(Recipe).order_by(MealPlan.meal_date.asc()).all()
 
     # show today,tomorrow and day after tommorw on dashboard
     preview_days = []
-
+    
     for i in range(3):
         preview_date = today + timedelta(days=i)
 
         day_meals = [meal_plan for meal_plan in meal_plans if meal_plan.meal_date == preview_date]
         preview_days.append({"date": preview_date, "meals": day_meals})
 
-    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images, meal_plans=meal_plans, preview_days=preview_days, today=today, timedelta=timedelta)
+    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images, meal_plans=meal_plans, weekly_meal_plans=weekly_meal_plans, preview_days=preview_days, today=today, timedelta=timedelta)
 
 # View recipe details route
 @main.route('/recipes/<int:recipe_id>')
