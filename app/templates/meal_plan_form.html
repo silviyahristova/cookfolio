@@ -14,7 +14,7 @@
                     <select id="recipe_id" name="recipe_id" required>
                         <option value="">Select a recipe</option>
                         {% for recipe in recipes %}
-                            <option value="{{ recipe.id }}" {% if form_data and form_data.get('recipe_id') == recipe.id|string %}selected{% elif not form_data and meal_plan and meal_plan.recipe_id == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
+                            <option value="{{ recipe.id }}" {% if form_data and form_data.get('recipe_id') == recipe.id|string %}selected{% elif selected_recipe_id and selected_recipe_id|int == recipe.id %}selected{% elif not form_data and meal_plan and meal_plan.recipe_id == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
                         {% endfor %}
                     </select>
                 </div>
