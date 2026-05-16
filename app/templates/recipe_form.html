@@ -61,7 +61,7 @@
 
                         <div class="form-actions">
                             <button type="submit" class="btn btn-success" id="save-recipe-button"> {% if form_type == 'edit' %}Update Recipe{% else %}Save Recipe{% endif %}</button>
-                            <a href="{% if form_type == 'edit' %}{{ url_for('main.view_recipe', recipe_id=recipe.id) }}{% else %}{{ url_for('main.dashboard') }}{% endif %}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
+                            <a href="{{ return_url or url_for('main.dashboard') }}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
                         </div>
                     </div>
                 </div>

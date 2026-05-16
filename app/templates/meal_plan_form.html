@@ -34,7 +34,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-success" id="save-recipe-button">{% if meal_plan %}Update Meal Plan{% else %}Save Meal Plan{% endif %}</button>
-                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
+                    <a href="{{return_url or url_for('main.meal_plans') }}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
                 </div>
             </form>
         </div>
