@@ -311,7 +311,7 @@ def dashboard():
         day_meals = [meal_plan for meal_plan in meal_plans if meal_plan.meal_date == preview_date]
         preview_days.append({"date": preview_date, "meals": day_meals})
 
-    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images, meal_plans=meal_plans, preview_days=preview_days, today=today)
+    return render_template('dashboard.html', recipes=recipes, categories=categories, category_counts=category_counts, category_images=category_images, meal_plans=meal_plans, preview_days=preview_days, today=today, timedelta=timedelta)
 
 # View recipe details route
 @main.route('/recipes/<int:recipe_id>')
@@ -528,6 +528,7 @@ def add_meal_plan():
     recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.title).all()
     selected_date = request.args.get('meal_date') or date.today()
     selected_meal_type = request.args.get('meal_type')
+    selected_recipe_id = request.args.get('recipe_id')
 
     if not recipes:
         flash('You need to have at least one recipe to add a meal plan. Please add a recipe first.', 'error')
@@ -583,7 +584,7 @@ def add_meal_plan():
         flash('Meal plan added successfully!', 'success')
         return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date.strftime('%Y-%m-%d')))
     
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, selected_meal_type=selected_meal_type, form_data=request.form)
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, selected_meal_type=selected_meal_type, selected_recipe_id=selected_recipe_id, form_data=request.form)
 
 #View meal plan details route
 @main.route('/meal-plans/day/<meal_date>')
@@ -896,6 +897,7 @@ def view_discover_recipe(meal_id):
 def import_discover_recipe(meal_id):
     api_url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}"
     response = requests.get(api_url)
+    redirect_to_planner = request.args.get('planner')
 
     if response.status_code != 200:
         flash('Failed to fetch recipe details from API.', 'error')
@@ -913,8 +915,14 @@ def import_discover_recipe(meal_id):
     # Check if the recipe already exists in the user's collection based on title
     existing_recipe = Recipe.query.filter_by(user_id=current_user.id, title=meal.get('strMeal')).first()
     if existing_recipe:
+
+        # if user want to add recipe to planner before importing, redirect to planner page, otherwise redirect to recipe details page
+        if redirect_to_planner:
+            return redirect(url_for('main.add_meal_plan', recipe_id=existing_recipe.id))
+        
+        #else after importing, stay on the API recipe details page
         flash('You have already imported this recipe.', 'warning')
-        return redirect(url_for('main.view_recipe', recipe_id=existing_recipe.id))
+        return redirect(url_for('main.view_recipe', meal_id=meal_id))
     
     ingredients = []
     for i in range(1, 21):
@@ -969,8 +977,12 @@ def import_discover_recipe(meal_id):
     db.session.add(imported_recipe)
     db.session.commit()
 
+    # if user want to add recipe to planner before importing, redirect to planner page, otherwise redirect to recipe details page
+    if redirect_to_planner:
+        return redirect(url_for('main.add_meal_plan', recipe_id=imported_recipe.id))
+
     flash('Recipe imported successfully!', 'success')
-    return redirect(url_for('main.view_recipe', recipe_id=imported_recipe.id))
+    return redirect(url_for('main.view_discover_recipe', meal_id=meal_id))
 
 # View Spoonacular API discover recipe details route
 @main.route('/discover/spoonacular/<int:recipe_id>')
@@ -1015,6 +1027,7 @@ def view_spoonacular_recipe(recipe_id):
 def import_spoonacular_recipe(recipe_id):
     api_url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={os.getenv('SPOONACULAR_API_KEY')}"
     response = requests.get(api_url)
+    redirect_to_planner = request.args.get('planner')
 
     if response.status_code != 200:
         flash('Failed to fetch recipe details from API.', 'error')
@@ -1031,7 +1044,13 @@ def import_spoonacular_recipe(recipe_id):
     existing_recipe = Recipe.query.filter_by(user_id=current_user.id, title=data.get('title')).first()
     if existing_recipe:
         flash('You have already imported this recipe.', 'warning')
-        return redirect(url_for('main.view_recipe', recipe_id=existing_recipe.id))
+
+        # if user want to add recipe to planner before importing, redirect to planner page, otherwise redirect to recipe details page
+        if redirect_to_planner:
+            return redirect(url_for('main.add_meal_plan', recipe_id=existing_recipe.id))
+        
+        #else after importing, stay on the API recipe details page
+        return redirect(url_for('main.view_spoonacular_recipe', recipe_id=recipe_id))
     
     #Map API category to user's category, if not found assign to first category
     category_mapping = {
@@ -1058,8 +1077,12 @@ def import_spoonacular_recipe(recipe_id):
     db.session.add(imported_recipe)
     db.session.commit()
 
+    # if user want to add recipe to planner before importing, redirect to planner page, otherwise redirect to recipe details page
+    if redirect_to_planner:
+        return redirect(url_for('main.add_meal_plan', recipe_id=imported_recipe.id))
+
     flash('Recipe imported successfully!', 'success')
-    return redirect(url_for('main.view_recipe', recipe_id=imported_recipe.id))
+    return redirect(url_for('main.view_spoonacular_recipe', recipe_id=recipe_id))
 
 # Support route with GET and POST methods
 @main.route('/support', methods=['GET', 'POST'])
