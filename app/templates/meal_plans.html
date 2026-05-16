@@ -73,7 +73,13 @@
                             {% if meals_for_day %}
                                 {% for meal in meals_for_day %}
                                     <div class="meal-category-row">
-                                        <span class="meal-category">{{ meal.meal_type|capitalize }}</span>
+                                        <span class="meal-category">
+                                            {% if meal.meal_type == 'breakfast' %}<i class="fa-solid fa-sun"></i>
+                                            {% elif meal.meal_type == 'lunch' %}<i class="fa-solid fa-bowl-rice"></i>
+                                            {% elif meal.meal_type == 'dinner' %}<i class="fa-solid fa-utensils"></i>
+                                            {% else %}<i class="fa-solid fa-cake-candles"></i>
+                                            {% endif %}
+                                            {{ meal.meal_type|capitalize }}</span>
                                         <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="meal-plan-link">{{ meal.recipe.title }} &gt;</a>
                                     </div>
                                 {% endfor %}
