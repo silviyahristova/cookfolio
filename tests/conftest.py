@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app import create_app, db
-from app.models import User, Category, Recipe
+from app.models import User, Category, Recipe, MealPlan
+from datetime import datetime, timedelta
 
 # Fixture to create a test app with an in-memory database
 @pytest.fixture
@@ -81,6 +82,21 @@ def logged_in_client(client, test_user):
         'password': 'testpassword'
     }, follow_redirects=True)
     return client
+
+#fixture to create a meal plan for testing the meal plan page
+@pytest.fixture
+def test_meal_plan(db_session, test_user, test_recipe):
+
+    meal_plan = MealPlan(
+        meal_date=datetime.now().date() + timedelta(days=1),
+        meal_type='Dinner',
+        user_id=test_user,
+        recipe_id=test_recipe
+    )
+    db.session.add(meal_plan)
+    db.session.commit()
+        
+    return meal_plan.id
 
 # Fixture to create a test client for making requests to the app
 @pytest.fixture
