@@ -996,14 +996,25 @@ header {
     font-size: 1rem;
 }
 
+.meal-plan-preview-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    justify-content: center;
+}
+
 .meal-plan-preview-content {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: left;
     gap: 0.5rem;
-    margin-top: 1rem;
     padding: 0 1rem ;
+}
+
+.meal-plan-preview-footer {
+    margin-top: 1rem;
 }
 
 .meal-plan-preview-recipe {
@@ -1459,7 +1470,8 @@ header {
     margin : 0;
 }
 
-#confirm-delete:checked ~ .delete-confirmation {
+#confirm-delete:checked ~ .delete-confirmation,
+.delete-section input:checked ~ .delete-confirmation {
     display: flex;
 }
 
@@ -1762,7 +1774,7 @@ header {
     }
 
     .meal-day-card {
-        min-height: 400px;
+        min-height: 600px;
         min-width: auto;
     }
 
@@ -1966,7 +1978,7 @@ header {
     }
 
     .meal-day-card {
-        min-height: 400px;
+        min-height: 600px;
     }
 }
 
