@@ -47,26 +47,26 @@
                                 <a href="{{ url_for('main.edit_meal_plan', meal_plan_id=meal.id) }}" class="btn btn-primary">Edit Meal</a>
 
                                 <div class="delete-section">
-                                <input type="checkbox" id="confirm-delete" hidden>
-                                <label for="confirm-delete" class="btn btn-secondary">Delete Meal</label>
-                                <div class="delete-confirmation">
-                                    <div class="delete-content" area-labelledby="delete-confirmation">
-                                        {% if meal.recipe.image_url %}
-                                            <img src="{{ meal.recipe.image_url }}" alt="{{meal.recipe.title}}" class="confirm-image">
-                                        {% elif meal.recipe.image_filename %}
-                                            <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{meal.recipe.title}}" class="confirm-image">
-                                        {% endif %}
-                                        <h1>{{ meal.recipe.title }}</h1>
-                                        <p>Are you sure you want to delete {{ meal.recipe.title }} for {{ selected_date.strftime("%d.%m.%Y") }}?</p>
-                                        <div class="confirm-actions">
-                                            <form method="POST" action="{{ url_for('main.delete_meal_plan', meal_plan_id=meal.id) }}">
-                                                <button type="submit" class="btn btn-primary">Yes, Delete</button>
-                                            </form>
-                                            <label for="confirm-delete" class="btn btn-secondary">Cancel</label>
+                                    <input type="checkbox" id="confirm-delete-{{ meal.id }}" hidden>
+                                    <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Delete Meal</label>
+                                    <div class="delete-confirmation">
+                                        <div class="delete-content" area-labelledby="delete-confirmation">
+                                            {% if meal.recipe.image_url %}
+                                                <img src="{{ meal.recipe.image_url }}" alt="{{meal.recipe.title}}" class="confirm-image">
+                                            {% elif meal.recipe.image_filename %}
+                                                <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{meal.recipe.title}}" class="confirm-image">
+                                            {% endif %}
+                                            <h1>{{ meal.recipe.title }}</h1>
+                                            <p>Are you sure you want to delete {{ meal.recipe.title }} for {{ selected_date.strftime("%d.%m.%Y") }}?</p>
+                                            <div class="confirm-actions">
+                                                <form method="POST" action="{{ url_for('main.delete_meal_plan', meal_plan_id=meal.id) }}">
+                                                    <button type="submit" class="btn btn-primary">Yes, Delete</button>
+                                                </form>
+                                                <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Cancel</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     {% else%}
