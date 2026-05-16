@@ -191,10 +191,13 @@ def logout():
 @main.route('/add-recipe', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
+
+    return_url = request.args.get('next') or request.referrer
+
     # If GET request, show the add recipe form with category options by orders
     if request.method == 'GET':
         categories = Category.query.order_by(Category.order).all()
-        return render_template('recipe_form.html', form_type='add', categories=categories)
+        return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url)
 
     # If POST request, process the form submission
     if request.method == 'POST':
@@ -212,26 +215,26 @@ def add_recipe():
         # Validate form data
         if not title or not category_id or not ingredients or not instructions or not prep_time or not servings :
             flash('Please fill in all required fields.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url, form_data=request.form)
         
         if len(title) < 3 or len(title) > 100:
             flash('Title must be between 3 and 100 characters long.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url, form_data=request.form)
         
         try:
             prep_time = int(prep_time)
             servings = int(servings)
         except ValueError:
             flash('Prep time and servings must be valid numbers.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url, form_data=request.form)
         
         if prep_time < 1 or prep_time > 1440:
             flash('Prep time must be between 1 and 1440 minutes.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url, form_data=request.form)
         
         if servings < 1 or servings > 100:
             flash('Servings must be between 1 and 100.', 'error')
-            return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url, form_data=request.form)
         
         # Handle file upload
         image_filename = None
@@ -246,7 +249,7 @@ def add_recipe():
                 image_filename = filename
             else:
                 flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
-                return render_template('recipe_form.html', form_type='add', categories=categories, form_data=request.form)
+                return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url, form_data=request.form)
 
         # Create a new recipe and add to the database
         new_recipe = Recipe(
@@ -265,9 +268,9 @@ def add_recipe():
         db.session.commit()
 
         flash('Recipe added successfully!', 'success')
-        return redirect(url_for('main.view_recipe', recipe_id=new_recipe.id))
+        return redirect(url_for('main.view_recipe', recipe_id=new_recipe.id, next=return_url))
 
-    return render_template('recipe_form.html', form_type='add', categories=categories)
+    return render_template('recipe_form.html', form_type='add', categories=categories, return_url=return_url)
 
 # Dashboard route to show user's recipes and categories with counts
 @main.route('/dashboard')
@@ -341,6 +344,8 @@ def view_recipe(recipe_id):
 @login_required
 def edit_recipe(recipe_id):
     recipe = db.session.get(Recipe, recipe_id)
+    return_url = request.args.get('next') or url_for('main.view_recipe', recipe_id=recipe_id)
+    
     if not recipe:
         flash('Recipe not found.', 'error')
         return redirect(url_for('main.dashboard'))
@@ -360,30 +365,30 @@ def edit_recipe(recipe_id):
         servings = request.form.get('servings', '').strip()
 
         photo = request.files.get('photo')
-        
+
         # Validate form data
         if not title or not category_id or not ingredients or not instructions or not prep_time or not servings :
             flash('Please fill in all required fields.', 'error')
-            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url, form_data=request.form)
         
         if len(title) < 3 or len(title) > 100:
             flash('Title must be between 3 and 100 characters long.', 'error')
-            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url, form_data=request.form)
         
         try:
             prep_time = int(prep_time)
             servings = int(servings)
         except ValueError:
             flash('Prep time and servings must be valid numbers.', 'error')
-            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url, form_data=request.form)
         
         if prep_time < 1 or prep_time > 1440:
             flash('Prep time must be between 1 and 1440 minutes.', 'error')
-            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url, form_data=request.form)
         
         if servings < 1 or servings > 100:
             flash('Servings must be between 1 and 100.', 'error')
-            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+            return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url, form_data=request.form)
         
         # Update recipe details
         recipe.title = title
@@ -412,14 +417,14 @@ def edit_recipe(recipe_id):
                 recipe.image_filename = filename
             else:
                 flash('Invalid file type. Allowed types are png, jpg, jpeg, webp.', 'error')
-                return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, form_data=request.form)
+                return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url, form_data=request.form)
 
         db.session.commit() 
 
         flash('Recipe updated successfully!', 'success')
-        return redirect(url_for('main.view_recipe', recipe_id=recipe_id))
+        return redirect(url_for('main.view_recipe', recipe_id=recipe_id, next=return_url))
     
-    return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories)
+    return render_template('recipe_form.html', form_type='edit', recipe=recipe, categories=categories, return_url=return_url)
 
 # Delete recipe route
 @main.route('/recipes/<int:recipe_id>/delete', methods=['POST'])
@@ -536,6 +541,7 @@ def add_meal_plan():
     selected_date = request.args.get('meal_date') or date.today()
     selected_meal_type = request.args.get('meal_type')
     selected_recipe_id = request.args.get('recipe_id')
+    return_url = request.args.get('next') or url_for('main.meal_plans')
 
     if not recipes:
         flash('You need to have at least one recipe to add a meal plan. Please add a recipe first.', 'error')
@@ -549,33 +555,33 @@ def add_meal_plan():
 
         if not recipe_id or not meal_date or not meal_type:
             flash('Please fill in all fields.', 'error')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, return_url=return_url, form_data=request.form)
 
         #convert meal_date string to date object and validate that it's not in the past
         try:
             meal_date = datetime.strptime(meal_date, '%Y-%m-%d').date()
         except ValueError:
             flash('You can only add meal plans for valid dates.', 'error')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, return_url=return_url, form_data=request.form)
 
         #prevent past date meal plans
         if meal_date < date.today():
             flash('You can only add meal plans for today or future dates.', 'error')
-            return render_template('meal_plan_form.html', recipes=recipes,meal_type=meal_type, selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes,meal_type=meal_type, selected_date=selected_date, return_url=return_url, form_data=request.form)
         
         # prevent duplicates meal category for the same day
         existing_meal_category = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, meal_type=meal_type).first()
 
         if existing_meal_category:
             flash(f'You already have a {meal_type} planned for {meal_date.strftime("%d.%m.%Y")}. Please edit it instead.', 'warning')
-            return render_template('meal_plan_form.html', recipes=recipes,meal_type=meal_type, selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes,meal_type=meal_type, selected_date=selected_date, return_url=return_url, form_data=request.form)
 
         #prevent same recipe been planned more than once on the same day
         existing_recipe_for_day = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, recipe_id=int(recipe_id)).first()
 
         if existing_recipe_for_day:        
             flash(f'You already have this recipe planned for {meal_date.strftime("%d.%m.%Y")}. Please choose a different recipe.', 'warning')   
-            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_type=meal_type, selected_date=selected_date, return_url=return_url, form_data=request.form)
 
         #create new meal plan and save to database
         new_meal_plan = MealPlan(
@@ -591,7 +597,7 @@ def add_meal_plan():
         flash('Meal plan added successfully!', 'success')
         return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date.strftime('%Y-%m-%d')))
     
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, selected_meal_type=selected_meal_type, selected_recipe_id=selected_recipe_id, form_data=request.form)
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=None, today=date.today(), selected_date=selected_date, selected_meal_type=selected_meal_type, selected_recipe_id=selected_recipe_id, return_url=return_url, form_data=request.form)
 
 #View meal plan details route
 @main.route('/meal-plans/day/<meal_date>')
@@ -626,6 +632,7 @@ def view_day_meal_plan(meal_date):
 @login_required
 def edit_meal_plan(meal_plan_id):
     meal_plan = MealPlan.query.get_or_404(meal_plan_id)
+    return_url = request.args.get('next') or url_for('main.view_day_meal_plan', meal_date=meal_plan.meal_date.strftime('%Y-%m-%d'))
 
     if not meal_plan:
         flash('Meal plan not found.', 'error')
@@ -646,31 +653,31 @@ def edit_meal_plan(meal_plan_id):
         # Validate form data
         if not recipe_id or not meal_type or not meal_date:
             flash('Please fill in all fields.', 'error')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, return_url=return_url, form_data=request.form)
         
         try:
             meal_date = datetime.strptime(request.form.get('meal_date'), '%Y-%m-%d').date()
         except ValueError:
             flash('You can only set meal plans for valid dates.', 'error')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, return_url=return_url, form_data=request.form)
         
         if meal_date < date.today():
             flash('You can only set meal plans for today or future dates.', 'error')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, return_url=return_url, form_data=request.form)
 
         # prevent duplicates meal category for the same day
         existing_meal_category = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, meal_type=meal_type).first()
         
         if existing_meal_category and existing_meal_category.id != meal_plan_id:
             flash(f'You already have a {meal_type} planned for {meal_date.strftime("%d.%m.%Y")}. Please choose a different meal type or edit the existing one.', 'warning')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, return_url=return_url, form_data=request.form)
         
         #prevent same recipe been planned more than once on the same day
         existing_recipe_for_day = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date, recipe_id=int(recipe_id)).first()
         
         if existing_recipe_for_day and existing_recipe_for_day.id != meal_plan_id:
             flash(f'You already have this recipe planned for {meal_date}. Please choose a different recipe.', 'warning')
-            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, form_data=request.form)
+            return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=selected_date, return_url=return_url, form_data=request.form)
         
         meal_plan.recipe_id = int(recipe_id)
         meal_plan.meal_date = meal_date
@@ -681,7 +688,7 @@ def edit_meal_plan(meal_plan_id):
         flash('Meal plan updated successfully!', 'success')
         return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date.strftime('%Y-%m-%d')))
 
-    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=meal_plan.meal_date, form_data=None)
+    return render_template('meal_plan_form.html', recipes=recipes, meal_plan=meal_plan, today=date.today(), selected_date=meal_plan.meal_date, return_url=return_url, form_data=None)
 
 # Delete meal plan route
 @main.route('/meal-plans/<int:meal_plan_id>/delete', methods=['POST'])
