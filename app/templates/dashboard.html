@@ -128,24 +128,36 @@
                             {% for day in preview_days %}
                                 <article class="meal-plan-preview-card">
                                     <div class="meal-plan-preview-header">
-                                        <h3>{{ day.date.strftime('%A') }}</h3>
+                                        {% if day.date == today %}
+                                            <h3>Today</h3>
+                                        {% elif day.date == today + timedelta(days=1) %}
+                                            <h3>Tomorrow</h3> 
+                                        {% else %}
+                                            <h3>{{ day.date.strftime('%A') }}</h3>
+                                        {% endif %}
                                         <span>{{ day.date.strftime('%d.%m.%Y') }}</span>
                                     </div>
-                                    {% if day.meals %}
-                                        {% for meal in day.meals %}
-                                            <div class="meal-plan-preview-content">
-                                                <img src="{{ meal.recipe.image_url if meal.recipe.image_url else (url_for('static', filename='uploads/' ~ meal.recipe.image_filename) if meal.recipe.image_filename else url_for('static', filename='images/image-placeholder.png')) }}" alt="{{ meal.recipe.title }} image" class="meal-plan-preview-image">
-                                                <div class="meal-plan-preview-recipe">
-                                                    <p>{{ meal.meal_type|capitalize }}</p>
-                                                    <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="meal-plan-link">{{ meal.recipe.title }} &gt;</a>
+                                    <div class="meal-plan-preview-body">
+                                        {% if day.meals %}
+                                            {% for meal in day.meals %}
+                                                <div class="meal-plan-preview-content">
+                                                    <img src="{{ meal.recipe.image_url if meal.recipe.image_url else (url_for('static', filename='uploads/' ~ meal.recipe.image_filename) if meal.recipe.image_filename else url_for('static', filename='images/image-placeholder.png')) }}" alt="{{ meal.recipe.title }} image" class="meal-plan-preview-image">
+                                                    <div class="meal-plan-preview-recipe">
+                                                        <p>{{ meal.meal_type|capitalize }}</p>
+                                                        <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="meal-plan-link">{{ meal.recipe.title }} &gt;</a>
+                                                    </div>
                                                 </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="empty-dashboard">
+                                                <p class="dashboard-empty-text">You haven't planned<br> any meals for today.</p>
+                                                <a href="{{ url_for('main.add_meal_plan', meal_date=day.date) }}" class="btn btn-success">+ Add Meal</a>
                                             </div>
-                                            <a href="{{ url_for('main.view_day_meal_plan', meal_date=day.date) }}" class="view-day-card-link">View Day's Meals &gt;</a>
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="empty-dashboard my-5">
-                                            <p class="dashboard-empty-text">You haven't planned<br> any meals for today.</p>
-                                            <a href="{{ url_for('main.add_meal_plan', meal_date=day.date) }}" class="btn btn-success">+ Add Meal</a>
+                                        {% endif %}
+                                    </div>
+                                    {% if day.meals %}
+                                        <div class="meal-plan-preview-footer">
+                                            <a href="{{ url_for('main.view_day_meal_plan', meal_date=day.date) }}" class="view-day-card-link">{% if day.date == today %}View Today's Meals &gt;{% elif day.date == today + timedelta(days=1) %}View Tomorrow's Meals &gt;{% else %}View {{ day.date.strftime('%A') }}'s Meals &gt;{% endif %}</a>
                                         </div>
                                     {% endif %}
                                 </article>
