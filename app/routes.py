@@ -766,6 +766,110 @@ def search_api_recipes(search_query, api_page=1):
 
     return all_recipes[start:end], len(all_recipes)
 
+#Quick daily planner form to add or update multiple meal plans for the same day in one form, with pre-filled existing meal plans for the selected day, and validation to prevent duplicates and past dates
+@main.route('/meal-plans/quick-add', methods=['GET', 'POST'])
+@login_required
+def quick_add_meal_plan():
+    recipes = Recipe.query.filter_by(user_id=current_user.id).order_by(Recipe.title).all()
+    today = date.today().strftime('%Y-%m-%d')
+    selected_date = request.args.get('meal_date') or today
+    return_url = request.args.get('next') or url_for('main.view_day_meal_plan', meal_date=today)
+    
+    if not recipes:
+        flash('You need to have at least one recipe to use the quick add feature. Please add a recipe first.', 'error')
+        return redirect(url_for('main.meal_plans'))
+    
+    # Convert selected_date string to date object and validate that it's in the correct format, if not set it to today
+    try:
+        selected_date_object = datetime.strptime(selected_date, '%Y-%m-%d').date()
+    except ValueError:
+        selected_date_object = date.today()
+        selected_date = today
+
+    # Get existing meal plans for the selected date to pre-fill the form, and create a dictionary with meal_type as key for easy access in the template
+    existing_meal_plan = MealPlan.query.filter_by(user_id=current_user.id, meal_date=selected_date_object).all()
+    meal_plan_data = {meal.meal_type: meal.recipe_id for meal in existing_meal_plan}
+
+    if request.method == 'POST':
+        meal_date=request.form.get('meal_date') or selected_date
+
+        # Validate meal_date
+        try:
+            meal_date_object = datetime.strptime(meal_date, '%Y-%m-%d').date()
+        except ValueError:
+            flash('Please enter a valid date.', 'error')
+            return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date=meal_date, return_url=return_url)
+
+        # Reload meals for selected POST date for pre-fill form
+        existing_meal_plan = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date_object).all()
+        meal_plan_data = {meal.meal_type: meal.recipe_id for meal in existing_meal_plan}
+        
+        selected_recipes = {
+            'breakfast': request.form.get('breakfast_recipe_id'),
+            'lunch': request.form.get('lunch_recipe_id'),
+            'dinner': request.form.get('dinner_recipe_id'),
+            'dessert/snack': request.form.get('dessert_snack_recipe_id')
+        }
+
+        # Check if at least one recipe is selected for any meal type
+        has_selected_recipe = any(recipe_id for recipe_id in selected_recipes.values())
+
+        if not has_selected_recipe:
+            flash('Please select at least one recipe to add or update meal plans.', 'error')
+            return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date= meal_date, return_url=return_url)
+
+        # Prevent creating meal plans for past dates
+        if meal_date_object < date.today():
+            flash('You can only create meal plans for today or future dates.', 'error')
+            return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date=meal_date, return_url=return_url)
+
+        # Initialize a counter to track how many meal plans were added, updated or deleted
+        added_or_updated = 0
+       
+        # Create or update meal plans accordingly
+        for meal_type, recipe_id in selected_recipes.items():
+            excisting_meal_plan = MealPlan.query.filter_by(user_id=current_user.id, meal_date=meal_date_object, meal_type=meal_type).first()
+
+            # If a recipe is selected for the meal type, create or update the meal plan. If no recipe is selected and a meal plan exists, delete it.
+            if recipe_id:
+                # If a meal plan already exists for the meal type, update it with the new recipe. Otherwise, create a new meal plan.
+                if excisting_meal_plan:
+                    if excisting_meal_plan.recipe_id != int(recipe_id):
+                        excisting_meal_plan.recipe_id = int(recipe_id)
+                        added_or_updated += 1
+                else:
+                    new_meal_plan = MealPlan(
+                        user_id=current_user.id,
+                        recipe_id=int(recipe_id),
+                        meal_date=meal_date_object,
+                        meal_type=meal_type
+                    )
+                    db.session.add(new_meal_plan)
+                    db.session.commit()
+
+                    added_or_updated += 1
+            else:
+                # Remove meal if user cleared select
+                if excisting_meal_plan:
+                    db.session.delete(excisting_meal_plan)
+                    added_or_updated += 1
+
+        # If no meal plans were added, updated or deleted, show a warning message and stay on the form page
+        if added_or_updated == 0:
+            flash('No meal plans were added or updated. Please select at least one recipe.', 'warning')
+            return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date=meal_date, return_url=return_url)
+        
+        db.session.commit()
+
+        # Show a success message indicating whether meal plans were added or updated, and redirect to the day meal plan view
+        if existing_meal_plan:
+            flash('Meal plans updated successfully!', 'success')
+        else:
+            flash('Meal plans added successfully!', 'success')
+        return redirect(url_for('main.view_day_meal_plan', meal_date=meal_date_object.strftime('%Y-%m-%d')))
+    
+    return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date=selected_date, return_url=return_url)
+
 # Search route to search recipe globally- users recipes and API recipes, search by title, ingredients and instructions, show results in a separate page with pagination
 @main.route('/search')
 @login_required
