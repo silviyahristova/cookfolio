@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Cookfolio - Quick Meal Plan{% endblock %}
+
+{% block content %}
+<section class="add-recipe-section">
+    <div class="add-recipe-container">
+        <div class="add-recipe-text">
+            <h1>{% if meal_plan_data %}Edit Daily Meal Plan{% else %}Add Daily Meal Plan{% endif %}</h1>
+            <p>{% if meal_plan_data %}Update the details below to edit your daily meal plan.{% else %}Fill out the details below to create a dailymeal plan.{% endif %}</p>
+            <form method="POST" action="{{ url_for('main.quick_add_meal_plan', return_url=return_url) }}" class="add-recipe-form">
+                <div class="form-group">
+                    <label for="meal_date">Date</label>
+                    <input type="date" id="meal_date" name="meal_date" min="{{ today }}" value="{% if meal_plan_data and meal_plan_data.get('meal_date') %}{{ meal_plan_data.get('meal_date') }}{% elif selected_date %}{{ selected_date }}{% else %}{{ today }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="breakfast_recipe_id">Breakfast:</label>
+                    <select id="breakfast_recipe_id" name="breakfast_recipe_id">
+                        <option value="" class="">Select a recipe</option>
+                        {% for recipe in recipes %}
+                            <option value="{{ recipe.id }}" {% if meal_plan_data.get('breakfast') == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lunch_recipe_id">Lunch:</label>
+                    <select id="lunch_recipe_id" name="lunch_recipe_id">
+                        <option value="">Select a recipe</option>
+                        {% for recipe in recipes %}
+                            <option value="{{ recipe.id }}" {% if meal_plan_data.get('lunch') == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dinner_recipe_id">Dinner:</label>
+                    <select id="dinner_recipe_id" name="dinner_recipe_id">
+                        <option value="">Select a recipe</option>
+                        {% for recipe in recipes %}
+                            <option value="{{ recipe.id }}" {% if meal_plan_data.get('dinner') == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dessert_snack_recipe_id">Dessert/Snack:</label>
+                    <select id="dessert_snack_recipe_id" name="dessert_snack_recipe_id">
+                        <option value="">Select a recipe</option>
+                        {% for recipe in recipes %}
+                            <option value="{{ recipe.id }}" {% if meal_plan_data.get('dessert/snack') == recipe.id %}selected{% endif %}>{{ recipe.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success" id="save-recipe-button">{% if meal_plan_data %}Update Meal Plan{% else %}Save Meal Plan{% endif %}</button>
+                    <a href="{{ return_url or url_for('main.meal_plans') }}" class="btn btn-secondary" id="cancel-button" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript to handle the date change event on the quick meal plan form -->
+<script src="{{ url_for('static', filename='js/quick-meal-plan.js') }}"></script>
+
+{% endblock %}
