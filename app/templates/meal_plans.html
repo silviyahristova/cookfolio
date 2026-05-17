@@ -31,7 +31,7 @@
                             <p class="dashboard-empty-text">You haven't created any meal plans yet.</p>
                             <p>Start building your meal plans by creating your first one.</p>
                             <div class="dashboard-buttons">
-                                <a href="{{ url_for('main.add_meal_plan') }}" class="btn btn-success">+ Create Meal Plan</a>
+                                <a href="{{ url_for('main.quick_add_meal_plan') }}" class="btn btn-success">+ Create Meal Plan</a>
                             </div>
                         {% else %}
                             <p class="dashboard-empty-text">You haven't created any meal plans yet.</p>
@@ -93,7 +93,7 @@
                                 <a href="{{ url_for('main.view_day_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-primary">{%if day < today %}View Past Meals{% else %}View Meals{% endif %}</a>
                             {%endif%}
                             {% if day >= today and not full_day_planned %}
-                                <a href="{{ url_for('main.add_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-success">+ Add Meal</a>
+                                <a href="{{ url_for('main.quick_add_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-success">+ Add Meals</a>
                             {% endif %}
                         </footer>
                     </article>

@@ -10,6 +10,7 @@
             <div>
                 <h1>Meals for {{ selected_date.strftime('%A') }}</h1>
                 <p>{{ selected_date.strftime('%d.%m.%Y') }}</p>
+                <a href="{{ url_for('main.quick_add_meal_plan', selected_date=selected_date) }}" class="btn btn-primary">Edit Meal Plan</a>
             </div>
             <a href="{{ url_for('main.meal_plans') }}" class="card-link">Back to Meal Planner &gt;</a>
         </div>
