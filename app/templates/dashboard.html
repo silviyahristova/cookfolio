@@ -74,10 +74,10 @@
                 <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
                         <div>
-                            <h2>My Recipes</h2>
-                            <p>You have {{ recipes|length }} recipes.</p>
+                            <h2><i class="fa-solid fa-book-open"></i> My Recipes</h2>
+                            <p>You have {{ recipes|length }} recipes in total.</p>
                         </div>
-                        <a href="{{ url_for('main.my_recipes') }}" class="card-link">View All Recipes &gt;</a>
+                        <a href="{{ url_for('main.my_recipes') }}" class="card-link"><i class="fa-solid fa-eye"></i> View All Recipes &gt;</a>
                     </div>
                         
                     {% if recipes %}
@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="category-card-content">
                                         <h3>{{ category.name }}</h3>
-                                        <p>{{ category_counts.get(category.id, 0) }} recipes</p>
+                                        <p><i class="fa-solid fa-plate-wheat"></i> {{ category_counts.get(category.id, 0) }} recipes</p>
                                         <a href="{{ url_for('main.my_recipes', category_id=category.id) }}" class="category-card-link">View {{ category.name}} recipes &gt;</a>
                                     </div>
                                 </div>
@@ -118,10 +118,10 @@
                 <div class="dashboard-card recipes-card">
                     <div class="dashboard-section-header">
                         <div>
-                            <h2>My Meal Planner</h2>
+                            <h2><i class="fa-solid fa-calendar-days"></i> My Meal Planner</h2>
                             <p>You have {{ meal_plans|length }} meals planned this week.</p>
                         </div>
-                        <a href="{{ url_for('main.meal_plans') }}" class="card-link">View All Meal Plans &gt;</a>
+                        <a href="{{ url_for('main.meal_plans') }}" class="card-link"><i class="fa-solid fa-eye"></i> View All Meal Plans &gt;</a>
                     </div>
                     {% if weekly_meal_plans|length > 0 %}
                         <div class="meal-plan-preview-grid">
@@ -157,7 +157,7 @@
                                     </div>
                                     {% if day.meals %}
                                         <div class="meal-plan-preview-footer">
-                                            <a href="{{ url_for('main.view_day_meal_plan', meal_date=day.date) }}" class="view-day-card-link">{% if day.date == today %}View Today's Meals &gt;{% elif day.date == today + timedelta(days=1) %}View Tomorrow's Meals &gt;{% else %}View {{ day.date.strftime('%A') }}'s Meals &gt;{% endif %}</a>
+                                            <a href="{{ url_for('main.view_day_meal_plan', meal_date=day.date) }}" class="card-link"><i class="fa-solid fa-eye"></i> {% if day.date == today %}View Today's Meals &gt;{% elif day.date == today + timedelta(days=1) %}View Tomorrow's Meals &gt;{% else %}View {{ day.date.strftime('%A') }}'s Meals &gt;{% endif %}</a>
                                         </div>
                                     {% endif %}
                                 </article>

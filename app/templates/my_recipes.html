@@ -80,13 +80,13 @@
                                 {% endif %}
                             </div>
                             <div class="recipe-card-content">
-                                <h2>{{ recipe.title }}</h2>
-                                <span>{{ recipe.category.name }}</span>
+                                <h3>{{ recipe.title }}</h3>
+                                <span><i class="fa-solid fa-utensils"></i> {{ recipe.category.name }}</span>
                                 <div class="recipe-card-meta">
-                                    <span>{{ recipe.prep_time }} mins</span>
-                                    <span>{{ recipe.servings }} servings</span>
+                                    <span> <i class="fa-solid fa-clock"></i> {{ recipe.prep_time }} mins</span>
+                                    <span><i class="fa-solid fa-user-group"></i> {{ recipe.servings }} servings</span>
                                 </div>
-                                <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                                <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="recipe-card-link"><i class="fa-solid fa-eye"></i> View Recipe &gt;</a>
                             </div>
                         </div>
                     {% endfor %}
