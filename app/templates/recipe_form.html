@@ -51,12 +51,12 @@
                     <div class="recipe-right">
                         <div class="form-group">
                             <label for="ingredients">Ingredients:</label>
-                            <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients" required>{% if form_data %}{{ form_data.ingredients }}{% elif form_type == 'edit' %}{{ recipe.ingredients }}{% endif %}</textarea>
+                            <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients in a list format (one per line)." required>{% if form_data %}{{ form_data.ingredients }}{% elif form_type == 'edit' %}{{ recipe.ingredients }}{% endif %}</textarea>
                         </div>
                             
                         <div class="form-group">
                             <label for="instructions">Instructions:</label>
-                            <textarea id="instructions" name="instructions" placeholder="Enter cooking instructions" required>{% if form_data %}{{ form_data.instructions }}{% elif form_type == 'edit' %}{{ recipe.instructions }}{% endif %}</textarea>
+                            <textarea id="instructions" name="instructions" placeholder="Enter cooking instructions in a list format (one per line)." required>{% if form_data %}{{ form_data.instructions }}{% elif form_type == 'edit' %}{{ recipe.instructions }}{% endif %}</textarea>
                         </div>
 
                         <div class="form-actions">
