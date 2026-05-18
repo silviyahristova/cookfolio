@@ -58,15 +58,23 @@
             </div>
 
             <!--quick access-->
-            <div class="recipes-card">
-                <div class="dashboard-section-header">
-                    <h2>Quick Access</h2>
+            <div class="dashboard-quick-access">
+                <div class="dashboard-section-header quick-access-header">
+                    <h2><i class="fa-solid fa-bolt"></i> Quick Access</h2>
                 </div>
                 <div class="quick-access-grid">
-                    <a href="{{ url_for('main.add_recipe') }}" class="quick-access-link">Add New Recipe</a>
-                    <a href="{{ url_for('main.quick_add_meal_plan') }}" class="quick-access-link">Quick Daily Plan</a>
+                    <a href="{{ url_for('main.add_recipe') }}" class="quick-access-link">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Add New Recipe</span>
+                    </a>
+                    <a href="{{ url_for('main.quick_add_meal_plan') }}" class="quick-access-link">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                        <span>Add Meal Plan</span>
+                    </a>
+                
                 </div>
             </div>
+            <div class="divider-btn"></div>
 
             <div class="dashboard-main-grid">
 
