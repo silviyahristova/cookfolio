@@ -7,12 +7,9 @@
 <section class="view-meal-plan-section">
     <div class="view-meal-plan-container">
         <div class="view-meal-day-plan-header">
-            <div>
-                <h1>Meals for {{ selected_date.strftime('%A') }}</h1>
-                <p>{{ selected_date.strftime('%d.%m.%Y') }}</p>
-                <a href="{{ url_for('main.quick_add_meal_plan', selected_date=selected_date) }}" class="btn btn-primary">Edit Meal Plan</a>
-            </div>
-            <a href="{{ url_for('main.meal_plans') }}" class="card-link">Back to Meal Planner &gt;</a>
+            <h1>Meals for {{ selected_date.strftime('%A') }}</h1>
+            <p>{{ selected_date.strftime('%d.%m.%Y') }}</p>
+            <a href="{{ url_for('main.quick_add_meal_plan', selected_date=selected_date) }}" class="btn btn-primary">Edit Meal Plan</a>
         </div>
         {% if day_meals %}
             <div class="view-meal-day-grid">
@@ -37,38 +34,40 @@
                                 {% endif %}
                             </div>
                             <div class="view-meal-day-card-content">
-                                <h2>{{ meal.recipe.title }}</h2>
+                                <h3>{{ meal.recipe.title }}</h3>
                                 <div class="view-meal-day-card-meta">
-                                    <span>{{ meal.recipe.prep_time }} mins</span>
-                                    <span>{{ meal.recipe.servings }} servings</span>
+                                    <span><i class="fa-solid fa-clock"></i> {{ meal.recipe.prep_time }} mins</span>
+                                    <span><i class="fa-solid fa-user-group"></i> {{ meal.recipe.servings }} servings</span>
                                 </div>
-                                <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="recipe-card-link"> View Recipe &gt;</a>
+                                <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="recipe-card-link"><i class="fa-solid fa-eye"></i> View Recipe &gt;</a>
                             </div>
-                            <div class="view-recipe-actions">
-                                <a href="{{ url_for('main.edit_meal_plan', meal_plan_id=meal.id) }}" class="btn btn-primary">Edit Meal</a>
+                            {% if selected_date >= today %}
+                                <div class="view-recipe-actions">
+                                    <a href="{{ url_for('main.edit_meal_plan', meal_plan_id=meal.id) }}" class="btn btn-primary">Edit Meal</a>
 
-                                <div class="delete-section">
-                                    <input type="checkbox" id="confirm-delete-{{ meal.id }}" hidden>
-                                    <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Delete Meal</label>
-                                    <div class="delete-confirmation">
-                                        <div class="delete-content" area-labelledby="delete-confirmation">
-                                            {% if meal.recipe.image_url %}
-                                                <img src="{{ meal.recipe.image_url }}" alt="{{meal.recipe.title}}" class="confirm-image">
-                                            {% elif meal.recipe.image_filename %}
-                                                <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{meal.recipe.title}}" class="confirm-image">
-                                            {% endif %}
-                                            <h1>{{ meal.recipe.title }}</h1>
-                                            <p>Are you sure you want to delete {{ meal.recipe.title }} for {{ selected_date.strftime("%d.%m.%Y") }}?</p>
-                                            <div class="confirm-actions">
-                                                <form method="POST" action="{{ url_for('main.delete_meal_plan', meal_plan_id=meal.id) }}">
-                                                    <button type="submit" class="btn btn-primary">Yes, Delete</button>
-                                                </form>
-                                                <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Cancel</label>
+                                    <div class="delete-section">
+                                        <input type="checkbox" id="confirm-delete-{{ meal.id }}" hidden>
+                                        <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Delete Meal</label>
+                                        <div class="delete-confirmation">
+                                            <div class="delete-content" area-labelledby="delete-confirmation">
+                                                {% if meal.recipe.image_url %}
+                                                    <img src="{{ meal.recipe.image_url }}" alt="{{meal.recipe.title}}" class="confirm-image">
+                                                {% elif meal.recipe.image_filename %}
+                                                    <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{meal.recipe.title}}" class="confirm-image">
+                                                {% endif %}
+                                                <h1>{{ meal.recipe.title }}</h1>
+                                                <p>Are you sure you want to delete {{ meal.recipe.title }} for {{ selected_date.strftime("%d.%m.%Y") }}?</p>
+                                                <div class="confirm-actions">
+                                                    <form method="POST" action="{{ url_for('main.delete_meal_plan', meal_plan_id=meal.id) }}">
+                                                        <button type="submit" class="btn btn-primary">Yes, Delete</button>
+                                                    </form>
+                                                    <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Cancel</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     {% else%}
                         <div class="view-meal-day-card empty-meal-day-card">
@@ -89,5 +88,8 @@
                 <a href="{{ url_for('main.add_meal_plan', meal_date=selected_date) }}" class="btn btn-success">+ Add Meal</a>
             </div>
         {% endif %}
+        <div class="pagination">
+            <a href="{{ url_for('main.meal_plans') }}" class="card-link btn">Back to Meal Planner &gt;</a>
+        </div>
     </div>
 {% endblock %}
