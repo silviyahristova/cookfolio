@@ -55,6 +55,9 @@
                                 <p><strong>Prep Time:</strong> {{ recipe.prep_time }} minutes</p>
                                 <p><strong>Servings:</strong> {{ recipe.servings }}</p>
                             </div>
+                            <div class="view-recipe-meta">
+                                <a href="{{ url_for('main.add_meal_plan', recipe_id=recipe.id) }}" class="btn btn-success add-meal-btn">Add to Meal Planner</a>
+                            </div>
                         {% endif %}
                     </div>
                     
