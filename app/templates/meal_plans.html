@@ -52,11 +52,11 @@
                 <p>Plan your meals for the week.</p>
         
                 <div class="meal-week-navigation">
-                    <a href="{{ url_for('main.meal_plans', week_start=previous_week) }}" class="week-btn" >&lt; </a>
+                    <a href="{{ url_for('main.meal_plans', week_start=previous_week) }}" class="week-btn" ><i class="fa-solid fa-chevron-left"></i><span class="week-nav-text">Previous week</span></a>
                     <div class="meal-week-range">
-                        <span>{{ start_of_week.strftime('%d.%m.%Y') }} - {{ end_of_week.strftime('%d.%m.%Y') }}</span>
+                        <span><i class="fa-regular fa-calendar-days"></i> {{ start_of_week.strftime('%d.%m.%Y') }} - {{ end_of_week.strftime('%d.%m.%Y') }}</span>
                     </div>
-                    <a href="{{ url_for('main.meal_plans', week_start=next_week) }}" class="week-btn"> &gt;</a>
+                    <a href="{{ url_for('main.meal_plans', week_start=next_week) }}" class="week-btn"> <span class="week-nav-text">Next week</span><i class="fa-solid fa-chevron-right"></i></a>
                 </div>
             </div>
             <div class="meal-week-grid">
@@ -79,12 +79,29 @@
                                             {% elif meal.meal_type == 'dinner' %}<i class="fa-solid fa-utensils"></i>
                                             {% else %}<i class="fa-solid fa-cake-candles"></i>
                                             {% endif %}
-                                            {{ meal.meal_type|capitalize }}</span>
-                                        <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="meal-plan-link">{{ meal.recipe.title }} &gt;</a>
+                                            {{ meal.meal_type|capitalize }}
+                                        </span>
+                                        <div class="meal-info">
+                                            {% if meal.recipe.image_url %}
+                                                <img src="{{ meal.recipe.image_url }}" alt="{{ meal.recipe.title }}" class="meal-thumb">
+                                            {% elif meal.recipe.image_filename %}
+                                                <img src="{{ url_for('static', filename='uploads/' ~ meal.recipe.image_filename) }}" alt="{{ meal.recipe.title }}" class="meal-thumb">
+                                            {% else %}
+                                                <picture>
+                                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.webp') }}" type="image/webp">
+                                                    <source srcset="{{ url_for('static', filename='images/image-placeholder.png') }}" type="image/png">
+                                                    <img src="{{ url_for('static', filename='images/image-placeholder.png') }}" alt="Recipe placeholder image" class="meal-thumb">
+                                                </picture>
+                                            {% endif %}
+                                            <a href="{{ url_for('main.view_recipe', recipe_id=meal.recipe.id) }}" class="meal-plan-link">{{ meal.recipe.title }} &gt;</a>
+                                        </div>
                                     </div>
                                 {% endfor %}
                             {% else %}
-                                <p class="no-meals-text">{% if day < today %}No meals were planned for this day.{% else %}No meals planned yet.{% endif %}</p>
+                                <div class="no-meal-icon">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                                <p class="no-meals-text"><i class="fa-solid fa-info-circle"></i> {% if day < today %}No meals were planned for this day.{% else %}No meals planned yet.{% endif %} Start planning your day!</p>
                             {% endif %}
                         </div>
                         
@@ -94,6 +111,9 @@
                             {%endif%}
                             {% if day >= today and not full_day_planned %}
                                 <a href="{{ url_for('main.quick_add_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-success">+ Add Meals</a>
+                            {% endif %}
+                            {% if day>= today and full_day_planned %}
+                                <a href="{{ url_for('main.quick_add_meal_plan', meal_date=day.strftime('%Y-%m-%d')) }}" class="btn btn-success">Edit Meals</i></a>
                             {% endif %}
                         </footer>
                     </article>
