@@ -64,6 +64,24 @@ body {
     border: 2px solid #1a1919;
 }
 
+h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1f1f3d;
+}
+
+h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1a1919;
+}
+
+h3 {
+    font-size: 1.3rem;
+    color: #1a1919;
+    font-weight: 500;
+}
+
 /*Navbar*/
 header {
     position: relative;
@@ -1163,7 +1181,8 @@ header {
 
 .recipe-card,
 .view-meal-day-card {
-    max-width: 230px;
+    width: 100%;
+    max-width: 290px;
     background-color: #fff;
     border: 1px solid #e3e3e3;
     border-radius: 8px;
@@ -1202,6 +1221,7 @@ header {
     align-items: center;
     gap: 0.5rem;
     flex-grow: 1;
+    margin-top: 1rem;
 }
 
 .recipe-card-content h2,
@@ -1223,6 +1243,7 @@ header {
     color: #1a1919;
     font-weight: 500;
     text-decoration: none;
+    margin-top: auto;
 }
 
 .recipe-card-link:hover {
@@ -1605,6 +1626,7 @@ header {
     font-weight: 500;
     display: inline-block;
     text-align: left;
+    max-width: 250px;
 }
 
 .meal-plan-link:hover {
@@ -1659,6 +1681,30 @@ header {
     flex-wrap: wrap;
 }
 
+.meal-thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.meal-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.week-nav-text {
+    display: none;
+}
+
+.no-meal-icon {
+    font-size: 2rem;
+    color: #c9c8c8;
+}
+
 /*View day meal plan page*/
 .view-meal-day-grid {
     display: grid;
@@ -1674,6 +1720,8 @@ header {
 
 .view-meal-day-plan-header {
     margin-bottom: 1.5rem;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .view-meal-day-card{
@@ -1754,6 +1802,10 @@ header {
     .meal-day-card {
         min-width: 330px;
     }
+
+    .add-meal-btn {
+        min-width: 290px;
+    }
 }
 
 @media (min-width: 576px) {
@@ -1820,6 +1872,18 @@ header {
 /*Tablet*/
 
 @media (min-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
     .logo a {
         font-size: 1.8rem;
     }
@@ -1897,7 +1961,6 @@ header {
     }
 
     .recipe-card {
-        max-width: 250px;
         border-radius: 12px;
         padding: 1rem;
     }
@@ -1980,6 +2043,20 @@ header {
     .meal-day-card {
         min-height: 600px;
     }
+
+    .week-nav-text {
+        display: inline;
+    }
+
+    .week-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .no-meal-icon {
+        font-size: 3rem;
+    }
 }
 
 @media (max-width: 992px) {
@@ -2015,6 +2092,17 @@ header {
 /*Desktop*/
 
 @media (min-width: 992px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
 
     .menu-toggle {
         display: none;
@@ -2492,6 +2580,10 @@ header {
 
     .view-meal-day-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .no-meal-icon {
+        font-size: 3.5rem;
     }
 }
 
