@@ -4,12 +4,12 @@ import sys
 import tempfile
 import pytest
 from werkzeug.security import generate_password_hash
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from app import create_app, db
-from app.models import User, Category, Recipe, MealPlan
+from app.models import SupportMessage, User, Category, Recipe, MealPlan
 from datetime import datetime, timedelta
+
+# Add the parent directory to the system path to allow imports from the app package
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Fixture to create a test app with an in-memory database
 @pytest.fixture
@@ -82,6 +82,39 @@ def logged_in_client(client, test_user):
         'password': 'testpassword'
     }, follow_redirects=True)
     return client
+
+#fixture for admin user for testing the admin page
+@pytest.fixture
+def admin_user(app):
+    with app.app_context():
+        admin = User (
+            username='admin', 
+            is_admin=True, 
+            email='admin@example.com',
+            password=generate_password_hash('adminpassword')
+        )
+        
+        db.session.add(admin)
+        db.session.commit()
+
+        return admin
+    
+#fixture to create a support message for testing the support page
+@pytest.fixture
+def test_support_message(app):
+    with app.app_context():
+
+        support_message = SupportMessage(
+            name='Test User',
+            email='testuser@example.com',
+            subject='Test Support Message',
+            message='This is a test support message.'
+        )
+
+        db.session.add(support_message)
+        db.session.commit()
+        
+        return support_message
 
 #fixture to create a meal plan for testing the meal plan page
 @pytest.fixture
