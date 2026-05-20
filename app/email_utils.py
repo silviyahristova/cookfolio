@@ -86,3 +86,41 @@ def send_user_support_confirmation_email(name, email, subject, message, created_
     except Exception as e:
         current_app.logger.error(f"Failed to send confirmation email: {e}")
         return False
+
+# Email helper function to send a welcome email to a new user
+def send_welcome_email(name, email):
+    """Send a welcome email to a new user."""
+    current_year = datetime.now().year
+
+    # Render the email template with the provided details
+    html_body = render_template("emails/welcome_email.html", name=name, current_year=current_year)
+    
+    # Create the email message with the provided details
+    msg = Message(
+        subject=f"Welcome to Cookfolio!", 
+        recipients=[email], 
+        body=f""" 
+        Hello {name}, 
+        
+        Welcome to Cookfolio! 
+        
+        Your account has been successfully created. 
+
+        You can now save recipes, plan meals and discover new cooking ideas.
+        
+        We hope you enjoy using Cookfolio.
+        
+        The Cookfolio Team""",
+        
+        html=html_body
+    )
+    
+    # Attempt to send the email and log the result
+    try:
+        mail.send(msg)
+        current_app.logger.info(f"Welcome email sent to user: {name}")
+        return True
+    # Catch any exceptions that occur during email sending and log the error
+    except Exception as e:
+        current_app.logger.error(f"Failed to send welcome email: {e}")
+        return False
