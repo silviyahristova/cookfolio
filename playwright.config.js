@@ -1,6 +1,9 @@
 // configuration file for Playwright tests
 const{defineConfig}=require('@playwright/test');
 
+const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables from .env file
+
 module.exports=defineConfig({
     testDir: './tests/frontend', // directory where tests are located
     use:{
