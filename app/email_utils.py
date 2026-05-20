@@ -16,9 +16,25 @@ def send_admin_notification(name, email, subject, message, user_status, created_
     
     user_status = user_status if user_status else "Guest User"
     current_year = datetime.now().year
+    
+    # Render the email template with the provided details
     html_body = render_template("emails/send_admin_notification.html", name=name, email=email, subject=subject, message=message, user_status=user_status, created_at=created_at, current_year=current_year)
+    
     # Create the email message with the provided details
-    msg = Message(subject=f" New Cookfolio support message: {subject}", recipients=[admin_email], body=f""" New support message received. User ID: {user_status} Name: {name} Email: {email} Subject: {subject} Message: {message}""", html=html_body)
+    msg = Message(
+        subject=f" New Cookfolio support message",
+        recipients=[admin_email],
+        body=f""" 
+        New support message received.
+
+        User ID: {user_status} 
+
+        Name: {name} Email: {email} 
+        Subject: {subject} 
+        Message: {message}""", 
+        
+        html=html_body
+    )
     
     # Attempt to send the email and log the result
     try:
@@ -28,4 +44,45 @@ def send_admin_notification(name, email, subject, message, user_status, created_
     # Catch any exceptions that occur during email sending and log the error
     except Exception as e:
         current_app.logger.error(f"Failed to send notification: {e}")
+        return False
+    
+# Email helper function to send confirmation email to the user who submitted the support message
+def send_user_support_confirmation_email(name, email, subject, message, created_at):
+    """Send a confirmation email to the user who submitted the support message."""
+
+    current_year = datetime.now().year
+
+    # Render the email template with the provided details
+    html_body = render_template("emails/send_user_support_confirmation.html", name=name, subject=subject, message=message, created_at=created_at, current_year=current_year)
+    
+    # Create the email message with the provided details
+    msg = Message(
+        subject=f"Cookfolio Support Confirmation", 
+        recipients=[email], 
+        body=f""" 
+        Hello {name}, 
+        
+        Thank you for contacting Cookfolio support. 
+        
+        We have received your message and will get back to you as soon as possible. 
+        
+        Your subject: {subject} 
+        
+        Your message: {message} 
+        
+        Submitted at: {created_at} 
+        
+        Cookfolio Support Team""",
+        
+        html=html_body
+    )
+    
+    # Attempt to send the email and log the result
+    try:
+        mail.send(msg)
+        current_app.logger.info(f"Confirmation email sent to user: {name}")
+        return True
+    # Catch any exceptions that occur during email sending and log the error
+    except Exception as e:
+        current_app.logger.error(f"Failed to send confirmation email: {e}")
         return False
