@@ -10,3 +10,4 @@ instance/
 playwright-test-results/
 screenshots/
 app/static/uploads/
+node_modules/
