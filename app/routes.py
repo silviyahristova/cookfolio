@@ -13,7 +13,7 @@ from sqlalchemy import join, or_
 from math import ceil
 from datetime import datetime, date, timedelta
 from collections import defaultdict
-from .email_utils import send_admin_notification
+from .email_utils import send_admin_notification, send_user_support_confirmation_email
 
 main = Blueprint('main', __name__)
 
@@ -1254,6 +1254,15 @@ def support():
             message= support_message.message,
             user_status = support_message.user_id if support_message.user_id else "Guest User",
             created_at= support_message.created_at.strftime('%H:%M:%S on %d.%m.%Y')
+        )
+
+        # Send confirmation email to user who submitted the support message
+        send_user_support_confirmation_email(
+            name=support_message.name,
+            email=support_message.email,
+            subject=support_message.subject,
+            message=support_message.message,
+            created_at=support_message.created_at.strftime('%H:%M:%S on %d.%m.%Y')
         )
 
         flash('Your message has been sent. We will get back to you shortly.', 'success')
