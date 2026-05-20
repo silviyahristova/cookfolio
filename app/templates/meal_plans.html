@@ -101,7 +101,7 @@
                                 <div class="no-meal-icon">
                                     <i class="fa-solid fa-calendar-days"></i>
                                 </div>
-                                <p class="no-meals-text"><i class="fa-solid fa-info-circle"></i> {% if day < today %}No meals were planned for this day.{% else %}No meals planned yet.{% endif %} Start planning your day!</p>
+                                <p class="no-meals-text"><i class="fa-solid fa-info-circle"></i> {% if day < today %}No meals were planned for this day.{% elif day == today %}No meals planned yet. Start planning your day!{% else %} No meals planned yet. Start planning your day!{% endif %}</p>
                             {% endif %}
                         </div>
                         
