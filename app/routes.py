@@ -13,7 +13,7 @@ from sqlalchemy import join, or_
 from math import ceil
 from datetime import datetime, date, timedelta
 from collections import defaultdict
-from .email_utils import send_admin_notification, send_user_support_confirmation_email
+from .email_utils import send_admin_notification, send_user_support_confirmation_email, send_welcome_email
 
 main = Blueprint('main', __name__)
 
@@ -142,6 +142,12 @@ def register():
         #Save user to database
         db.session.add(new_user)
         db.session.commit()
+
+        # Send welcome email to the new user
+        send_welcome_email(
+            name=new_user.username,
+            email=new_user.email
+        )
 
         # Provide feedback to the user
         flash('Registration successful! You can now log in.', 'success')
