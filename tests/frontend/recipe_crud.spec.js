@@ -92,7 +92,7 @@ test('delete recipe and check it no longer appears on recipe page', async ({page
     await loginUser(page, username, password);
 
     //add recipe
-    await addRecipe(page, 'Test Delete Recipe');
+    const recipeTitle = await addRecipe(page, 'Test Delete Recipe ${Date.now()}');
     await page.waitForURL(/recipe/); // Wait for the URL to change to the recipe page after adding a recipe
 
     //delete recipe
@@ -101,7 +101,7 @@ test('delete recipe and check it no longer appears on recipe page', async ({page
     await page.getByRole('button', {name: /yes,\s*delete/i}).click();
     
     //check recipe is deleted
-    await expect(page.locator('body')).not.toContainText('Test Delete Recipe');
+    await expect(page.locator('body')).not.toContainText(recipeTitle);
 });
 
 test('cancel edit returns to recipe page without changes', async ({page}) => {
@@ -140,7 +140,7 @@ test('cancel delete returns to recipe page without deleting', async ({page}) => 
     await loginUser(page, username, password);
 
     //add recipe
-    await addRecipe(page, 'Test Recipe');
+    const recipeTitle = await addRecipe(page, 'Test Recipe');
 
     //delete recipe
     await page.getByText('Delete Recipe').click();
@@ -148,7 +148,7 @@ test('cancel delete returns to recipe page without deleting', async ({page}) => 
     await page.locator('.delete-confirmation label[for="confirm-delete"]',{hasText:'Cancel'}).click(); // Click the "Cancel" option in the confirmation dialog
 
     //check that the recipe is still present
-    await expect(page.locator('body')).toContainText('Test Recipe');
+    await expect(page.locator('body')).toContainText(recipeTitle);
 });
 
 test('add recipe with missing fields shows error message', async ({page}) => {

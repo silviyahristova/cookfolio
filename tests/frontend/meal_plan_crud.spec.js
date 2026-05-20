@@ -107,7 +107,7 @@ test('edit meal plan updates successfully and shows updated details on meal plan
     // Add a meal plan
     const mealPlanDetails = await addMealPlan(page, {mealType: 'dinner', recipe: firstRecipeTitle});
 
-    await page.getByRole('link', {name: 'Edit Meal'}).click(); // Click the Edit link to go to the edit page for the meal plan    
+    await page.getByRole('link', {name: 'Edit Meal', exact: true}).click(); // Click the Edit link to go to the edit page for the meal plan    
     await expect(page.locator('select[name="recipe_id"]')).toBeVisible(); // Wait for the recipe select field to be visible on the edit page
     await page.selectOption('select[name="recipe_id"]', {label: updatedRecipeTitle}); // Select the updated recipe in the select field
     await page.locator('button[type="submit"]').click();
@@ -135,7 +135,7 @@ test('cancel edit keeps form open', async ({page}) => {
     // Add a meal plan
     const mealPlanDetails = await addMealPlan(page, {mealType: 'dinner', recipe: firstRecipeTitle});
 
-    await page.getByRole('link', {name: 'Edit Meal'}).click(); // Click the Edit link to go to the edit page for the meal plan    
+    await page.getByRole('link', {name: 'Edit Meal', exact: true}).click(); // Click the Edit link to go to the edit page for the meal plan    
     await expect(page.locator('select[name="recipe_id"]')).toBeVisible(); // Wait for the recipe select field to be visible on the edit page
     await page.selectOption('select[name="recipe_id"]', {label: updatedRecipeTitle}); // Select the updated recipe in the select field
     await page.getByRole('link', {name: 'Cancel'}).click(); // Click the Cancel link to cancel editing
@@ -172,7 +172,7 @@ test('cancel edit returns user to meal plan page', async ({page}) => {
     // Add a meal plan
     const mealPlanDetails = await addMealPlan(page, {mealType: 'dinner', recipe: firstRecipeTitle});
 
-    await page.getByRole('link', {name: 'Edit Meal'}).click(); // Click the Edit link to go to the edit page for the meal plan    
+    await page.getByRole('link', {name: 'Edit Meal',exact: true}).click(); // Click the Edit link to go to the edit page for the meal plan    
     await expect(page.locator('select[name="recipe_id"]')).toBeVisible(); // Wait for the recipe select field to be visible on the edit page
     await page.selectOption('select[name="recipe_id"]', {label: updatedRecipeTitle}); // Select the updated recipe in the select field
     await page.getByRole('link', {name: 'Cancel'}).click(); // Click the Cancel link to cancel editing
