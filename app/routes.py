@@ -1252,7 +1252,8 @@ def support():
             email= support_message.email,
             subject= support_message.subject,
             message= support_message.message,
-            user_status = support_message.user_id if support_message.user_id else "Guest User"
+            user_status = support_message.user_id if support_message.user_id else "Guest User",
+            created_at= support_message.created_at.strftime('%H:%M:%S on %d.%m.%Y')
         )
 
         flash('Your message has been sent. We will get back to you shortly.', 'success')
