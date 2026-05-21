@@ -192,6 +192,17 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
 
+        # Validate that email field is not empty
+        if not email:
+            flash('Please enter your email address.', 'error')
+            return redirect(url_for('main.forgot_password'))
+        
+        # Validate email format
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_pattern, email):
+            flash('Please enter a valid email address.', 'error')
+            return redirect(url_for('main.forgot_password'))
+
         user = User.query.filter_by(email=email).first()
 
         if user:
