@@ -213,6 +213,48 @@ def forgot_password():
             flash('If an account with that email exists, you will receive an email with reset instructions.', 'success')
     return render_template('forgot_password.html')
 
+# Reset password route
+@main.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.verify_reset_token(token)
+
+    if not user:
+        flash('The password reset link is invalid or has expired.', 'error')
+        return redirect(url_for('main.forgot_password'))
+    
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        # Validate the new password
+        if not password or not confirm_password:
+            flash('Both fields are required.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+        
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+        
+        # Password  validation
+        if len(password) < 6:
+            flash('Password must be at least 6 characters long.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+        if not any(char.isdigit() for char in password):
+            flash('Password must contain at least one number.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+        if not any(char.isalpha() for char in password):
+            flash('Password must contain at least one letter.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+
+        # Hash the new password and update the user's password
+        user.password = generate_password_hash(password)
+        db.session.commit()
+
+        flash('Your password has been reset successfully. You can now log in with your new password.', 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('reset_password.html' , token=token)
+
 #logout route
 @main.route('/logout')
 @login_required
