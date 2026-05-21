@@ -14,6 +14,8 @@ from math import ceil
 from datetime import datetime, date, timedelta
 from collections import defaultdict
 from .email_utils import send_admin_notification, send_user_support_confirmation_email, send_welcome_email
+from flask_mail import Message
+from app import mail
 
 main = Blueprint('main', __name__)
 
@@ -183,6 +185,33 @@ def login():
         return redirect(url_for('main.dashboard'))
 
     return render_template('login.html')
+
+# Forgot password route
+@main.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            # Generate password reset token
+            token = user.generate_reset_token()
+
+            # Create password reset link
+            reset_link = url_for('main.reset_password', token=token, _external=True)
+
+            # Send password reset email
+            msg = Message(
+                subject='Cookfolio Password Reset',
+                recipients=[user.email],
+                body=f"""Click the link to reset your password: {reset_link}. If you did not request a password reset, please ignore this email."""
+            )
+            mail.send(msg)
+            flash('An email with instructions to reset your password has been sent.', 'success')
+        else:
+            flash('If an account with that email exists, you will receive an email with reset instructions.', 'success')
+    return render_template('forgot_password.html')
 
 #logout route
 @main.route('/logout')
