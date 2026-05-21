@@ -667,7 +667,7 @@ header {
 }
 
 .login-form{
-    max-width: 420px;
+    max-width: 450px;
 }
 
 /*Add Recipe page*/
@@ -2586,7 +2586,7 @@ quick-access-link span {
         justify-content: center;
     }
 
-     .confirm-actions .btn {
+    .confirm-actions .btn {
         width: auto;
         min-width: 150px;
     }
