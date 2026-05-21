@@ -1,8 +1,9 @@
+from flask import current_app # Importing current_app to access the Flask application context for configuration 
 from sqlalchemy import String, Boolean, DateTime, ForeignKey, func # Importing necessary SQLAlchemy types and functions for defining the database models
 from sqlalchemy.orm import Mapped, mapped_column, relationship # Importing Mapped and relationship for defining model attributes and relationships between models
 from flask_login import UserMixin # Importing UserMixin for user authentication and session management with Flask-Login
 from . import db, login_manager # Importing the database instance and login manager from the app package
-from datetime import date, datetime # For handling date and time fields in the models
+from datetime import date # For handling date and time fields in the models
 from typing import List, Optional # For type hinting of relationships
 from itsdangerous import URLSafeTimedSerializer # Serializer for generating and verifying password reset tokens
 
@@ -32,13 +33,13 @@ class User(db.Model, UserMixin):
     
     #Method to generate password reset token
     def generate_reset_token(self):
-        serializer = URLSafeTimedSerializer(db.app.config['SECRET_KEY']) # Create a serializer using the application's secret key for securely signing the token
+        serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY']) # Create a serializer using the application's secret key for securely signing the token
         return serializer.dumps(self.email, salt='password-reset-salt') # Generate a token using the user's email and a salt for added security
 
     #Static method to verify password reset token
     @staticmethod
     def verify_reset_token(token, expiration=3600):
-        serializer = URLSafeTimedSerializer(db.app.config['SECRET_KEY']) # Create a serializer using the application's secret key for securely signing the token
+        serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY']) # Create a serializer using the application's secret key for securely signing the token
 
         try:
             email = serializer.loads(token, salt='password-reset-salt', max_age=expiration) # Attempt to decode the token and retrieve the email, ensuring it hasn't expired
