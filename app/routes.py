@@ -216,7 +216,8 @@ def forgot_password():
             msg = Message(
                 subject='Cookfolio Password Reset',
                 recipients=[user.email],
-                body=f"""Click the link to reset your password: {reset_link}. If you did not request a password reset, please ignore this email."""
+                body=f"""Click the link to reset your password: {reset_link}. If you did not request a password reset, please ignore this email.""",
+                html=render_template('emails/reset_password_link.html', user=user, reset_link=reset_link)
             )
             mail.send(msg)
             flash('An email with instructions to reset your password has been sent.', 'success')
