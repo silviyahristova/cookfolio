@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False) # Field to indicate if the user has admin privileges
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(),nullable=False) # Timestamp for when the user account was created
+    reset_token: Mapped[Optional[str]] = mapped_column(String(255), nullable=True) # Field to store password reset token for the user
 
     #Relationship to support messages- one user can have many support messages, and each support message belongs to one user
     support_messages: Mapped[List['SupportMessage']] = relationship('SupportMessage', back_populates='user', cascade='all, delete-orphan') 
@@ -34,7 +35,10 @@ class User(db.Model, UserMixin):
     #Method to generate password reset token
     def generate_reset_token(self):
         serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY']) # Create a serializer using the application's secret key for securely signing the token
-        return serializer.dumps(self.email, salt='password-reset-salt') # Generate a token using the user's email and a salt for added security
+
+        token = serializer.dumps(self.email, salt='password-reset-salt') # Generate a token using the user's email and a salt for added security
+        self.reset_token = token # Store the generated token in the user's reset_token field
+        return token # Return the generated token
 
     #Static method to verify password reset token
     @staticmethod
@@ -45,7 +49,12 @@ class User(db.Model, UserMixin):
             email = serializer.loads(token, salt='password-reset-salt', max_age=expiration) # Attempt to decode the token and retrieve the email, ensuring it hasn't expired
         except Exception:
             return None # If the token is invalid or has expired, return None
-        return User.query.filter_by(email=email).first() # If the token is valid, return the user associated with the email
+        
+        user = User.query.filter_by(email=email).first() # If the token is valid, return the user associated with the email
+
+        if user is None or user.reset_token != token: # Check if the user exists and if the stored reset token matches the provided token
+            return None # If the user doesn't exist or the tokens don't match, return None
+        return user # If the token is valid and the user exists, return the user
     
 # Flask-Login user loader
 @login_manager.user_loader
