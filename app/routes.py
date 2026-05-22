@@ -208,6 +208,7 @@ def forgot_password():
         if user:
             # Generate password reset token
             token = user.generate_reset_token()
+            db.session.commit() # Save the generated token to the database
 
             # Create password reset link
             reset_link = url_for('main.reset_password', token=token, _external=True)
@@ -247,6 +248,11 @@ def reset_password(token):
             flash('Passwords do not match.', 'error')
             return redirect(url_for('main.reset_password', token=token))
         
+        # Check if the new password is the same as the old password
+        if check_password_hash(user.password, password):
+            flash('This password has been used before. Please choose a new password.', 'error')
+            return redirect(url_for('main.reset_password', token=token))
+        
         # Password  validation
         if len(password) < 6:
             flash('Password must be at least 6 characters long.', 'error')
@@ -260,6 +266,7 @@ def reset_password(token):
 
         # Hash the new password and update the user's password
         user.password = generate_password_hash(password)
+        user.reset_token = None # Clear the reset token after successful password reset
         db.session.commit()
 
         flash('Your password has been reset successfully. You can now log in with your new password.', 'success')
