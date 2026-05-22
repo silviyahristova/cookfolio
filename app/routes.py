@@ -915,6 +915,12 @@ def quick_add_meal_plan():
             flash('Please select at least one recipe to add or update meal plans.', 'error')
             return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date= meal_date, return_url=return_url)
 
+        # Prevent dupliate recipes for the same day
+        recipe_ids = [recipe_id for recipe_id in selected_recipes.values() if recipe_id]
+        if len(recipe_ids) != len(set(recipe_ids)):
+            flash('Each recipe can only be selected once per day. Please choose different recipes.', 'error')
+            return render_template('quick_meal_plan_form.html', recipes=recipes, today=today, meal_plan_data=meal_plan_data, selected_date=meal_date, return_url=return_url)
+        
         # Prevent creating meal plans for past dates
         if meal_date_object < date.today():
             flash('You can only create meal plans for today or future dates.', 'error')
