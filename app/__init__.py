@@ -7,22 +7,25 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
 
-#Ensure that the .env file is loaded and correct DATABASE_URL is used
+# Ensure that the .env file is loaded and correct DATABASE_URL is used
 load_dotenv(override=True)
 
 # Initialize Flask extensions
 login_manager = LoginManager()
 migrate = Migrate()
-mail=Mail()
+mail = Mail()
+
 
 class Base(DeclarativeBase):
     pass
 
+
 db = SQLAlchemy(model_class=Base)
+
 
 def create_app():
     # Create the Flask application instance
-    app = Flask(__name__,instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True)
 
     # Set the secret key for session management
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -36,11 +39,11 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = uri or "sqlite:///project.db"
     print(f"Using database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+
     # File upload configuration, uploaded files will be stored in 'static/uploads' directory
     app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads')
     # 16 MB limit for uploaded files
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
     db.init_app(app)
 
@@ -54,12 +57,13 @@ def create_app():
     # Initialize and configure Flask-Mail
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
     app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
-    app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'true').lower() == 'true'
+    app.config['MAIL_USE_TLS'] = os.getenv(
+        'MAIL_USE_TLS', 'true').lower() == 'true'
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
     app.config['ADMIN_EMAIL'] = os.getenv('ADMIN_EMAIL')
-    
+
     mail.init_app(app)
 
     # Initialize Flask-Migrate
@@ -68,5 +72,5 @@ def create_app():
     from app import models
     from .routes import main
     app.register_blueprint(main)
-    
+
     return app
