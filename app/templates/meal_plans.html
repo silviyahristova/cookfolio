@@ -58,6 +58,10 @@
                     </div>
                     <a href="{{ url_for('main.meal_plans', week_start=next_week) }}" class="week-btn"> <span class="week-nav-text">Next week</span><i class="fa-solid fa-chevron-right"></i></a>
                 </div>
+                <a href="{{ url_for('main.grocery_list', date=start_of_week.strftime('%Y-%m-%d')) }}" class="quick-access-link">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>View Grocery List</span>
+                </a>
             </div>
             <div class="meal-week-grid">
                 {% for day in week_days %}

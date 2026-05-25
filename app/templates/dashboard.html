@@ -71,7 +71,14 @@
                         <i class="fa-solid fa-calendar-plus"></i>
                         <span>Add Meal Plan</span>
                     </a>
-                
+                    <a href="{{ url_for('main.grocery_list') }}" class="quick-access-link">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>View Grocery List</span>
+                    </a>
+                    <a href="{{ url_for('main.discover') }}" class="quick-access-link">
+                        <i class="fa-solid fa-compass"></i>
+                        <span>Discover Recipes</span>
+                    </a>
                 </div>
             </div>
             <div class="divider-btn"></div>
@@ -172,14 +179,19 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="empty-dashboard">
-                            <picture>
-                                <source srcset="{{ url_for('static', filename='images/no-recipes-found.webp') }}" type="image/webp">
-                                <source srcset="{{ url_for('static', filename='images/no-recipes-found.png') }}" type="image/png">
-                                <img src="{{ url_for('static', filename='images/no-recipes-found.png') }}" alt="Cookfolio no meal plans Image" class="page-picture">
-                            </picture>
-                            <p class="dashboard-empty-text">Your planner is empty.</p>
-                            <a href="{{ url_for('main.meal_plans') }}" class="btn btn-success">Go to Meal Planner</a>
+                        <div class="no-recipes-found">
+                            <div class="dashboard-image">
+                                <picture>
+                                    <source srcset="{{ url_for('static', filename='images/no-recipes-found.webp') }}" type="image/webp">
+                                    <source srcset="{{ url_for('static', filename='images/no-recipes-found.png') }}" type="image/png">
+                                    <img src="{{ url_for('static', filename='images/no-recipes-found.png') }}" alt="Cookfolio no meal plans Image" class="page-picture">
+                                </picture>
+                            </div>
+                            <div class="empty-dashboard">
+                                <p class="dashboard-empty-text">Your planner is empty.</p>
+                                <p>Start adding meals to your planner to see them here.</p>
+                                <a href="{{ url_for('main.meal_plans') }}" class="btn btn-success">Go to Meal Planner</a>
+                            </div>
                         </div>
                     {% endif %}
                 </div>
