@@ -1509,6 +1509,64 @@ def support():
 
     return render_template('support.html')
 
+
+# Grocery list route
+
+
+@main.route('/grocery-list')
+@login_required 
+def grocery_list():
+    selected_date = request.args.get('date')
+
+    # Convert selected_date string to date object and validate that it's in the correct format, if not set it to today
+    if selected_date:
+        selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+    else:
+        selected_date = date.today()
+    
+    # Calculate the start and end of the week for the selected date (Monday to Sunday)
+    week_start = selected_date - timedelta(days=selected_date.weekday())
+    week_end = week_start + timedelta(days=6)
+
+    meal_plans = MealPlan.query.filter(
+        MealPlan.user_id == current_user.id,
+        MealPlan.meal_date >= week_start,
+        MealPlan.meal_date <= week_end
+    ).all()
+
+    # Create a dictionary to store grocery items categorized by meal type
+    grocery_items = defaultdict(list)
+
+    # Loop through meal plans and extract ingredients from the associated recipes, categorizing them by meal type
+    for meal in meal_plans:
+        if meal.recipe and meal.recipe.ingredients:
+            ingredients = meal.recipe.ingredients.splitlines()
+
+            for ingredient in ingredients:
+                ingredient = ingredient.strip()
+
+                if ingredient:
+                    grocery_items[meal.meal_type].append(ingredient)
+
+    # Define the order of meal types
+    meal_type_order = {
+        'breakfast': 1,
+        'lunch': 2,
+        'dinner': 3,
+        'dessert/snack': 4
+    }
+
+    ordered_grocery_items = {}
+
+    for meal_type in meal_type_order:
+        if meal_type in grocery_items:
+            ordered_grocery_items[meal_type] = grocery_items[meal_type]
+
+    previous_week = week_start - timedelta(days=7)
+    next_week = week_start + timedelta(days=7)
+
+    return render_template('grocery_list.html', grocery_items=ordered_grocery_items, selected_date=selected_date, week_start=week_start, week_end=week_end, previous_week=previous_week, next_week=next_week)
+
 # Error handlers
 
 
