@@ -413,7 +413,8 @@ header {
 .discover-container,
 .search-container,
 .meal-plan-container,
-.view-meal-plan-container {
+.view-meal-plan-container,
+.grocery-list-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -433,7 +434,8 @@ header {
 .error-text,
 .discover-text,
 .search-text,
-.meal-plan-text {
+.meal-plan-text,
+.grocery-list-text {
     text-align: center;
 }
 
@@ -579,7 +581,8 @@ header {
 .error-section,
 .discover-section,
 .search-results-section,
-.view-meal-plan-section {
+.view-meal-plan-section,
+.grocery-list-section {
     padding: 2rem 1rem 0 1rem;
 }
 
@@ -912,7 +915,8 @@ header {
 }
 
 .quick-access-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     margin: 0 auto;
 }
@@ -1849,6 +1853,71 @@ quick-access-link span {
     margin: 1rem;
 }
 
+/*Grocery List Page*/
+.grocery-category-card {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    transition: 0.2s;
+    margin-bottom: 1rem;
+}
+
+.grocery-category-card h2 {
+    font-size: 1.5rem;
+    color: #1a1919;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.grocery-item {
+    display: block;
+    color: #1a1919;
+    font-size: 1rem;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.grocery-item span {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: left;
+}
+
+.grocery-item label {    
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.grocery-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.grocery-item input[type="checkbox"]:checked + span {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.grocery-list-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 
 /*Media Queries*/
 
@@ -1860,6 +1929,14 @@ quick-access-link span {
 
     .add-meal-btn {
         min-width: 290px;
+    }
+
+    .grocery-category-card {
+        min-width: 330px;
+    }
+
+    .grocery-category-card ul {
+        padding-right: 5rem;
     }
 }
 
@@ -1907,6 +1984,17 @@ quick-access-link span {
     .view-meal-day-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .grocery-category-card ul {
+        padding-right: 15rem;
+    }
+
+    .grocery-list-actions {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
 }
 
 @media (max-width: 768px) {
@@ -2041,7 +2129,8 @@ quick-access-link span {
         margin-top: 4rem;
     }
 
-    .no-recipes-found{
+    .no-recipes-found {
+        padding: 3rem 1rem;
         flex-direction: row-reverse;
     }
 
@@ -2111,6 +2200,20 @@ quick-access-link span {
 
     .no-meal-icon {
         font-size: 3rem;
+    }
+
+    .grocery-list-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .grocery-category-card ul {
+        padding-right: 0;
+    }
+
+    .quick-access-grid {
+    display: flex;
     }
 }
 
@@ -2689,6 +2792,12 @@ quick-access-link span {
 
      .all-recipes-grid{
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grocery-list-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
     }
 }
 
