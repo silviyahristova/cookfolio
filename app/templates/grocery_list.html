@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Cookfolio - Grocery List{% endblock %}
+
+{% block content %}
+<!-- Empty Grocery List Content -->
+    {% if not grocery_items %}
+        <section class="dashboard-section">
+            <div class="grocery-list-container">
+                <div class="dashboard-content">
+                    <div class="dashboard-left">
+                        <div class="dashboard-welcome-text">
+                            <h1>Weekly Grocery List</h1>
+                            <p>Your personalized grocery list based on your saved weekly meal plans.</p>
+                        </div>
+                            <div class="meal-week-navigation">
+                            <a href="{{ url_for('main.grocery_list', date=previous_week) }}" class="week-btn" ><i class="fa-solid fa-chevron-left"></i><span class="week-nav-text">Previous week</span></a>
+                            <div class="meal-week-range">
+                                <span><i class="fa-regular fa-calendar-days"></i> {{ week_start.strftime('%d.%m.%Y') }} - {{ week_end.strftime('%d.%m.%Y') }}</span>
+                            </div>
+                            <a href="{{ url_for('main.grocery_list', date=next_week) }}" class="week-btn"> <span class="week-nav-text">Next week</span><i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-right">
+                        <div class="empty-dashboard">
+                            <picture>
+                                <source srcset="{{ url_for('static', filename='images/empty-dashboard.webp') }}" type="image/webp">
+                                <source srcset="{{ url_for('static', filename='images/empty-dashboard.png') }}" type="image/png">
+                                <img src="{{ url_for('static', filename='images/empty-dashboard.png') }}" alt="Cookfolio empty dashboard Image" class="page-picture">
+                            </picture>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-left">
+                        <div class="empty-dashboard">   
+                            <p class="dashboard-empty-text">Your grocery list is empty</p>
+                            <p>Start adding meal plans to generate your grocery list.</p>
+                            <a href="{{ url_for('main.meal_plans') }}" class="btn btn-success">Go to Meal Planner</a> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    {% else %}
+        <!-- Grocery List Content -->
+        <section class="grocery-list-section">
+            <div class="grocery-list-container">
+                <div class="grocery-list-text">
+                    <h1>Weekly Grocery List</h1>
+                    <p>Your personalized grocery list based on your saved weekly meal plans.</p>
+                    <div class="meal-week-navigation">
+                        <a href="{{ url_for('main.grocery_list', date=previous_week) }}" class="week-btn" ><i class="fa-solid fa-chevron-left"></i><span class="week-nav-text">Previous week</span></a>
+                        <div class="meal-week-range">
+                            <span><i class="fa-regular fa-calendar-days"></i> {{ week_start.strftime('%d.%m.%Y') }} - {{ week_end.strftime('%d.%m.%Y') }}</span>
+                        </div>
+                        <a href="{{ url_for('main.grocery_list', date=next_week) }}" class="week-btn"> <span class="week-nav-text">Next week</span><i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="grocery-list-actions">
+                    <a href="{{ url_for('main.meal_plans') }}" class="btn btn-primary">View Meal Plans</a>
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary"> Back to Dashboard</a>
+                    
+                </div>
+                <div class="grocery-list-grid">
+                    {% for meal_type,ingredients in grocery_items.items() %}
+                        <div class="grocery-category-card">
+                            <h2>{{ meal_type|title }}</h2>
+                            <ul class="ingredient-list">
+                                {% for ingredient in ingredients %}
+                                    <li class="grocery-item">
+                                        <label>
+                                            <input type="checkbox" class="ingredient-checkbox">
+                                            <span class="ingredient-name">{{ ingredient }}</span>
+                                        </label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}
