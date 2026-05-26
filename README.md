@@ -8,7 +8,7 @@
 
 Cookfolio is a recipe management website that allows users to create, edit and organize their own recipes, plan weekly meals and discover new recipes. The application is designed to help users manage their cooking and meal planning in a simple and intuitive way.
 
-This is the documentation for Cookfolio, a full-stack web application. It has been built using HTML5, CSS3, JavaScript, Python, Flask and a relational database. It has been developed for educational purposes as par of Code Institute Level 5 Diploma in Web Application Development.
+This is the documentation for Cookfolio, a full-stack web application. It has been built using HTML5, CSS3, JavaScript, Python, Flask and a relational database. It has been developed for educational purposes as part of Code Institute Level 5 Diploma in Web Application Development.
 
 ---
 
@@ -397,7 +397,7 @@ Icons are used across the website to improve usability and provide clear visual 
     + used to provide external recipe data and functionality.
 + [DB schema diagram](https://dbdiagram.io/home)
     + used to create database schema diagram to show relationships between database models.
-+ [License](https://choosealicense.com/)
++ [MIT License](https://choosealicense.com/)
     + used to help to select open-source license for the project providing permissions, conditions and limitations.
 + [Markdown](https://www.markdownguide.org/)
     + used to structure and format The README and TESTING documentations.
@@ -409,6 +409,26 @@ Icons are used across the website to improve usability and provide clear visual 
 [Back to top](#table-of-content)
 
 ## Future features
+
+* Favourite recipe and recent viewed recipe functionality.
+
+* Nutritional information and calorie tracking for recipes and meal plans.
+
+* Grocery list merge items and export PDF download file.
+
+* Sharing recipes with other users.
+
+* Recipe rating and review and commenting.
+
+* User profile customization.
+
+* Drag and drop meal planner functionality.
+
+* Recipe image gallery.
+
+* Cooking mode - step by step instruction sliders for mobile devices.
+
+* Admin and User analytics dashboard.
 
 [Back to top](#table-of-content)
 
@@ -424,12 +444,63 @@ Please refer to [**here**](TESTING.md) for more information on testing Cookfolio
 
 ## License
 
+This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/). It allows users to use, modify, distribute and share the project while providng attribution to the author. Additional information about the license can be found in the [License](./LICENSE) file included within the project repository.
+
 [Back to top](#table-of-content)
 
 ## Credits
 
+### Content
+
++ [API images](https://www.themealdb.com/) 
+    + recipe data and recipe images are provided through TheMealDB and Spoonacular API integrations.
++ [Favicon.io](https://favicon.io/)
+    + used to create the site Favicon and provided the code in the head of all pages.
++ [Font Awesome](https://fontawesome.com/)
+    + used to add icons to the project and provided the stylesheet link in the head of all pages.
++ [Google Fonts](https://fonts.google.com/)
+    + used to get the links to the fonts that are in the head of the html pages.
++ [ChatGPT Tool](https://chatgpt.com/)
+    + Used to create and download logo and images used throught the website.
+
+### Code
+
++ [Flask](https://flask.palletsprojects.com/en/stable/)
+    + Flask official documentation for application structure, routing, configuration, autetication guidance.
++ [SQLAlchemy](https://www.sqlalchemy.org/)
+    + SQLAlchemy documentation for database models, relationships and ORM implementation.
++ [Flask-Login](https://flask.palletsprojects.com/en/stable/logging/)
+    + Flask-Login documentation for autentication and session management.
++ [Flask-WTF](https://flask.palletsprojects.com/en/stable/patterns/wtforms/)
+    + Flask-WTF documentation for form handling and validation.
++ [Flask-Mail](https://flask-mail.readthedocs.io/en/latest/)
+    + Flask-Mail documentation for password reset email functionality.
++ [Playwright](https://playwright.dev/)
+    + Playwright documentation for automated device testing.
++ [Pytest](https://docs.pytest.org/en/stable/)
+    + Pytest documentation for automated back-end testing.
++ [Heroku](https://www.heroku.com/) 
+    + Heroku documentation for deployment configuration and PostgreSQL integration.
+
+### Tutorials
+
++ [Code Institute](https://learn.codeinstitute.net/login?next=/dashboard)
+    + used for learning materials, walkthrough projects and course content and requirements.
++ [MDN Web Docs](https://developer.mozilla.org/en-US/)
+    + used for help resource for developers, by developers.
++ [W3School](https://www.w3schools.com/)
+    + used for HTML, CSS, JS, Python syntax and tutorials.
++ [ChatGPT](https://chatgpt.com/)
+    + used as learning tool and debbuging guidance.
+
 [Back to top](#table-of-content)
 
 ## Acknowledgements
+
+This project is for educational purpose and was completed as a Portfolio 3 Project for the Full Stack Software Developer Diploma at the Code Institute. I would like to thank 
+
+* Director [Pasquale Fasulo](https://www.linkedin.com/in/pasquale-fasulo-68612218a/) at Bristol City College for his understanding, guidance and feedbacks throughout the project.
+* My mentor Miguel Orteg Legorreta for his guidance, support and suggestions during the project.
+* The whole team at [Code Institute](https://codeinstitute.net/) for their teaching and support.
 
 [Back to top](#table-of-content)
