@@ -253,6 +253,12 @@ The fonts that will be used in the website will be imported from [Google Fonts](
 
 The Cookfolio logo is created using [ChatGPT](https://chatgpt.com) logo design tool. It represent the concept of the digital cookbook where users can organise and manage their personal recipes. The design combines visual elemenents related to cooking and food preparation, helping users immediately understand the purpose of the application. The visual style of the logo is friendly and welcoming, simple and modern. The colours used in the logo follow the same colour palette used throughout the Cookfolio interface. This consistency help to strenghten the brand identity of the website. The logo is used primarily in the navigation bar, where it also functions ad a clickable element that allows users to return to the home page.
 
+<details><summary>Logo image</summary>
+
+![Cookfolio Logo](app/static/images/logo-image.webp)
+
+</details>
+
 **Images**
 
 Images are important in the Cookfolio website. They making the interface more engaging and visually appealing. Food-related images help users connect with recipes. The images used in the website support the theme of cooking and meal preparation while helping users better understand the content presented on each page. Users are able to upload images for their recipes. These images help users quickly identify recipes and make browsing more easier. Recipe images also help create a more realistic digital cookbook experience where user can visually explore meals before deciding what to cook. All images used across the website include similar style, colour theme and layout placement across different pages. 
@@ -266,10 +272,135 @@ Icons are used across the website to improve usability and provide clear visual 
 ## Technologies Used
 
 
-### **Languages**
+### Languages
 
+- [HTML](https://en.wikipedia.org/wiki/HTML5) - used to structure the website pages, forms, navigation and content layout.
+- [CSS](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) - used for custom styling, responsive design, animation and layout improvements.
+- [JavaScript](https://en.wikipedia.org/wiki/JavaScript) - used for interactive front-end functionality.
+- [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) - used back-end programming language for logic, routing, autentication, database interaction and server-side functionality.
 
-### **Tools**
+### Tools
+
+#### Frameworks and Libraries
+
++ [Flask](https://flask.palletsprojects.com/en/stable/)
+    + used to handle application routes, server-logic, configuration and app structure.
++ [Flask-SQLAlchemy](https://flask.palletsprojects.com/en/stable/patterns/sqlalchemy/)
+    + used to simplify database integration and to manage database models and relationships within the Flask application.
++ [Flask-Login](https://flask.palletsprojects.com/en/stable/logging/)
+    + used to manage user autentication, login sessions, route protection and user session handling.
++ [Flask-WTF](https://flask.palletsprojects.com/en/stable/patterns/wtforms/)
+    + used to create and validate secure forms with protection.
++ [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/index.html)
+    + used to manage database migrations and apply database schema changes during development and deployment.
++ [Flask-Mail](https://flask-mail.readthedocs.io/en/latest/)
+    + used to send welcome, password reset emails and support-related emails.
++ [SQLAlchemy](https://www.sqlalchemy.org/)
+    + used ORM to interact with the database using Python models.
++ [WTForms](https://wtforms.readthedocs.io/en/3.2.x/)
+    + used to create forms with built-in validation.
++ [Jinja2](https://jinja.palletsprojects.com/en/stable/)
+    +  used as templating engine for dynamically rendering HTML pages and displaying data from the Flask.
++ [Bootstrap 5](https://getbootstrap.com/)
+    + used to create the structure and layout of the website, making it responsive on all devices.
+
+#### Database
+
++ [SQLite](https://sqlite.org/index.html)
+    + used as local development database during project building and testing.
++ [PostgreSQL](https://www.postgresql.org/)
+    + used as production database for the deployed Heroku application
+
+#### Testing Tools
+
++ [Pytest](https://docs.pytest.org/en/stable/)
+    + used for automated back-end testing -route, CRUD, authentication and validation testing.
++ [Playwright](https://playwright.dev/)
+    + used for front-end testing across different user workflows and responsive layout.
++ [Flake8](https://flake8.pycqa.org/en/latest/)
+    +  used to check Python code quality and PEP8 compliance throughout the project.
++ [Black](https://ichard26-testblackdocs.readthedocs.io/en/stable/usage_and_configuration/the_basics.html)
+    + used as an automated Python code formatter to maintain consistent code readability and styling.
++ [Autopep8](https://pypi.org/project/autopep8/)
+    + used to automatically format Python cod and fix PEP8 style issues such as spacing and line formatting. 
++ [Autoflake](https://pypi.org/project/autoflake/)
+    +  used to remove unused imports and clean unnecessary Python code elements.
++ [W3C HTML Validator](https://validator.w3.org/nu/)
+    + used to validate HTML files.
++ [W3C CSS Validator](https://jigsaw.w3.org/css-validator/#validate_by_input)
+    + used to validate CSS file.
++ [JSHint](https://jshint.com/) 
+    + used to validate JS files.
+
+#### Development Tools
+
++ [Git](https://git-scm.com/docs)
+    + used for version control and tracking project changes throughout development.
++ [GitHub](https://github.com/)
+    + used to store the project repository, manage commits and support deployment.
++ [VS Code](https://code.visualstudio.com/)
+    +  used code editor for project development and debugging.
++ [Heroku](https://www.heroku.com/)
+    + used to deploy and host the production version of the application.
++ [Heroku CLI](https://www.heroku.com/)
+    + used to manage Heroku application through the terminal, including deployment, migrations, view logs, configuration managemnt and remote app access.
++ [Gunicorn](https://gunicorn.org/)
+    + used as production server for running Flask application on Heroku.
++ [Pip](https://pip.pypa.io/en/stable/index.html)
+    +  used to install and manage Python package dependencies for the project.
++ [Virtual Env](https://docs.python.org/3/library/venv.html)
+    + used to create Python environment. 
++ [python-dotenv](https://www.heroku.com/)
+    + used to manage variables in .env file such as API keys, secret keys, email credentials and admin testing details.
++ [psycopg](https://www.psycopg.org/)
+    + used as PostgreSQL database adapter to connect Flask application to the production database.
++ [werkzeug](https://werkzeug.palletsprojects.com/en/stable/)
+    + used for password hashing and Flask support functionality.
+
+#### Other tools
+
++ [Google Fonts](https://fonts.google.com/)
+    + used to get the links to the fonts that are in the head of the html pages. These fonts are then used throughout the website.
++ [Font Awesome](https://fontawesome.com/)
+    + used to add icons to the project.
++ [Figma](https://www.figma.com/)
+    + used to create the wireframes and design layout for the project.
++ [Pixelied](https://pixelied.com/convert/)
+    + used to convert PNG and JPG images to WEBP format images.
++ [Favicon](https://favicon.io/)
+    + used to create the favicon for the website.
++ [Color-hex](https://www.color-hex.com/)
+    + was used to create the colour palette that was used through the website.
++ [Make Tints and Shades](https://maketintsandshades.com/)
+    + used to create the tints and shades from the main colour palette for use on the whole site.
++ [Grammarly](https://app.grammarly.com/)
+    + used to check spelling, grammar, and punctuation in the content of the website.
++ [WebAIM](https://webaim.org/resources/contrastchecker/)
+    + used to check the color contrast.
++ [WAVE Web Accessibility](https://wave.webaim.org/)
+    + used to make web content more accessible to individuals with disabilities.
++ [Mock-up Image](https://amiresponsive.blogspot.com/)
+    + used to create the responsive mock-up image that is at the beginning of the readme file.
++ [Google Dev Tools](https://developer.chrome.com/docs/devtools)
+    + used to test features, responsiveness and to troubleshoot.
++ [Chrome Capture - screenshot & gif tool](https://chromewebstore.google.com/detail/chrome-capture-screenshot/ggaabchcecdbomdcnbahdfddfikjmphe?hl=en-US&utm_source=ext_sidebar)
+    + used to take screenshots and screen record to use in the Readme file.
++ [GIF Compressor](https://www.freeconvert.com/gif-compressor)
+    + used to compress gif files to use in the Readme file.
++ [Node JS](https://nodejs.org/en)
+    + used to install and manage playwright testing dependencies.
++ [ChatGPT](https://chatgpt.com/)
+    + used to create logo and images related for the website, debugging tool and also to check my spelling and improve my sentences in Readme and Testing files.
++ [TheMealDB API](https://www.themealdb.com/)
+    + used to provide external recipe data and functionality.
++ [Spoonacular API](https://spoonacular.com/)
+    + used to provide external recipe data and functionality.
++ [DB schema diagram](https://dbdiagram.io/home)
+    + used to create database schema diagram to show relationships between database models.
++ [License](https://choosealicense.com/)
+    + used to help to select open-source license for the project providing permissions, conditions and limitations.
++ [Markdown](https://www.markdownguide.org/)
+    + used to structure and format The README and TESTING documentations.
 
 [Back to top](#table-of-content)
 
