@@ -6,88 +6,111 @@ from app import db
 
 
 def test_register_page_loads(client):
-    response = client.get('/register')
+    response = client.get("/register")
 
     assert response.status_code == 200
-    assert b'Register' in response.data
+    assert b"Register" in response.data
+
 
 # test for empty fields
 
 
 def test_register_empty_fields(client):
-    response = client.post('/register', data={
-        'username': '',
-        'email': '',
-        'password': '',
-        'confirm_password': ''
-    }, follow_redirects=True)
+    response = client.post(
+        "/register",
+        data={"username": "", "email": "", "password": "", "confirm_password": ""},
+        follow_redirects=True,
+    )
 
     assert response.status_code == 200
-    assert b'All fields are required.' in response.data
+    assert b"All fields are required." in response.data
+
 
 # test for password mismatch
 
 
 def test_register_password_mismatch(client):
-    response = client.post('/register', data={
-        'username': 'testuser',
-        'email': 'testuser@example.com',
-        'password': 'password123',
-        'confirm_password': 'password456'
-    }, follow_redirects=True)
+    response = client.post(
+        "/register",
+        data={
+            "username": "testuser",
+            "email": "testuser@example.com",
+            "password": "password123",
+            "confirm_password": "password456",
+        },
+        follow_redirects=True,
+    )
 
     assert response.status_code == 200
-    assert b'Passwords do not match.' in response.data
+    assert b"Passwords do not match." in response.data
+
 
 # test for invalid email
 
 
 def test_register_invalid_email(client):
-    response = client.post('/register', data={
-        'username': 'testuser',
-        'email': 'invalidemail',
-        'password': 'password123',
-        'confirm_password': 'password123'
-    }, follow_redirects=True)
+    response = client.post(
+        "/register",
+        data={
+            "username": "testuser",
+            "email": "invalidemail",
+            "password": "password123",
+            "confirm_password": "password123",
+        },
+        follow_redirects=True,
+    )
 
     assert response.status_code == 200
-    assert b'Please enter a valid email address.' in response.data
+    assert b"Please enter a valid email address." in response.data
+
 
 # test for duplicate username or email
 
 
 def test_register_duplicate_username_email(client, app):
     with app.app_context():
-        user = User(username='testuser', email='testuser@example.com',
-                    password=generate_password_hash('password123'))
+        user = User(
+            username="testuser",
+            email="testuser@example.com",
+            password=generate_password_hash("password123"),
+        )
         db.session.add(user)
         db.session.commit()
 
-    response = client.post('/register', data={
-        'username': 'testuser',
-        'email': 'testuser@example.com',
-        'password': 'password123',
-        'confirm_password': 'password123'
-    }, follow_redirects=True)
+    response = client.post(
+        "/register",
+        data={
+            "username": "testuser",
+            "email": "testuser@example.com",
+            "password": "password123",
+            "confirm_password": "password123",
+        },
+        follow_redirects=True,
+    )
 
     assert response.status_code == 200
-    assert b'Username or email already exists.' in response.data
+    assert b"Username or email already exists." in response.data
+
 
 # test for successful registration
 
 
 def test_register_success(client, app):
-    response = client.post('/register', data={
-        'username': 'newuser',
-        'email': 'newuser@example.com',
-        'password': 'password123',
-        'confirm_password': 'password123'
-    }, follow_redirects=True)
+    response = client.post(
+        "/register",
+        data={
+            "username": "newuser",
+            "email": "newuser@example.com",
+            "password": "password123",
+            "confirm_password": "password123",
+        },
+        follow_redirects=True,
+    )
 
     assert response.status_code == 200
-    assert b'Registration successful! You can now log in.' in response.data
+    assert b"Registration successful! You can now log in." in response.data
 
     with app.app_context():
-        user = User.query.filter_by(username='newuser').first()
+        user = User.query.filter_by(username="newuser").first()
         assert user is not None
-        assert user.email == 'newuser@example.com'
+        assert user.email == "newuser@example.com"
