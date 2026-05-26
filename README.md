@@ -1,10 +1,10 @@
 # Cookfolio
 
-<!--add responsive mock-up image-->
+![Responsive Mock-up](app/static/images/docs/cookfolio-mock-up.webp)
 
 #### **By Silviya Hristova**
 
-<!--add link-->
+[Click here to view the live web application](https://cookfolio-dc589e41eddc.herokuapp.com/)
 
 Cookfolio is a recipe management website that allows users to create, edit and organize their own recipes, plan weekly meals and discover new recipes. The application is designed to help users manage their cooking and meal planning in a simple and intuitive way.
 
@@ -43,7 +43,8 @@ The website focuses on simplicity, usability and accessibility, using a mobile-f
 
 Cookfolio is developed as part of Code Institute Level 5 Diploma in Web Application Develoment and demostrate full CRUD functionality, relational database design, and server-side logic using Python and Flask.
 
-<!--add link-->
+Click [**here**](https://cookfolio-dc589e41eddc.herokuapp.com/) to view the live website.
+
 
 ## User Experiences
 
@@ -82,7 +83,7 @@ Cookfolio is developed as part of Code Institute Level 5 Diploma in Web Applicat
 #### **Site owner (Admin):**
 
 - As an admin, I want to access an admin dashboard.
-- As an admin, I want to view all registered users.
+- As an admin, I want to view all support messages, that users sending.
 - As an admin, I want users to register and log in.
 - As an admin, I want each recipe to be linked to a specific user so that ownership is enforced.
 - As an admin, I want to prevent users from editing or deleting recipes they do not own.
@@ -106,40 +107,50 @@ The project aims to demostrate the following objectives:
 - Design a relational database schema that supports structures data storage.
 - Apply a mobile-first approach to ensure the website is accessible and usable across different devices.
 - Follow accessibility best practices, including clear navigation, readable typography and sufficient colour contrast.
-- Prrduce clear planning documentation, wireframes, page-flow diagrams and database schema design.
+- Produce clear planning documentation, wireframes, page-flow diagrams and database schema design.
 - Maintain a clean codebase using version control and regular commits.
 
 ### **Scope**
 
-The Cookfolio website is designed to allow users to manage their personal recipes, organize cooking content, and plan meals efficiently. The site includes core features that allows users to create and manage recipes, while also providing additional tools such as recipe discovery and meal planning to enhance the overal user experience.
+The Cookfolio website is designed to allow users to manage their personal recipes, organize cooking content, and plan meals efficiently. The site includes core features that allows users to create and manage recipes and meal plans, while also providing additional tools such as recipe discover, quick access links, empty states and support form to enhance the overal user experience.
 
 #### **Core features**
 
 The following core features are implemented in the Cookfolio application:
 
-- User Authentication - user can create an account, log in, and log out anytime.
+- User Authentication - user can create an account, log in, and log out anytime and reset password.
+
+- Secure autentication and protected routes.
 
 - Recipe Management (CRUD functionality) - users can create, view, edit and delete recipes. Each recipe contains details such as title, ingredients, instructions, preparation time, servings and category.
 
-- Recipe Category - Recipes can be organised into categories such as breakfast, lunch, dinner or desserts to make browsing esier.
+- Recipe Category - Recipes can be organised into categories such as breakfast, lunch, dinner or desserts/snack to make browsing easier.
 
 - Recipe Image Upload - users can upload images for their recipes, allowing each recipe to include a visual representation of the dish.
 
 - Recipe Search and Filtering - users can search for recipes by title or category to find quickly recipes they need.
 
+- Meal Planner (CRUD functionality) - users can create, view, edit and delete meal plans. User can assign recipes to specific days of the week, allowing them to plan meals in advance. User cannot add, edit or delete past meals, but is able to view them.
+
+- Grocery list generation based on meal plans.
+
+- Responsive mobile-first design for mobile, tablet and desktop devices.
+
+- Admin-only access for admin dashboard.
+
 #### **Additional features**
 
 To enhance the user experience, the following additional features are implemented in Cookfolio website:
 
-- Meal Planner - users can assign recipes to specific days of the week, allowing them to plan meals in advance.
+- API recipe search - two API have been implemented for best expirience TheMealDB and Spoonacular.
 
-- Recipe Discovery - users can explore new recipes using an external recipe API, allowing them to discover new dishesh and ideas.
+- Recipe Discover - users can explore new recipes using an external recipe API, allowing them to discover new dishesh and ideas.
 
-- Grocery List - Ingredients from planned recipes can be used to generate a grocery list to assist the users with shopping.
+- Dashboard with quick-access navigation 
 
-- Support Page - users can send support messages through a contact form f they encounter issues or have questions about the application.
+- Empty-state dashboard sections
 
-- Analytics Dashboard - the dashboard provides insights such as the number of recipes created and etc.
+- Support Page - users can send support messages through a contact form if they encounter issues or have questions about the application.
 
 #### **Error Handling**
 
@@ -154,17 +165,19 @@ The website includes custom error pages to improve the user experience:
 
 ### **Structure**
 
-The structure of Cookfolio is designed to provide a clear and logical flow based on the user`s authentication state. The website separates public pages from authenticated user features, allowing visitors to explore the website before creating an account, while providing registered users with access to advances features such as recipe management and meal planning. 
+The structure of Cookfolio is designed to provide a clear and logical flow based on the user`s authentication status and interaction flow. The website separates guest and authenticated user experiences, allowing visitors to explore the website before creating an account, while providing registered users with access to advances features such as recipe management and meal planning and grocery list generation. 
 
-Unathenticated users can access the Home page, where the purpose of the site is explained, and are guided toward the Login and Registration pages. These pages provide a simple and focused authentication flow without distractions.
+Unathenticated users can access the Home page, Login page, Registration page, Discover page and Support page. The Home page introduces the purpose of the application and guides users toward account creation and autentication through clear call-to-action section and navigation links.
 
-Once authenticated, users are redirected to the Dashboard, which acts as the main hub of the website. From the dashboard, users can view all of their recipes and access core actions such as adding, editing, or deleting recipes. The dashboard layout ensures that content management actions are easy to locate and perform.
+Once authenticated, users are redirected to the Dashboard, which acts as the central hub of the application. From the dashboard, users can quickly navigate to key areas including My recipes, Add Recipe, Meal Planner, Grocery list, Discover Recipes and Support pages. The dashboard structure is designed to prioritise commonly used actions and improve usability.
 
-Form-based pages such as Add Recipe, Edit Recipe, and Support follow a consistent layout. This helps users recognise familiar patterns and easy interacting with the website.
+Recipe management follows a structured CRUD workflow, allowing user to create, view, edit and delete recipes through consistent form layouts and navigation. Recipe detail page provide structured information including ingredients, instruction, category, preparation time and servings.
 
-Navigation is handled through a navigation bar and a mobile-friendly hamburger menu, providing access to key areas such as dashboard, support page, log out. Logging out ends the user session and redirects the user back to the Home page.
+Meal planning functionality is structured around daily and weekly planning workflows. Users can organize meals into categories such as Breakfast, Lunch, Dinner and Dessert/Snack, while grocery list generation is connected to planned meals to support a smooth user experience.
 
-The overall structure supports a predictable and intuitive user journey, ensuring that users can move through the website efficiently. 
+Navigation is handled through a navigation bar and a mobile-friendly hamburger menu, providing access to key areas such as dashboard, meal planner, support page, log out. Logging out ends the user session and redirects the user back to the Login page.
+
+The overall structure supports a predictable, intuitive and responsive user journey, ensuring that users can move through the website efficiently. 
 
 A custom 403, 404 and 500 error pages are implemented to handle errors. The pages provide clear feedback to users and offers navigation back to the Home or Dashboard page, ensuring smooth and controlled user experience.
 
@@ -224,11 +237,11 @@ Wireframes were created using Figma to plan the structure of each page. These wi
 
 The color palette for Cookfolio was selected to create a warm, inviting,and food-insired visual dentity. The colors were choosen to be associated with cooking, freshness and appetite while maintaining good readability and accessibility across devices. The palette combines warm and natural tones associated with food, ingredients and kitchen environments. Red colour is strongly associated with food and appetite. It is commonly used in food branding because it attracts attention and simulates hunger. In Cookfolio red is used for primary buttons and important actions such as adding and saving recipes. Green colour represents freshness, vegetables and healthy ingredients. It helps balance the strong red tone. The colour is used for confirmation actions and success messages. A light grey background colour was selected to create a clean and neutral interface that allows recipe and images to stand out without overwhelming the user. Dark grey used for body text to maintain strong readability. White colour is used to provide contrast and maintain a clean layout. The selected colours were choosen with accessibility in mind. The palette were created using the site [Color-hex.com](https://www.color-hex.com/). Tints and Shades of these colours will be used also and are created using the site [Maketintsandshade.com](https://maketintsandshades.com/).
 
-![Colour Pallette](static/images/docs/cookfolio-colorpalette.webp)
+![Colour Pallette](app/static/images/docs/cookfolio-colorpalette.webp)
 
 <details><summary>Tints and shades</summary>
 
-![Tints and shades](static/images/docs/cookfolio-tintandshades.webp)
+![Tints and shades](app/static/images/docs/cookfolio-tintandshades.webp)
 
 </details>
 
