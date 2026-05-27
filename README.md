@@ -515,6 +515,50 @@ Testing was integrated throughout the development. The testing process included:
 
 ## Database Design
 
+Cookfolio uses a relational database structure managed with [SQLAlchemy](https://www.sqlalchemy.org/). The database is designed to support user authentication, recipe management, meal planning, and future features. [SQLite](https://sqlite.org/index.html) was used during local development, while [PostgreSQL](https://www.postgresql.org/) was used in the deployed Heroku production environment. The database structure was planned and visualised using [DB schema diagram](https://dbdiagram.io/home). Main database models are User model, Category model, Recipe model, Meal Plan model and Support messages model. The database relationships were designed to maintan structured and connected data in the application. Foreign keys were used to maintain relationships between users, recipes, categories, meal plans and support messages. [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/index.html) was used to manage database migrations throughout development. Migrations were also applied to the Heroku PostgreSQL production database during deployment.
+
+![Cookfolio Database Schema](app/static/images/docs/cookfolio-database-schema.png)
+
+### User model
+
+- The User model stores user account information and authentication data. Main fields include id, username, email, password_hash.
+
+- Relationships: 
+    - One user can have many recipes.
+    - One user can have many meal plans.
+    - One user can have many support messages.
+
+### Category model
+
+- The Category model stores recipe categories used in the application. Main fields include id, name, order. Order field used for a consistent category order across the application.
+
+- Relationships:
+    - One category can contain many recipes.
+
+### Recipe model
+
+- The Recipe model stores recipe information created and managed by users. Main fields are id, title, ingredients, instructions, prep_time, servings, image_url, user_id and category_id.
+
+- Relationships:
+    - Each recipe belongs to one user.
+    - Each recipe belongs to one category.
+    - One recipe can appear in many meal plans.
+
+### Meal Plan Model
+
+- The Meal Plan model stores planned meals for users. Main fields are id, meal_date, meal_type, user_id and recipe_id.
+
+- Relationships: 
+    - Each meal plan belongs to one user.
+    - Each meal plan belongs to one recipe.
+
+### Support Message Model
+
+- The SupportMessage model stores support requests and feedback submitted by the users through the support/contact form. Main fields are id, user_id, name, email, subject, messages.
+
+- Relationships:
+    - One user can submit many messages.
+
 [Back to top](#table-of-content)
 
 ## Features
