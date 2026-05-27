@@ -15,19 +15,27 @@ This is the documentation for Cookfolio, a full-stack web application. It has be
 ## Table of content
 
 - [**About**](#about)
-- [**User Experiences**](#user-experiences)
+- [**User Experience**](#user-experience)
     - [**User Stories**](#user-stories)
     - [**Strategy**](#strategy)
     - [**Scope**](#scope)
     - [**Structure**](#structure)
     - [**Skeleton**](#skeleton)
     - [**Surface**](#surface)
+- [**Agile Planning and Development**](#agile-planning-and-development)
 - [**Technologies Used**](#technologies-used)
     - [**Languages**](#languages)
-    - [**Tools**](#tools)
+    - [**Frameworks and Libraries**](#frameworks-and-libraries)
+    - [**Database**](#database)
+    - [**APIs**](#apis)
+    - [**Testing and Validation Tools**](#testing-and-validation-tools)
+    - [**Development Tools**](#development-tools)
+    - [**Other Tools**](#other-tools)
+- [**Database Design**](#database-design)
 - [**Features**](#features)
 - [**Functionality**](#functionality)
-- [**Future improvemens**](#future-improvements)
+- [**Security Features**](#security-features)
+- [**Future Enhancements**](#future-enhancements)
 - [**Testing**](#testing)
 - [**Deployment**](#deployment)
 - [**License**](#license)
@@ -46,7 +54,7 @@ Cookfolio is developed as part of Code Institute Level 5 Diploma in Web Applicat
 Click [**here**](https://cookfolio-dc589e41eddc.herokuapp.com/) to view the live website.
 
 
-## User Experiences
+## User Experience
 
 ### **User Stories**
 
@@ -269,8 +277,101 @@ Icons are used across the website to improve usability and provide clear visual 
 
 [Back to top](#table-of-content)
 
-## Technologies Used
+## Agile Planning and Development
 
+### Agile Workflow
+
+Cookfolio was developed using an Agile workflow approach, allowing features to be planned, built, tested and improved continuously throughout development. The project was developed iteratively in small staged rather than attempting to build all functionallity at once. The approach helped maintain organized development, continuous improvement and a user-focused design process throughout the project development.
+
+### Development Process
+
+The project followed a feature-by-feature workflow:
+
+* Planning the feature and user functionality.
+* Designing layouts and database structure.
+* Implementing back-end functionality using Flask and SQLAlchemy.
+* Building front-end template and responsive layouts.
+* Testing functionality manually and automatically.
+* Debugging and improving responsiveness.
+* Committing changes regularly to GitHub.
+* Deploying updates to Heroku.
+* Refining the feature based on usability and accesibility improvements.
+
+This workflow allowed features to be developed incrementally while maintaining project stability and organisation.
+
+### Iterative Development
+
+Cookfolio was continuously improved throughout development. Examples of improvements include:
+
+- dashboard redesign and layout refinements
+- meal planner usability improvements
+- grocery list enchancements
+- responsive design improvements
+- accessibility and color countrast improvements
+- validation and flash messages improvements
+- password reset enchancements and etc.
+
+### MoSCoW Prioritisation
+
+MoSCoW Prioritisation was used to organize features based on project importance and development priority.
+
+#### Must Have
+
+- User Authentication system
+- Recipe CRUD functionality
+- Meal Planner
+- Responsive design
+- Database integration
+- Search functionality
+- Heroku deployment
+
+#### Should Have
+
+- Automated testing
+- Password reset functionality
+- API recipe integration
+- Grocery list generation
+
+#### Could Have
+
+- Recipe favourites
+- Recipe Cooking mode slider
+- Recently view
+- Recomended recipes
+- Nutrition tracking
+
+#### Won`t Have (Current Version)
+
+- Analytic Dashboard
+- User Profile 
+- Real-time recipe sharing and commenting
+
+### GitHub and Version Control
+
+Git and GitHub were used for version control and workflow management throughout the development. The workflow included:
+
+- Small and frequent commits
+- Descriptive commit messages using feat, fix, style, test, docs, chore.
+- Feature-by-feature development
+- Continuously updates
+- debugging and testing
+
+### Continuous Testing
+
+Testing was integrated throughout the development. The testing process included:
+
+- Manual testing
+- Responsive testing
+- Browser compatibility testing
+- Automated testing with Pytest and Plawright
+- Accessibility testing
+- Validation testing
+
+
+
+[Back to top](#table-of-content)
+
+## Technologies Used
 
 ### Languages
 
@@ -279,9 +380,7 @@ Icons are used across the website to improve usability and provide clear visual 
 - [JavaScript](https://en.wikipedia.org/wiki/JavaScript) - used for interactive front-end functionality.
 - [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) - used back-end programming language for logic, routing, autentication, database interaction and server-side functionality.
 
-### Tools
-
-#### Frameworks and Libraries
+### Frameworks and Libraries
 
 + [Flask](https://flask.palletsprojects.com/en/stable/)
     + used to handle application routes, server-logic, configuration and app structure.
@@ -304,14 +403,21 @@ Icons are used across the website to improve usability and provide clear visual 
 + [Bootstrap 5](https://getbootstrap.com/)
     + used to create the structure and layout of the website, making it responsive on all devices.
 
-#### Database
+### Database
 
 + [SQLite](https://sqlite.org/index.html)
     + used as local development database during project building and testing.
 + [PostgreSQL](https://www.postgresql.org/)
     + used as production database for the deployed Heroku application
 
-#### Testing Tools
+### APIs
+
++ [TheMealDB API](https://www.themealdb.com/)
+    + used to provide external recipe data and functionality.
++ [Spoonacular API](https://spoonacular.com/)
+    + used to provide external recipe data and functionality.
+
+### Testing and Validation Tools
 
 + [Pytest](https://docs.pytest.org/en/stable/)
     + used for automated back-end testing -route, CRUD, authentication and validation testing.
@@ -332,7 +438,7 @@ Icons are used across the website to improve usability and provide clear visual 
 + [JSHint](https://jshint.com/) 
     + used to validate JS files.
 
-#### Development Tools
+### Development Tools
 
 + [Git](https://git-scm.com/docs)
     + used for version control and tracking project changes throughout development.
@@ -357,7 +463,7 @@ Icons are used across the website to improve usability and provide clear visual 
 + [werkzeug](https://werkzeug.palletsprojects.com/en/stable/)
     + used for password hashing and Flask support functionality.
 
-#### Other tools
+### Other Tools
 
 + [Google Fonts](https://fonts.google.com/)
     + used to get the links to the fonts that are in the head of the html pages. These fonts are then used throughout the website.
@@ -391,10 +497,6 @@ Icons are used across the website to improve usability and provide clear visual 
     + used to install and manage playwright testing dependencies.
 + [ChatGPT](https://chatgpt.com/)
     + used to create logo and images related for the website, debugging tool and also to check my spelling and improve my sentences in Readme and Testing files.
-+ [TheMealDB API](https://www.themealdb.com/)
-    + used to provide external recipe data and functionality.
-+ [Spoonacular API](https://spoonacular.com/)
-    + used to provide external recipe data and functionality.
 + [DB schema diagram](https://dbdiagram.io/home)
     + used to create database schema diagram to show relationships between database models.
 + [MIT License](https://choosealicense.com/)
@@ -404,11 +506,23 @@ Icons are used across the website to improve usability and provide clear visual 
 
 [Back to top](#table-of-content)
 
+## Database Design
+
+[Back to top](#table-of-content)
+
 ## Features
 
 [Back to top](#table-of-content)
 
-## Future features
+## Functionality
+
+[Back to top](#table-of-content)
+
+## Security Features
+
+[Back to top](#table-of-content)
+
+## Future Enhancements
 
 * Favourite recipe and recent viewed recipe functionality.
 
@@ -499,8 +613,7 @@ This project is licensed under the [MIT License](https://choosealicense.com/lice
 
 This project is for educational purpose and was completed as a Portfolio 3 Project for the Full Stack Software Developer Diploma at the Code Institute. I would like to thank 
 
-* Director [Pasquale Fasulo](https://www.linkedin.com/in/pasquale-fasulo-68612218a/) at Bristol City College for his understanding, guidance and feedbacks throughout the project.
-* My mentor Miguel Orteg Legorreta for his guidance, support and suggestions during the project.
+* My mentor Miguel Orteg Legorreta for his guidance, support and suggestions during the project. Also understanding, guidance and feedbacks throughout the project.
 * The whole team at [Code Institute](https://codeinstitute.net/) for their teaching and support.
 
 [Back to top](#table-of-content)
