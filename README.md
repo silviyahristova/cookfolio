@@ -38,6 +38,10 @@ This is the documentation for Cookfolio, a full-stack web application. It has be
 - [**Future Enhancements**](#future-enhancements)
 - [**Testing**](#testing)
 - [**Deployment**](#deployment)
+    - [**Forking the Repository**](#forking-the-repository)
+    - [**Cloning the Repository**](#cloning-the-repository)
+    - [**Local Development**](#local-development)
+    - [**Heroku Production Deployment**](#heroku-production-deployment)
 - [**License**](#license)
 - [**Credits**](#credits)
 - [**Acknowledgements**](#acknowledgements)
@@ -521,6 +525,67 @@ Testing was integrated throughout the development. The testing process included:
 
 [Back to top](#table-of-content)
 
+## Security Features
+
+Cookfolio includes multiple security features to help protect user data, manage authentication securely and improve overall application safety.
+
+### User Authentication
+
+- Flask-Login is used to manage user authentication and sessions.
+- Users are required to log in to access protected pages and features.
+- Logged in users are redirected away from login and registration pages where appropriate.
+
+### Password Security
+
+- User passwords are securely hashed before being stored in the database.
+- Plain text passwords are never stored.
+- Password reset functionality includes secure token generation and validation.
+- Password reset tokens are time-limited.
+- Reset links are designed for single-use functionality.
+- User cannnot reuse their previous password during password reset.
+
+### Route Protection
+
+- Protected routes restrict unauthorised access to private pages.
+- Admin-only routes are restricted to administrator accounts.
+- User can only edit or delete their own recipes and meal plans.
+
+### Form Validation
+
+Cookfolio uses manual server-side validation to validate user input before data is processed or stored in the database. Validation checks include required fields, title lenght, numeric validation for servings and preparation time, category validation and etc. User feedback through flash messages.
+
+### Environment Variables 
+
+Sensitive configuration data is stored using enviroment variables including secret keys, email credentials, database URLs, API keys, Admin details. This prevent sensitive information from being exposed in the source code.
+
+### Production Security
+
+- DEBUG mode is disabled in production.
+- PostgreSQL is used for the deployed production database.
+- Gunicorn is used as the production WSGI server on Heroku.
+
+### Session and Access Management
+
+- User session are managed securely through Flask session handling
+- Authentication checks are used to prevent unauthorised page access.
+- Flash messages provide secure and clear feedback during authentication and form actions.
+
+
+### Sensitive File Protection
+
+The project uses a ".gitignore" file to prevent sensitive files, unnecessary dependencies and system files from being committed to GitHub. Ignore files include:
+
+- virtual enviroments
+- environment variable files
+- Python cache files
+- IDE configuration files
+- Playwright screenshots and test results
+- upladed media files
+- node modules
+
+This helps protect sensitive information such as secret keys, email credentials, API keys, database configuration.
+
+[Back to top](#table-of-content)
 
 ## Future Enhancements
 
