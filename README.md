@@ -32,7 +32,7 @@ This is the documentation for Cookfolio, a full-stack web application. It has be
     - [**Development Tools**](#development-tools)
     - [**Other Tools**](#other-tools)
 - [**Database Design**](#database-design)
-- [**Features**](#features)
+- [**Features and Functionality**](#features-and-functionality)
 - [**Functionality**](#functionality)
 - [**Security Features**](#security-features)
 - [**Future Enhancements**](#future-enhancements)
@@ -561,11 +561,216 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 [Back to top](#table-of-content)
 
-## Features
+## Features and Functionality
 
-[Back to top](#table-of-content)
+### Header and Navigation
 
-## Functionality
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/cookfolio-header-desktop.png"> <img src="app/static/images/docs/hamburger-menu.png"> <img src="app/static/images/docs/cookfolio-header-guest.png"> 
+<img src="app/static/images/docs/cookfolio-header.png">
+</details>
+
+* Cookfolio includes a consistent header and navigation system across the website.
+
+* Navigation links change depending on whether the user is logged in or logged out. Protected pages are only accessible to authenticated users.
+ 
+* Users can easily move around the site, return home using logo and acess the correct pages based on their login status.
+
+### Footer
+
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/cookfolio-footer-mobile.png"> <img src="app/static/images/docs/cookfolio-footer.png">
+</details>
+
+* A consistent footer is included across the website.
+
+* Footer links provide access to key pages and external social links.
+
+* The footer improves navigation and gives the application a complete , professional layout.
+
+### Buttons and Links
+
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/buttons-home.png"> <img src="app/static/images/docs/buttons-dashboard.png"> <img src="app/static/images/docs/buttons-navigation.png">
+<img src="app/static/images/docs/button-recipe.png"> <img src="app/static/images/docs/buttons-meal-plan.png"> <img src="app/static/images/docs/buttons-meal.png"> 
+<img src="app/static/images/docs/links-dashboard.png">
+</details>
+
+* Buttons and links are styled consistently across the webiste.
+
+* Buttons redirect users to the correct pages such as adding recipes, editing meal plans, generating grocery lists, returning to dashboard, cancel actions and etc.
+
+* Clear button text helps users understand eacg action before clicking.
+
+### Flash messages
+
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/flash-message-add-meal.png"> <img src="app/static/images/docs/flash-message-add-recipe.png"> <img src="app/static/images/docs/flash-message-all-fields.png">
+<img src="app/static/images/docs/flash-message-invalid-username.png"> <img src="app/static/images/docs/flash-message-select-one.png">
+</details>
+
+* Cookfolio uses flash messages to provide user feedback.
+
+* Flash messages are triggeres after actions such as login, logout, recipe changes, form errors, password reset requests, and meal planner updates.
+
+* User receive clear confirmation or error feedback after each action.
+
+### Favicon
+
+<details><summary>Screenshots</summary>
+
+* Desktop Favicon
+
+<img src="app/static/images/docs/cookfolio-desktop-favicon.png">
+
+* Mobile Favicon
+
+<img src="app/static/images/docs/cookfolio-mobile-favicon.png" width=300px>
+</details>
+
+* Cookfolio includes a custom favicon. 
+
+* Favicon files are stored in the static files and linked in the base template.
+
+* The favicon improves branding and makes the website look more professional in browser tabs.
+
+### Login and Registration
+
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/register-form.png"> <img src="app/static/images/docs/login-form.png"> <img src="app/static/images/docs/welcome-email.png">
+</details>
+
+* User can register, log in and log out.
+
+* Passwords are hashed before being stored. Flask-Login manages user sessions and protected routes. Flask-Mail will send welcome email once user is sucessfully registered.
+
+* User can securely access their own recipes, meal plans and dashboard.
+
+### Password Reset and Emails
+
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/forgot-password.png"> <img src="app/static/images/docs/reset-form.png"> 
+<img src="app/static/images/docs/reset-email.png">,
+</details>
+
+* User can request a password reset email.
+
+* Flask-Mail send password reset links. Reset tokens are generated, validated, time-limited and designed to support secure password recovery.
+
+* User can recover their account without needing admin support.
+
+### Dashboard
+
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+### Recipe Management
+
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+### Recipe Categories
+
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+### Meal Plan Management
+
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+### Discover and Search
+
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+### API Integration
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+
+### Grocery List Generator
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+
+
+
+### Error pages
+
+<details><summary>Screenshots</summary>
+
+<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
+<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
+<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+</details>
+
+
+
+### Support Messages
+
+<details><summary>Screenshots</summary>
+
+<img src="app/static/images/docs/contact-form.png"> <img src="app/static/images/docs/confirmation-email.png">
+</details>
+
+* Users can submit a support messages.
+
+* Support messages are validated and stored in the database.
+
+* Users have a simple way to send feedback or request help. The support message form is available for unauthorised users as well.
+
+### Admin Dashboard
+
+### Responsive Design
+
+* Cookfolio is designed for mobile, tablet and desktop devices.
+
+* Responsive layout are built uing custom CSS, CSS grid, Flexbox and media queries.
+
+* Users can use the application on different screen sizes.
+
+### Security
+
+* Cookfolio includes security-focused functionality.
+
+* Secure measures include password hashing, protected routes, environment variables, gitignore protection, user ownership, and disabled DEBUG mode in production.
+
+* Users can trust that their account and personal content are handled more safely.
 
 [Back to top](#table-of-content)
 
