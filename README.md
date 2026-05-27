@@ -299,6 +299,8 @@ The project followed a feature-by-feature workflow:
 
 This workflow allowed features to be developed incrementally while maintaining project stability and organisation.
 
+---
+
 ### Iterative Development
 
 Cookfolio was continuously improved throughout development. Examples of improvements include:
@@ -310,6 +312,8 @@ Cookfolio was continuously improved throughout development. Examples of improvem
 - accessibility and color countrast improvements
 - validation and flash messages improvements
 - password reset enchancements and etc.
+
+---
 
 ### MoSCoW Prioritisation
 
@@ -339,12 +343,15 @@ MoSCoW Prioritisation was used to organize features based on project importance 
 - Recently view
 - Recomended recipes
 - Nutrition tracking
+- Enchanced CSRF protection and additional form security improvements
 
 #### Won`t Have (Current Version)
 
 - Analytic Dashboard
 - User Profile 
 - Real-time recipe sharing and commenting
+
+---
 
 ### GitHub and Version Control
 
@@ -356,6 +363,8 @@ Git and GitHub were used for version control and workflow management throughout 
 - Continuously updates
 - debugging and testing
 
+--- 
+
 ### Continuous Testing
 
 Testing was integrated throughout the development. The testing process included:
@@ -366,8 +375,6 @@ Testing was integrated throughout the development. The testing process included:
 - Automated testing with Pytest and Plawright
 - Accessibility testing
 - Validation testing
-
-
 
 [Back to top](#table-of-content)
 
@@ -388,16 +395,12 @@ Testing was integrated throughout the development. The testing process included:
     + used to simplify database integration and to manage database models and relationships within the Flask application.
 + [Flask-Login](https://flask.palletsprojects.com/en/stable/logging/)
     + used to manage user autentication, login sessions, route protection and user session handling.
-+ [Flask-WTF](https://flask.palletsprojects.com/en/stable/patterns/wtforms/)
-    + used to create and validate secure forms with protection.
 + [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/index.html)
     + used to manage database migrations and apply database schema changes during development and deployment.
 + [Flask-Mail](https://flask-mail.readthedocs.io/en/latest/)
     + used to send welcome, password reset emails and support-related emails.
 + [SQLAlchemy](https://www.sqlalchemy.org/)
     + used ORM to interact with the database using Python models.
-+ [WTForms](https://wtforms.readthedocs.io/en/3.2.x/)
-    + used to create forms with built-in validation.
 + [Jinja2](https://jinja.palletsprojects.com/en/stable/)
     +  used as templating engine for dynamically rendering HTML pages and displaying data from the Flask.
 + [Bootstrap 5](https://getbootstrap.com/)
@@ -518,9 +521,6 @@ Testing was integrated throughout the development. The testing process included:
 
 [Back to top](#table-of-content)
 
-## Security Features
-
-[Back to top](#table-of-content)
 
 ## Future Enhancements
 
@@ -544,6 +544,8 @@ Testing was integrated throughout the development. The testing process included:
 
 * Admin and User analytics dashboard.
 
+* Enchanced form security and CSFR protection improvements.
+
 [Back to top](#table-of-content)
 
 ## Testing
@@ -553,6 +555,231 @@ Please refer to [**here**](TESTING.md) for more information on testing Cookfolio
 [Back to top](#table-of-content)
 
 ## Deployment
+
+### Forking the Repository
+
+1. NAvigate to the GitHub repository.
+2. Click the **Fork** button in the top-right corner.
+3. Select your GitHub account.
+4. GitHub will create a copy of the repository in your account.
+
+<details><summary>Screenshot</summary>
+
+<img src="app/static/images/docs/fork-repository.png">
+
+</details>
+
+---
+
+### Cloning the Repository
+
+You can clone the repository to use locally by following these steps:
+
+1. Navigate to the GitHub Repository.
+2. Click the **Code** button near the top of the repository page.
+3. Ensure the **HTTPS** option is selected.
+4. Copy the repository link to the clipboard.
+5. Open your IDE of choice (git must be installed for the next steps)
+6. Type git clone copied-git-url into the IDE terminal
+7. Press 'enter' to create the clone
+8. Navigate into the project directory.
+
+The project will now be cloned locally for you to use.
+
+<details><summary>Screenshot</summary>
+
+<img src="app/static/images/docs/clone-repository.png">
+
+</details>
+
+---
+
+### Local Development
+
+#### Create Virtual Environment 
+
+* A virtual environment was used to isolate project dependencies and keep the development environment organised. Create a virtual environment using: 
+
+```bash
+python -m venv .venv 
+```
+
+This creates a local virtual environment folder named .venv .
+
+#### Activate the Virtual Enviroment
+
+* A virtual environment must be activated before installing dependencies or running the application
+
+```bash
+.venv\Scripts\activate
+```
+
+Once activated, the terminal will display the virtual environment name.
+
+<details><summary>Screenshot</summary>
+
+<img src="app/static/images/docs/active-venv.png">
+
+</details>
+
+#### Install Dependencies
+
+* Install all required project dependencies using:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+This install all packages listed in the requirements.txt file
+
+#### Generate Requirements file
+
+* Project dependencies were stored in a requirements.txt file using:
+
+```bash
+python -m pip freeze > requirements.txt
+```
+
+This ensures the same dependencies can be installed in both local and production environments.
+
+#### Environment Variables
+
+* Create a .env file in the root directory. The .env file is included in .gitignore and must not be committed to GitHub.
+
+```bash
+SECRET_KEY=your_secret_key
+DATABASE_URL=sqlite://....
+API_SECRET_KEY=api_secret_key
+```
+
+#### SQLite Local Database
+
+* SQLite is used during local development because it is lightweight and easy to configure for development environments. The local SQLite database file is stored inside the "instance/" folder.
+
+```text
+instance/project.db
+```
+
+#### Database Setup
+
+* Apply database migrations using:
+
+```bash
+python -m flask db migrate -m "message"
+python -m flask db upgrade
+```
+* This creates the required database tables locally.
+
+#### Run the Application
+
+```bash
+python run.py
+```
+
+The app will run at 
+
+```bash 
+http://127.0.0.1:5000
+```
+
+#### Deactivate the Virtual Environment
+
+* To exit the virtual environment, run
+
+```bash
+deactivate
+```
+---
+
+### Heroku Production Deployment
+
+#### Create Heroku App
+
+1. Create Heroku account.
+2. Log in to Heroku.
+3. Create a new app.
+4. Choose a unique app name.
+
+#### Setup PostgreSQL for production Database
+
+1. Open the Heroku app dashboard.
+2. Go to **Resources**.
+3. Search for **Heroku Postgres**.
+4. Add the PostgreSQL database.
+
+* After setup Heroku automatically generates the DATABASE_URL config variable.
+
+#### Configure Heroku Config Vars
+
+Environment variables were configures in Heroku to ensure securely store sensitive credentials and production settings.
+
+Using Heroku Dashboard:
+
+1. Go to **Settings/Config Vars**
+2. Add them.
+
+or Using the Heroku CLI Terminal:
+
+```bash
+heroku config:set SECRET_KEY=your_secret_key -a cookfolio
+```
+To view existing Heroku Config Vars
+
+```bash
+heroku config -a cookfolio
+```
+
+#### Deployment Files
+
+- Ensure the project contains the required files
+    - requirements.txt
+    - Procfile - tells Heroku how to run the application: web:gunicorn run.app
+    - .gitignore
+
+#### Connect GitHub Repository to Heroku
+
+1. Open the Heroku app dashboard
+2. Go to **Deploy** tab.
+3. Choose **GitHub** as the deployment method.
+4. Search for the Cookfolio repository.
+5. Click **Connect**.
+
+#### Deploy the application
+
+* After connecting the repository
+
+1. Select correct branch.
+2. Click **Deploy Branch**.
+
+Automatic deploys can also be enabled so app redeploys each push to GitHub.
+
+#### Run the production Database Migration
+
+* After deployment run migration on the Heroku PostgreSQL database:
+
+```bash
+heroku run flask db upgarde -a cookfolio
+```
+* Open the deployed app from the Heroku dashboard.
+
+<details><summary>Screenshot</summary>
+
+<img src="app/static/images/docs/heroku-deployment.png">
+
+</details>
+
+#### Deployment Workflow
+
+* The following workflow is used when deploying database changes: 
+
+```bash
+python -m flask db migrate -m "migration message"
+python -m flask db upgrade
+git add . 
+git commit -m "migration message"
+git push
+heroku run flask db upgrade -a cookfolio
+```
 
 [Back to top](#table-of-content)
 
