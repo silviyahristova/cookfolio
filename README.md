@@ -567,28 +567,46 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
-<img src="app/static/images/docs/cookfolio-header-desktop.png"> <img src="app/static/images/docs/hamburger-menu.png"> <img src="app/static/images/docs/cookfolio-header-guest.png"> 
+* Desktop header
+
+<img src="app/static/images/docs/cookfolio-header-desktop.png"> 
+
+* Mobile header
+
+<img src="app/static/images/docs/hamburger-menu.png"> <img src="app/static/images/docs/cookfolio-header-guest.png"> 
 <img src="app/static/images/docs/cookfolio-header.png">
 </details>
 
-* Cookfolio includes a consistent header and navigation system across the website.
+* Frontend functionality
+    * Cookfolio includes a fully responsive header and navigation systems that remains consistent across all pages of the website. The navigation bar allows users to quickly access important areas such as the Dashboard, Discover recipes, Meal plans, Login, Sign up, My recipes and etc. The website logo is clickable and redirects users back to the homepage, improving usability and navigation flow. Navigation links dynamicaly change depending on whether the user is logged in or logged out, ensuring users only see actions relevant to their account status. On small devices, the navigation collapses into a mobile-friendly hamburger menu to improve usability and prevent overcrowding on narrow screens.
 
-* Navigation links change depending on whether the user is logged in or logged out. Protected pages are only accessible to authenticated users.
- 
-* Users can easily move around the site, return home using logo and acess the correct pages based on their login status.
+* Backend functionality
+    * The navigation system is powered using Flask templating and conditional Jinja logic. Flask-Login is used to determine whether a user is authenticated. Protected pages use route decorators to ensure only authenticated users can access restricted areas such as Dashboard, My recipes, Meal Plans, Grocery lists, Admin features. Unathenticated users attempting to access protected pages are redirected to the login page with feedback messages.
+
+* Technical Reasoning
+    * A consistent navigation system improves uasability and reduces user confusion. Dynamic navigation prevents users from seeing inaccessible options while also improving security and user expirience. Responsive components were used to ensure the navigation adapts across mobile, tablet, desktop and large desktop screens.
 
 ### Footer
 
 <details><summary>Screenshots</summary>
 
-<img src="app/static/images/docs/cookfolio-footer-mobile.png"> <img src="app/static/images/docs/cookfolio-footer.png">
+* Mobile Footer
+
+<img src="app/static/images/docs/cookfolio-footer-mobile.png"> 
+
+* Desktop Footer
+
+<img src="app/static/images/docs/cookfolio-footer.png">
 </details>
 
-* A consistent footer is included across the website.
+* Frontend functionality
+    * Cookfolio includes a consistent footer across all pages to provide users with quick access to imprortant information and navigation links. The footer contains Navigation links, Social media icons, Copyright information, and for larger screens logo. The footer hepls create a professional appearance while improving overall website navigation. 
 
-* Footer links provide access to key pages and external social links.
+* Backend functionality
+    * Footer content is managed through reusable base template using Jinja templating, allowing consistent rendering across all pages.
 
-* The footer improves navigation and gives the application a complete , professional layout.
+* Technical Reasoning
+    * Using a shared footer inside the base template reduces duplicate code and improves usability across the application. The footer layout automatically adjust depending on screen size.
 
 ### Buttons and Links
 
@@ -599,11 +617,14 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <img src="app/static/images/docs/links-dashboard.png">
 </details>
 
-* Buttons and links are styled consistently across the webiste.
+* Frontend functionality
+    *Buttons and links are styled consistently throughout the website using Bootstrap classes and custom CSS styling. Buttons provide users with clear actions such as Add Recipe, Edit Recipe, Delete Recipe, Update Meal, Log in, Cancel actions, View All Recipes, and etc. Clear button text improves usability and reduces user confusion. Hover effects imrpove visual feedback and accessibility.
 
-* Buttons redirect users to the correct pages such as adding recipes, editing meal plans, generating grocery lists, returning to dashboard, cancel actions and etc.
+* Backend functionality
+    * Buttons trigger Flask routes connected to backend functoinality such as Database CRUD operations, From submissions, Redirects, Search requests, Meal plan updates and etc. Delete actions require authentication. Dangerous actions require POST requests. Buttons resize and stack depending on the screen size to ensure usability on mobile devices. Form buttons trigger backend actions such as creating records, updating database, deleting records, saving meals and recipes, sending password reset requests.
 
-* Clear button text helps users understand eacg action before clicking.
+* Technical Reasoning
+    * Consistent button styling improves visual hierarchy and creates a predictable user expirience across the website. They are improtant because they control how users move through the application and interact with features. Buttons and links improve navigation flow, user confidence, accessibility and security.
 
 ### Flash messages
 
@@ -613,11 +634,14 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <img src="app/static/images/docs/flash-message-invalid-username.png"> <img src="app/static/images/docs/flash-message-select-one.png">
 </details>
 
-* Cookfolio uses flash messages to provide user feedback.
+* Frontend functionality
+    * Cookfolio uses flash messages to provide users with immediate visual feedback after actions are completed. Messages are displayed for actions such as Successful login, logout confirmation, Adding recipe, Recipe update, Delete recipe, Form validation errors, Password requests, Meal plan updates and etc. Messages are styled using Cookfolio custom color palette for visual consistency.
 
-* Flash messages are triggeres after actions such as login, logout, recipe changes, form errors, password reset requests, and meal planner updates.
+* Backend functionality
+    * Flask Flash messaging is used to dynamically generate user feedback. Categories such as success, warning, danger and error are used to style messages differently depending on the situation. Flash messagin is implemented using flash() functionality. The backend dynamically generates messages after actions are processes inside the route. Messages are temporarily stored in the ser session and displayed after redirects using Jinja templating. Flash messages are passed alongside the message text to apply different Bootstrap alert styles. The base template renders all flash messages globally using a reusable alert component.
 
-* User receive clear confirmation or error feedback after each action.
+* Technical Reasoning
+    * Flash messages improve security awaness by informing users when invalid input is detected ot action fail. Immediate feedback improves usability and helps user understand the result of their actions without confusion. Sensitive informations is not exposed inside messages such as login errors avoid revealing whether the username or password was incorrect. Flash messages are lighweight and session-based, making them efficient. Messages only exist temporarily and are automatically cleared after display.
 
 ### Favicon
 
@@ -632,11 +656,14 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <img src="app/static/images/docs/cookfolio-mobile-favicon.png" width=300px>
 </details>
 
-* Cookfolio includes a custom favicon. 
+* Frontend functionality
+    * Cookfolio includes a custom favicon displayed in browser tabs and bookmarks to improve branding and website recognition. The favicon creates more polished and professional appearance while strengthening the visual identity of the application. Feature include browsing tab icon, bookmark icon, mobile support shortcut.
 
-* Favicon files are stored in the static files and linked in the base template.
+* Backend functionality
+    * Favicon files are stored within the static files directory and linked globally through the base template. Using Flask static routing ensures favicon files are server correctly in local development and deployed production environments. 
 
-* The favicon improves branding and makes the website look more professional in browser tabs.
+* Technical Reasoning
+    * Favicon improve professionalism and help users identify the application quickly among multiple browser tabs. Favicons are lighweight assets and load quickly withot affecting page performance.
 
 ### Login and Registration
 
@@ -645,11 +672,14 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <img src="app/static/images/docs/register-form.png"> <img src="app/static/images/docs/login-form.png"> <img src="app/static/images/docs/welcome-email.png">
 </details>
 
-* User can register, log in and log out.
+* Frontend functionality
+    * Users can securely create accounts, log in, and log out using responsove authentication forms. Validation messages help users understand errors clearly during submission the form. Features include Login form, Registration form, Flash feedback messages, Forgot password functionality. Users can register with a username, email and password. Log in using their account details. Users can access protected pages only after logging in. The forms are designed to be simple and user-friendly, with clear label, helpful validation messages and buttons that guide the user through the process. Users will receive a welcome email after successful registration
 
-* Passwords are hashed before being stored. Flask-Login manages user sessions and protected routes. Flask-Mail will send welcome email once user is sucessfully registered.
+* Backend functionality
+    * AUthentication functionality is implemented using Flask-Login and Werkzeug password hashing. Passwords are hashed before storage in the database. User sessions are managed securely using Flask-Login and authenticated users gain access to protected routes and dashboard features. The backend manages creating new user accounts, checking if username or email already exist, hashing passwords, saving new user to database, sending a welcome email, validating login details, starting user sessions after successful login, logging users out, redirecting users based on the status, and protecting private pages with @login_required. User data is stored in the database using the User model. The welcome email is used to confirm registration, introduce to main features and encourage user to start using the website.
 
-* User can securely access their own recipes, meal plans and dashboard.
+* Technical Reasoning
+    * Authentication is essential for protecting user content such as recipes, meal plans, grocery lists and etc. Password hashing prevents sessitive user data from being stored insecurely. The login and registration system ensures that users can access only their own account content. The feature improves security and usability because users can safely manage their own cooking data inside a personalised account. The welcome email was added to make registration process feel complete and professional. It improves user onboarding, trus, comunication.
 
 ### Password Reset and Emails
 
@@ -659,87 +689,125 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <img src="app/static/images/docs/reset-email.png">,
 </details>
 
-* User can request a password reset email.
+* Frontend functionality
+    * Users can request password reset emails when they forgot their password. The reset workflow provides clear instructions, validation messages, secure reset link send to user email and confirmation feedback. User can click the forgot password link from login page, enter registered email, receive a password reset email, open secure reset link and create new password. User can see clear flsah message during each step. Email functionality improves the user experience because user do not need to create new account if they forgot password.
 
-* Flask-Mail send password reset links. Reset tokens are generated, validated, time-limited and designed to support secure password recovery.
+* Backend functionality
+    * Password reset functionality uses Flask-Mail, timed reset token, and secure token validation. The backend manage finding user by email, generate a secure password reset token, sending a reset email using Flask-Mail, validating the reset token when link is opened. Reset links expire after a limited period for securty purposes. Single-use token validation prevents reuse of old reset links. The reser email contains a secure link that redirects the user to their reset password form.
 
-* User can recover their account without needing admin support.
+* Technical Reasoning
+    * Password reset systems improve usability while maintaining account security and reducing support dependency. This is expected feature in modern-based websites. Using email-based reset links provides realistic and professional authentication system, It makes Cookfolio feel more complete and product-ready web application.
 
 ### Dashboard
 
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
+
+* Frontend functionality
+    * The Cookfolio dashboard provides users with a central overview of their account activity and cooking management features. Dashboard features include Welcome message, Quick access links shortcuts, Recipe category cards with recipe statistic, Empty states and upcoming meal plans. The dashboard dynamically changes depending on whether the user has added recipes or not. 
+
+* Backend functionality
+    * Dashboard data is dynamically generated using database queries and rendered using Jinja templates. Statistic include total recipes, each category recipe count, meal plan count. The backend retrive current logged in user, user`s saved recipes, recipe count, recipes group by category, upcoming meal plans, meal plans for current weeks.
+
+* Technical Reasoning
+    * Dynamic dashboard imrpove navigation, user engagement by presenting improtant information immediately after login and personalisation. This helps users find how many recipes have saves, what meals are planned, what to do next and etc.
 
 ### Recipe Management
 
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
 
-### Recipe Categories
+* Frontend functionality
+    * Cookfolio allows logged in users to create, edit, delete, and view recipes using user-friendly forms and recipe detail pages. Users can add new recipe, edit existing recipe, view recipe details, delete recipe, upload recipe image, add ingredients, cooking instructions, choose recipe category and view recipes in cards or grid and search and filter recipes. Recipe cards help users browse recipes visually, while recipe detail page gives more complete information such as ingredients, instructions, preparation time, servings and cateogry.
 
-<details><summary>Screenshots</summary>
+* Backend functionality
+    * Recipe CRUD functionality is connected to SQLAlchemy models. Database operations include create recipe, read recipe, update recipe and delete recipe. Recipes are connected to users through database relationships, ensuring each user manages thier own recipe collection. The backend handles form validation, image handling, category selection, ingredients and instruction storage, database, redirects after actions and flash messages.
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
-</details>
+* Technical Reasoning
+    * Recipe CRUD functionality forms the core foundation of the Cookfolio application and supports personalized cooking management. The full CRUD functionality was implemented to allow users to control their own content. This makes the website interactive and database-driven. Recipe management allows users to build a personal cooking collection inside Cookfolio.
 
 ### Meal Plan Management
 
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
+
+* Frontend functionality
+    * Cookfolio allows logged in users to organize meals into daily and weekly meal plans. Meal planner features are Breakfast slot, Lunch slot, Dinner slot, Dessert/Snack slot, Weekly navigation, Daily planning. User can add meal, edit meal, view meal and delete meal. Users can add meal plan for a selected date, choose recipe for different meal category, view daily meal plan, view weekly meal plan, edit existing plans, delete meal plans, navigate between weeks, plan future meals and view recipe images inside meal plan cards.
+
+* Backend functionality
+    * Meal plans are stored in the database and linked to users and recipes using relationships. Validation prevent duplicate meal categories for the same date. The backend manages saving meal plan to the database, linking meal plans to the logged in user, linking meal planto selected recipe, filtering meal plans by date, displaying weekly meal plans, displaying daily meal plans, deleting and updating meal plans, preventing duplicates recipes in the same daily plan, passing selected dates back to the templates, handling empty meal plan states. Meal plans are connected to User and Recipe models, allowing each user to manage their own planned meals.
+
+* Technical Reasoning
+    * Structured meal planning improves organization and increases application usefulness beyound recipe storage. It was added to make Cookfolio more useful than a basic recipe storage appication. Meal plan management helps users organise meals in advance, plan cooking weekly, reuse recipes, prepare grocery lists and improve cooking routine.
 
 ### Discover and Search
 
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
+
+* Frontend functionality
+    * Users can search recipes using keywords or browse categories through the Discover Recipe page. Feature include APIs recipe search, internal recipe search, category filter, pagination, recipe cards and search result pages. Users can search, browse, discover recipes, view recipe cards, open recipe detail pages, open external link, add recipe to meal plan and save imported recipes.
+
+* Backend functionality
+    * The application integrates external APIs to fetch recipe data dynamically. Pagination is implemented to improve performance and usability. The backend handles processing search queries, sending API requests, rendering cards dynamically, displaying API recipe details, manage internal database recipe searched.
+
+* Technical Reasoning
+    * Search and Discover features increase user engagement and improve content accessibility.
 
 ### API Integration
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
 
+* Frontend functionality
+    * Cookfolio integrates external recipe APIs to provide users with a larger variety of recipe beyound manually created content. API integration imrpoves the user exprerience by allowing users to discover, search and import recipes directly into the application. User can search, browse, view recipe images and details, improt recipes into their personal collection , add API recipe directly to meal plans, discover new meal ideas without manually creating recipes. Recipe cards display recipe image, recipe title, category, cooking information and action buttons.
 
-### Grocery List Generator
+* Backend functionality
+    * Cookfolio uses external API requests to retrieve recipe data dynamically. The backend handles sending API requests, receiving JSON responses, parsing recipe data, mapping category, handle missing data and rendering results into template. The application converts API responses into structured Python dictionaries and objects before displaying them in the frontend. API integration is connected with Search routes, discover page, recipe page and meal plans functionality. Imported recipes are stored in the local database for long-term user access. Pagination was implemented to reduce page load times, improve performance and prevent overwhelming users with too many results. Category mapping was implemented to keep meal plan categories consistent, and improve filtering fnctionality.
+
+* Technical Reasoning
+    * API integration significantly improves the functionality and scability of the application. Without it, users would only have access to manually created recipes. External APIs allows Cookfolio to provide larger recipe variety, faster content discovery, better user engagement and dynamic content updates. This make Cookfolio modern platform. 
+
+### Grocery List 
+
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
 
+* Frontend functionality
+    * Cookfolio automatically generates grocery list based on weekly meal plans that helps users turn planned meals into a practical shopping list. Features include weekly grocery list generation, checkbox interaction and weekly navigation., view grocery list by recipe categories, see helpful empty stated if no meals are planned.
 
+* Backend functionality
+    * The grocery list is generated dynamically from meal plan and recipe data stored in the database. The backend handles finding selected date or week, retrieving meal plans, collecting ingredients from linked recipes, preventing other userd from seeing private meal data, showing empty states.
 
+* Technical Reasoning
+    * Automated grocery generation improves practicality and provides real-world usefulness for meal planning users.
 
 ### Error pages
 
 <details><summary>Screenshots</summary>
 
-<img src="assets/images/docs/start-button-name.png">, <img src="assets/images/docs/contact-button.png">, <img src="assets/images/docs/exit-button.png">
-<img src="assets/images/docs/send-button.png">, <img src="assets/images/docs/back-to-home-button.png">, <img src="assets/images/docs/restart-button.png">
-<img src="assets/images/docs/continue-button.png">, <img src="assets/images/docs/sound-button.png">, <img src="assets/images/docs/start-again-button.png">, <img src="assets/images/docs/next-button.png">, <img src="assets/images/docs/answers-button.png">
+
 </details>
 
+* Frontend functionality
+    * Custom error pages improve user expirience when problems occur. Cookfolio include 404, 403 and 500 pages. Users receive clear messages explaining the problem and helpful navigation options.
 
+* Backend functionality
+    * Custom Flask error handlers manage application exceptions and invalid routes. The backend detects invalid routes, forbidden access or missing resources and render the correct custom template. Error pages prevent exposure of sensitive debugging information in production.
+
+* Technical Reasoning
+    * Custom error handling imrpoves user guidance, security, website consistency and navigation recovery and prevents confusing user experience.
 
 ### Support Messages
 
@@ -748,29 +816,38 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <img src="app/static/images/docs/contact-form.png"> <img src="app/static/images/docs/confirmation-email.png">
 </details>
 
-* Users can submit a support messages.
+* Frontend functionality
+    * Cookfolio includes a support message feature that allows users to contact the site owner or admin through the application. Users can open contact form, enter details, write support message, submit question , feedback or problems, receive a flash messages after submission.
 
-* Support messages are validated and stored in the database.
+* Backend functionality
+    * Support messages are handles using Flask routes, forms, models and database storage. The backend handles receiving submitted support form, validating fields, saving messages to database, showing flash messages, allowing admin user to review messages.
 
-* Users have a simple way to send feedback or request help. The support message form is available for unauthorised users as well.
+* Technical Reasoning
+    * The support message feature was added to improve communication between users and site owner(admin), trust, feedback collection, admin functionality. 
 
 ### Admin Dashboard
 
+<details><summary>Screenshots</summary>
+
+
+</details>
+
+* Frontend functionality
+    * Cookfolio include admin dashboard to give authorised admin user a central place to monitor and manage application activity. The admin dashboard display user`s support messages.
+
+* Backend functionality
+    * The backend manages to check whether the current user is logged in, and has amin permissions, retrieve submitted support messages and pass admin-only data to the template.
+
+* Technical Reasoning
+    * The dashboard is showing role based access control. it imporves application management, site owner control, support messages review.
+    
 ### Responsive Design
 
-* Cookfolio is designed for mobile, tablet and desktop devices.
-
-* Responsive layout are built uing custom CSS, CSS grid, Flexbox and media queries.
-
-* Users can use the application on different screen sizes.
+* Cookfolio is designed for mobile, tablet and desktop devices. Responsive layout are built uing custom CSS, CSS grid, Flexbox and media queries. Cookfolio uses responsive images, mobile-first styling, reusable Jinja templates, collapsable navigation menu. On mobile devices content is stacked vertically to improve readability and touch usability. On larger screens grid layouts are used to display more content side-by-side. A mobile-first approach is useful because cooking applications are often used on phones. Responsive design improves accessibility, mobile usability, readability, navigation and visual consistency.
 
 ### Security
 
-* Cookfolio includes security-focused functionality.
-
-* Secure measures include password hashing, protected routes, environment variables, gitignore protection, user ownership, and disabled DEBUG mode in production.
-
-* Users can trust that their account and personal content are handled more safely.
+* Cookfolio includes security-focused functionality. Users receive feedback when login details are correct, protected page required login, form missing or invalid information, password reset link is invalid or expired. Secure measures include user authentication, password hashing, protected routes, environment variables, gitignore protection, user ownership, and disabled DEBUG mode in production. Security is important because Cookfolio stores user-specific data such as recipes, meal plans, grocery lists, and account information. Users can trust that their account and personal content are handled more safely.
 
 [Back to top](#table-of-content)
 
