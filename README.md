@@ -33,7 +33,6 @@ This is the documentation for Cookfolio, a full-stack web application. It has be
     - [**Other Tools**](#other-tools)
 - [**Database Design**](#database-design)
 - [**Features and Functionality**](#features-and-functionality)
-- [**Functionality**](#functionality)
 - [**Security Features**](#security-features)
 - [**Future Enhancements**](#future-enhancements)
 - [**Testing**](#testing)
@@ -303,8 +302,6 @@ The project followed a feature-by-feature workflow:
 
 This workflow allowed features to be developed incrementally while maintaining project stability and organisation.
 
----
-
 ### Iterative Development
 
 Cookfolio was continuously improved throughout development. Examples of improvements include:
@@ -316,8 +313,6 @@ Cookfolio was continuously improved throughout development. Examples of improvem
 - accessibility and color countrast improvements
 - validation and flash messages improvements
 - password reset enchancements and etc.
-
----
 
 ### MoSCoW Prioritisation
 
@@ -355,8 +350,6 @@ MoSCoW Prioritisation was used to organize features based on project importance 
 - User Profile 
 - Real-time recipe sharing and commenting
 
----
-
 ### GitHub and Version Control
 
 Git and GitHub were used for version control and workflow management throughout the development. The workflow included:
@@ -366,8 +359,6 @@ Git and GitHub were used for version control and workflow management throughout 
 - Feature-by-feature development
 - Continuously updates
 - debugging and testing
-
---- 
 
 ### Continuous Testing
 
@@ -618,7 +609,7 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 </details>
 
 * Frontend functionality
-    *Buttons and links are styled consistently throughout the website using Bootstrap classes and custom CSS styling. Buttons provide users with clear actions such as Add Recipe, Edit Recipe, Delete Recipe, Update Meal, Log in, Cancel actions, View All Recipes, and etc. Clear button text improves usability and reduces user confusion. Hover effects imrpove visual feedback and accessibility.
+    * Buttons and links are styled consistently throughout the website using Bootstrap classes and custom CSS styling. Buttons provide users with clear actions such as Add Recipe, Edit Recipe, Delete Recipe, Update Meal, Log in, Cancel actions, View All Recipes, and etc. Clear button text improves usability and reduces user confusion. Hover effects imrpove visual feedback and accessibility.
 
 * Backend functionality
     * Buttons trigger Flask routes connected to backend functoinality such as Database CRUD operations, From submissions, Redirects, Search requests, Meal plan updates and etc. Delete actions require authentication. Dangerous actions require POST requests. Buttons resize and stack depending on the screen size to ensure usability on mobile devices. Form buttons trigger backend actions such as creating records, updating database, deleting records, saving meals and recipes, sending password reset requests.
@@ -686,7 +677,7 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 <details><summary>Screenshots</summary>
 
 <img src="app/static/images/docs/forgot-password.png"> <img src="app/static/images/docs/reset-form.png"> 
-<img src="app/static/images/docs/reset-email.png">,
+<img src="app/static/images/docs/reset-email.png">
 </details>
 
 * Frontend functionality
@@ -702,11 +693,26 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+* Empty state
+
+<img src="app/static/images/docs/empty-dashboard.png" width=900px> 
+
+* After adding recipe
+
+<img src="app/static/images/docs/dashboard-with-recipe.png" width=900px> 
+
+* Meal plan empty state when only recipes are saved
+
+<img src="app/static/images/docs/dashboard-meal-empty.png" width=900px>
+
+* Dashboard with meal plans and recipes
+
+<img src="app/static/images/docs/meal-planner-dashboard.png" width=900px>
 
 </details>
 
 * Frontend functionality
-    * The Cookfolio dashboard provides users with a central overview of their account activity and cooking management features. Dashboard features include Welcome message, Quick access links shortcuts, Recipe category cards with recipe statistic, Empty states and upcoming meal plans. The dashboard dynamically changes depending on whether the user has added recipes or not. 
+    * The Cookfolio dashboard provides users with a central overview of their account activity and cooking management features. Dashboard features include Welcome message, Quick access links shortcuts, Recipe category cards with recipe statistic, Empty states and upcoming meal plans. The dashboard dynamically changes depending on whether the user has added recipes or not. Each category cards have recipe count and once opened showing only recipe from that category. User can see all recipes through the View all recipes link where recipes are shown from newest.
 
 * Backend functionality
     * Dashboard data is dynamically generated using database queries and rendered using Jinja templates. Statistic include total recipes, each category recipe count, meal plan count. The backend retrive current logged in user, user`s saved recipes, recipe count, recipes group by category, upcoming meal plans, meal plans for current weeks.
@@ -718,11 +724,33 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+* Add Recipe Form
 
+<img src="app/static/images/docs/add-recipe-form.png" width=900px>
+
+* View Recipe Page
+
+<img src="app/static/images/docs/view-recipe.png" width=900px>
+
+* Edit Recipe Form
+
+<img src="app/static/images/docs/edit-recipe-form.png" width=900px>
+
+* Delete Recipe
+
+<img src="app/static/images/docs/delete-recipe.png" width=900px>
+
+* My Recipes page
+
+<img src="app/static/images/docs/my-recipes-page.png" width=900px>
+
+* Empty state for My Recipe Page
+
+<img src="app/static/images/docs/empty-my-recipes.png" width=900px>
 </details>
 
 * Frontend functionality
-    * Cookfolio allows logged in users to create, edit, delete, and view recipes using user-friendly forms and recipe detail pages. Users can add new recipe, edit existing recipe, view recipe details, delete recipe, upload recipe image, add ingredients, cooking instructions, choose recipe category and view recipes in cards or grid and search and filter recipes. Recipe cards help users browse recipes visually, while recipe detail page gives more complete information such as ingredients, instructions, preparation time, servings and cateogry.
+    * Cookfolio allows logged in users to create, edit, delete, and view recipes using user-friendly forms and recipe detail pages. Users can add new recipe, edit existing recipe, view recipe details, delete recipe, upload recipe image, add ingredients, cooking instructions, choose recipe category and view recipes in cards or grid and search and filter recipes. Recipe cards help users browse recipes visually, while recipe detail page gives more complete information such as ingredients, instructions, preparation time, servings and cateogry. When editing or creating recipes all entered information is preserved if validation fails. Users can correct individual fields without re-entering the entire recipe. To encourage recipe creation, Cookfolio displays an interactive Add Another Recipe card at the end of the user`s recipe collection. The card acts as a call-to-acion that allows users to quickly add new recipe from the same page.The card is displayed alongside existing recipe cards and follows the sae visual layout to maintain design consistency.
 
 * Backend functionality
     * Recipe CRUD functionality is connected to SQLAlchemy models. Database operations include create recipe, read recipe, update recipe and delete recipe. Recipes are connected to users through database relationships, ensuring each user manages thier own recipe collection. The backend handles form validation, image handling, category selection, ingredients and instruction storage, database, redirects after actions and flash messages.
@@ -734,11 +762,38 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+* Add Meal Plan Form - single meal plan and daily meal plan forms
+
+<img src="app/static/images/docs/add-recipe-to-meal.png" width=900px>
+<img src="app/static/images/docs/add-daily-meal-form.png" width=900px>
+
+* View Meal Plan
+
+<img src="app/static/images/docs/daily-meal-plan.png" width=900px>
+<img src="app/static/images/docs/view-daily-meal-plan.png" width=900px>
+
+* Edit Meal Plan form - single meal plan and daily meal plan forms
+
+<img src="app/static/images/docs/edit-single-meal.png" width=900px>
+<img src="app/static/images/docs/edit-daily-meal-plan.png" width=900px>
+
+* Delete Meal plan 
+
+<img src="app/static/images/docs/delete-meal.png" width=900px>
+
+* My Meal Plans page
+
+<img src="app/static/images/docs/meal-planner-page.png" width=900px>
+<img src="app/static/images/docs/meal-planner-page2.png" width=900px>
+
+* Empty state for My Meal Plans page
+
+<img src="app/static/images/docs/empty-my-meal-plans.png" width=900px>
 
 </details>
 
 * Frontend functionality
-    * Cookfolio allows logged in users to organize meals into daily and weekly meal plans. Meal planner features are Breakfast slot, Lunch slot, Dinner slot, Dessert/Snack slot, Weekly navigation, Daily planning. User can add meal, edit meal, view meal and delete meal. Users can add meal plan for a selected date, choose recipe for different meal category, view daily meal plan, view weekly meal plan, edit existing plans, delete meal plans, navigate between weeks, plan future meals and view recipe images inside meal plan cards.
+    * Cookfolio allows logged in users to organize meals into daily and weekly meal plans. Meal plans can be created after user has saved recipes in the database. Meal planner features are Breakfast slot, Lunch slot, Dinner slot, Dessert/Snack slot, Weekly navigation, Daily planning. User can add meal, edit meal, view meal and delete meal. Users can add meal plan for a selected date, choose recipe for different meal category, view daily meal plan, view weekly meal plan, edit existing plans, delete meal plans, navigate between weeks, plan future meals and view recipe images inside meal plan cards. Selected dates, meal categories, and recipe choices are preserved when validation errors ocur, helping users manage meal plans more efficiently. Cookfolio includes a Meal Plan archive feature that allows user to view previously planned meals while preserving historical records. Past meal plans remain accessible for reference, enabling users to review previous meal plans. Past meals are displayed in a read-only format. Users can browse and review archive meal plans, but cannot edit or delete them once the planned date has passed.
 
 * Backend functionality
     * Meal plans are stored in the database and linked to users and recipes using relationships. Validation prevent duplicate meal categories for the same date. The backend manages saving meal plan to the database, linking meal plans to the logged in user, linking meal planto selected recipe, filtering meal plans by date, displaying weekly meal plans, displaying daily meal plans, deleting and updating meal plans, preventing duplicates recipes in the same daily plan, passing selected dates back to the templates, handling empty meal plan states. Meal plans are connected to User and Recipe models, allowing each user to manage their own planned meals.
@@ -750,7 +805,11 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+<img src="app/static/images/docs/discover-recipe-page.png" width=900px>
 
+* API recipe detail page
+
+<img src="app/static/images/docs/api-recipe.png" width=900px>
 </details>
 
 * Frontend functionality
@@ -763,10 +822,6 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
     * Search and Discover features increase user engagement and improve content accessibility.
 
 ### API Integration
-<details><summary>Screenshots</summary>
-
-
-</details>
 
 * Frontend functionality
     * Cookfolio integrates external recipe APIs to provide users with a larger variety of recipe beyound manually created content. API integration imrpoves the user exprerience by allowing users to discover, search and import recipes directly into the application. User can search, browse, view recipe images and details, improt recipes into their personal collection , add API recipe directly to meal plans, discover new meal ideas without manually creating recipes. Recipe cards display recipe image, recipe title, category, cooking information and action buttons.
@@ -781,6 +836,11 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+<img src="app/static/images/docs/grocery-list.png" width=900px>
+
+* Empty state for Grocery List page for weeks without meals
+
+<img src="app/static/images/docs/grocery-list-empty-state.png" width=900px>
 
 </details>
 
@@ -797,7 +857,17 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+* 404 - Error Page
 
+<img src="app/static/images/docs/404-page.png" width=900px>
+
+* 403 - Access Denied
+
+<img src="app/static/images/docs/403-page.png" width=900px>
+
+* 500 - Internal Server Error
+
+<img src="app/static/images/docs/500-page.png" width=900px>
 </details>
 
 * Frontend functionality
@@ -829,7 +899,15 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 <details><summary>Screenshots</summary>
 
+* Admin dashboard
 
+<img src="app/static/images/docs/admin-dashboard.png" width=900px>
+<img src="app/static/images/docs/admin-support-messages.png" width=900px>
+<img src="app/static/images/docs/admin-view-message.png" width=900px>
+
+* Admin email notification for receiving new message from user
+
+<img src="app/static/images/docs/message-received.png">
 </details>
 
 * Frontend functionality
@@ -840,7 +918,11 @@ Cookfolio uses a relational database structure managed with [SQLAlchemy](https:/
 
 * Technical Reasoning
     * The dashboard is showing role based access control. it imporves application management, site owner control, support messages review.
-    
+
+### Form Data Persistence and User-Friendly Editing
+
+* Cookfolio is design to prevent data loss and improve usability by preserving user-entered information throughout the application. When validation errors occur, previously entered data is retained, allowing users to correct mistakes without re-entering information. This functionality is implementet across recipe create form, recipe edit form, meal plan create form, meal plan edit form, authentication forms, search forms and support messages. Search queries remain visible after submission, allowing users to refine searches without typing keywords. During recipe and meal plan editing, existing information is automatically pre-populated into form, enabling users to update only the fields they wish to change while preserving all other data, including uploaded images. Selected dates, meal categories and recipe selections are maintained during meal planning workflows, providing a smoother and more efficient planning experience. This approach reduces user frustraition, improves accessibility, and support intuitive user experience across devices.
+
 ### Responsive Design
 
 * Cookfolio is designed for mobile, tablet and desktop devices. Responsive layout are built uing custom CSS, CSS grid, Flexbox and media queries. Cookfolio uses responsive images, mobile-first styling, reusable Jinja templates, collapsable navigation menu. On mobile devices content is stacked vertically to improve readability and touch usability. On larger screens grid layouts are used to display more content side-by-side. A mobile-first approach is useful because cooking applications are often used on phones. Responsive design improves accessibility, mobile usability, readability, navigation and visual consistency.
