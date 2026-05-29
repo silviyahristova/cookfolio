@@ -1862,8 +1862,10 @@ def import_discover_recipe(meal_id):
 @main.route("/discover/spoonacular/<int:recipe_id>")
 def view_spoonacular_recipe(recipe_id):
     spoonacular_api_key = os.getenv("SPOONACULAR_API_KEY")
-    api_url = f"https://api.spoonacular.com/recipes/{recipe_id}"
+    api_url =(
+    f"https://api.spoonacular.com/recipes/{recipe_id}"
     f"/information?apiKey={spoonacular_api_key}"
+    )
     response = requests.get(api_url)
 
     if response.status_code != 200:
