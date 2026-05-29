@@ -1311,9 +1311,15 @@ This project is licensed under the [MIT License](https://choosealicense.com/lice
 
 ## Acknowledgements
 
-This project is for educational purpose and was completed as a Portfolio 3 Project for the Full Stack Software Developer Diploma at the Code Institute. I would like to thank 
+This project is for educational purpose and was completed as a Portfolio 3 Project for the Full Stack Software Developer Diploma at the Code Institute. I would like to express my gratitude to everyone who supported me throughout the planning, development, testing and deployment of Cookfolio. 
 
-* My mentor Miguel Orteg Legorreta for his guidance, support and suggestions during the project. Also understanding, guidance and feedbacks throughout the project.
-* The whole team at [Code Institute](https://codeinstitute.net/) for their teaching and support.
+* My mentor Miguel Orteg Legorreta for providing valuable guidance, support, understanding, feedbacks, recommendations and suggestions during the project.
+* The whole team at [Code Institute](https://codeinstitute.net/) for their teaching, support, educational resources that helped develop the skills required to build this application.
+* The team at City of Bristol College for supporting my studies and providing the opportunity to complete the Level 5 Diploma in Web Application Development.
+* The wider developer community whose articles, tutorials, discussions, and troubleshooting advices hekoed overcome technical challenges during development.
+* The frameworks and libraries communities for their excellent documentation and open-source resources.
+* My family for their patience, encouragement, and support throughout the project.
+
+Their combined support, guidance and feedbacks contributes significantly to the successful completio of this project.
 
 [Back to top](#table-of-content)
