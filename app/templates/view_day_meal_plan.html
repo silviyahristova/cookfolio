@@ -61,7 +61,7 @@
                                                     <form method="POST" action="{{ url_for('main.delete_meal_plan', meal_plan_id=meal.id) }}">
                                                         <button type="submit" class="btn btn-primary">Yes, Delete</button>
                                                     </form>
-                                                    <label for="confirm-delete-{{ meal.id }}" class="btn btn-secondary">Cancel</label>
+                                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('confirm-delete-{{ meal.id }}').checked = false;">Cancel</button>
                                                 </div>
                                             </div>
                                         </div>

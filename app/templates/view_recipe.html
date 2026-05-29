@@ -102,7 +102,7 @@
                                             <form method="POST" action="{{ url_for('main.delete_recipe', recipe_id=recipe.id) }}">
                                                 <button type="submit" class="btn btn-primary">Yes, Delete</button>
                                             </form>
-                                            <label for="confirm-delete" class="btn btn-secondary">Cancel</label>
+                                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('confirm-delete').checked = false;">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
