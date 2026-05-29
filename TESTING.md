@@ -21,8 +21,8 @@ This is the documentation for Cookfolio, a full-stack web application. It has be
 - [**Responsiveness**](#responsiveness)
 - [**Performance**](#performance)
 - [**Code Validation**](#code-validation)
-- [**Bugs**](#bugs)
 - [**Accessibility**](#accessibility)
+- [**Bugs**](#bugs)
 
 ## Testing Strategy
 
@@ -36,10 +36,15 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
  code quality and reliability.
 
 ## Manual Testing
+
 ## Automated Testing
+
 ## Browser Compatibility
+
 ## Responsiveness
+
 ## Performance
+
 ## Code Validation
 
 Code validation was perfomed throughout the development process to ensure that Cookfolio follows modern web development standarts, maintain code quality, and provides a reliable user ecperience. Validation testing was carried out on HTML, CSS, Python and JS.
@@ -89,11 +94,29 @@ Code validation was perfomed throughout the development process to ensure that C
 
 <details><summary>Link Validation</summary>
 
-<img src="">
+<img src="app/static/images/test/link-checker-pass.png">
 </details>
 
 * The validation site [W3C Link Checker](https://validator.w3.org/checklink) was used to check the website for broken links.
-* Some errors were found and resolved. More details can be found [here](#resolved-bugs).
+* No broken internal links were identified. The validator reported Facebook, LinkdIn and Twitter external links. All external social media links verified manually.
+* One error was found and resolved. More details can be found [here](#resolved-bugs).
+
+[Back to top](#table-of-content)
+
+## Accessibility
+
+### Color contrast
+
+* Cookfolio uses a carefully selected colour palette to maintain readability and visual accessibility. Testing were performed to ensure that text remains readable against background colours, buttons prove sufficient contrast, navigation elements remain visible.The project colour scheme was adjusted during development to improve compliance with accesibility recommendations. Colours were tested with [WebAIM contrast checker](https://webaim.org/resources/contrastchecker/).
+
+<img src="app/static/images/test/contast1.png" width=300px> <img src="app/static/images/test/contrast2.png" width=300px> <img src="app/static/images/test/contrast3.png" width=300px>
+
+### WAVE Web Accessibility Evaluation Tools
+
+* The WAVE Web Accessibility Tool was used to review Cookfolio pages for accessibility issues and potential improvements. 
+* Some warnings, alerts and one error appears. More details can be found [here](#resolved-bugs).
+
+<img src="app/static/images/test/wave-home.png"> <img src="app/static/images/test/wave-meal-plan.png"> <img src="app/static/images/test/wave-support.png">
 
 [Back to top](#table-of-content)
 
@@ -114,9 +137,9 @@ Code validation was perfomed throughout the development process to ensure that C
 
 #### Bug: Python Validation errors
 
-Issue: During Python validation using Flake8 several code quality issued were identify during development included line lenght violations, unused imports, trailing whitespace, formatting inconsistencies. This issues did not prevent the application from running, but affected code readability, maintanability and compliance with PEP* standarts.
+* Issue: During Python validation using Flake8 several code quality issued were identify during development included line lenght violations, unused imports, trailing whitespace, formatting inconsistencies. This issues did not prevent the application from running, but affected code readability, maintanability and compliance with PEP* standarts.
 
-Result: Lomg statements were split across multiple lines using parenthness nd proper indentation. Unused improts were removed from routes, models and test files. Whitespaces was removed manually and with formatting tools. Blank lines were adjusted according to PEP8 Standarts. Imports were moved to the top of the files and grouped logically.
+* Fix: Long statements were split across multiple lines using parenthness nd proper indentation. Unused improts were removed from routes, models and test files. Whitespaces was removed manually and with formatting tools. Blank lines were adjusted according to PEP8 Standarts. Imports were moved to the top of the files and grouped logically.
 
 <details><summary>Python Validation</summary>
 
@@ -124,47 +147,41 @@ Result: Lomg statements were split across multiple lines using parenthness nd pr
 <img src="app/static/images/test/flake8-test-3.png" width=600px> <img src="app/static/images/test/flake8-test-4.png" width=600px>
 </details>
 
+#### Bug: WAVE error - Multiple form labels
+
+* Issue: WAVE reported a Multiple form labels error on the delete confirmation checkbox used for meal and recipe deletion. The hidden box used for the delete confirmation had two labels connected to the same ID. One label opened the delete confirmation,another label was used as a Cancel button.
+
+* Fix: The first label was kept to open the confirmation, and the second wa replaces with a normal button. The duplicate label association was removed and the WAVE error was resolved.
+
+<details><summary>WAVE error - Multiple form labels</summary>
+
+<img src="app/static/images/test/wave-error.png" width=600px> <img src="app/static/images/test/multi-form-label.png" width=600px>
+<img src="app/static/images/test/labet-button.png" width=600px>
+</details>
+
 ### Unresolved bugs and warnings
 
 #### Warning: SQLAlchemy Deprecation Warnings
 
-Issue: Minor SQLAlchemy deprecation warnings were displayed during automated testing. The warning originate from compatibility between libraries and SQLAlchemy 2.x rather than from application code.
+* Issue: Minor SQLAlchemy deprecation warnings were displayed during automated testing. The warning originate from compatibility between libraries and SQLAlchemy 2.x rather than from application code.
 
-Result: The warnings were reviewed and documented. They do not affect application functionality, testing or user experience.
+* Decision: The warnings were reviewed and documented. They do not affect application functionality, testing or user experience.
 
 <details><summary>SQLAlchemy deprecation warnings</summary>
 
 <img src="app/static/images/test/pytest-pass.png">
 </details>
 
-## Accessibility
+#### WAVE Suspicios Alternative text
 
-### Color contrast
+* Issue: WAVE reported warning suspicious alternative text on some recipe images, particularly recipe imported from external APIs. The approach allows screen reader users to identify the recipe associated with image and provides meaningful context. Alt value is too repetitive. 
 
-* The main colors, used for the website, have very good contrast. They were tested with [WebAIM contrast checker](https://webaim.org/resources/contrastchecker/).
+* Decision: The warning reviewed and considered acceptable because the alt text remains descreptive enought for users of assistive technologies. No functional or accessibility barriers were identified. The warning was therefore documented but not changed
 
-<img src="assets/images/testing/contrast1.png" width=250px>, <img src="assets/images/testing/contrast3.png" width=250px>, <img src="assets/images/testing/contrast5.png" width=250px>
+#### WAVE Redundant links
 
-### WAVE Web Accessibility Evaluation Tools
+* Issue: WAVE reported redundant links alert where multiple nearby elements linked to the same destination. This behaviour occurs intentionally within recipe cards, where users can access same page through images and text links.
 
-<details><summary>Home page</summary>
-
-<img src="assets/images/testing/indexpage-wave.png">
-
-</details>
-
-<details><summary>Contact page</summary>
-
-<img src="assets/images/testing/contactpage-wave.png">
-
-</details>
-
-<details><summary>404 page</summary>
-
-<img src="assets/images/testing/404page-wave.png">
-
-</details>
-
-* On all pages same alert came up - that there is more than 1 redundant link. This is, because some links are navigating users to the same page, but was made to be user friendly and intuitive as possible for the user. No further action was taken.
+* Decision: The links were retained because they improve usability and provide larger click for users on mibile devices. No functionality barries were identified. The alert was documented but not chanhed.
 
 Back to [**README.md**](README.md#testing)
