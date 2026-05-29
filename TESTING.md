@@ -32,18 +32,93 @@ The testing approach focused to verify that all features function as intended, e
 
 Several testing methods were used throughout the project. Manual testing was performed feature-by-feature to verify user interactions, navigation, forms, validations, and overall functionality. User stories were tested tp ensure that use requirements and project goals were successfully implemented. Automated testing was implemented using Pytest and Playwright to verify backend functionality, route behaviour, authentication, database interactions and end-to-end user jorney. Validation tools were used to access HTML, CSS, Python and JS code quality and standart complience. Accessibility testing have been done using Lighthoute. The application was tested across mobile, tablet, laptop and desktop screen sizes to ensurea consistent user experience. Security testing focused on authentication, authorization, role-based access control, password management, protected routesa and forms. Deployment testing was conducted on local and deployed environment to ensure application functionality remained consistent after deployment.
 
-Overall, the testing strategy helped ensure that Cookfolio delivers a stable, secure, responsive, and user-friendly experience while maintaining
- code quality and reliability.
+Overall, the testing strategy helped ensure that Cookfolio delivers a stable, secure, responsive, and user-friendly experience while maintaining code quality and reliability.
+
+[Back to top](#table-of-content)
 
 ## Manual Testing
 
+[Back to top](#table-of-content)
+
 ## Automated Testing
+
+Automated testing was implemented throughout the development of Cookfolio to verify application functionality, reduce regression issues and ensure that features are working when new functionality is added. The project used both Pytest and Playwright for automated testing.
+
+### Pytest Testing
+
+* Pytest was used to test backend functionality, routes, models, and authentication. Areas covered include user registration, user login and logout, protected routes, recipe creation, editing,deleting, meal planner functionality, error handling and database interactions. Pytest helped ensure that backend functionality behave as expected and that future code changes did not introduce regressions. To improve tes reliability and reduce code duplication, Pytest fixtures were created and used for the automated testing. Fixtures were used to provide reusable test data including test client setup, test user, admin user, test recipe, test meal plan, standard user. Fixtures ensured that each test can run independently using predictable data.
+
+* Final test results
+
+<img src="app/static/images/test/final-pytest-pass.png">
+
+<details><summary>Pytest Results during development</summary>
+
+<img src="app/static/images/test/pytest-relationships-during-testing.png"> <img src="app/static/images/test/pytest-routes-during-coding.png"> <img src="app/static/images/test/pytest-testing-during-coding.png">
+</details>
+
+### Playwright Testing
+
+* Playwright testing was used to perfom automated end-to-end testing of Cookfolio from user`s perspective. These tests simulate real user interactions within a browser and help verify that features function correctly. Playwright was implemented during development nad was regularly executed after feature additions and bug fixes. Playwright was used to verify responsive behaviour across multiple devices. Testing included mobile, table and desktop layouts. Playwright automatically generated screenshots during test execution. Screenshots were used to verify rendering, compare layout across devices, assist with debugging during development. Screenshot were collected for both successful and failed test runs. Playwright testing successfully verified key user journeys throughout the application and helped ensure that Cookfolio functions consistently across the devices and browsers.
+
+* Final test results
+
+<img src="app/static/images/test/final-playwright-pass.png">
+
+<details><summary>Playwright Results during development</summary>
+
+<img src="app/static/images/test/playwright-meal-crud-test.png"> <img src="app/static/images/test/playwright-testing-during-coding.png">
+</details>
+
+[Back to top](#table-of-content)
 
 ## Browser Compatibility
 
+| **Browser tested** | **Intended appearance** | **Intended responsiveness** | 
+|--------------------|-------------------------|-----------------------------|
+| Google Chrome      |Excellent|Excellent|
+| Mozzila            |Excellent|Excellent|
+| Firefox            |Excellent|Excellent|
+| Microsoft edge     |Excellent|Excellent|
+| Safari            |Very Good|Very Good|
+
+* Browser compatibility testing was performed to ensure that Cookfolio provides a consistent user experience across modern web browsers. Testing was conducted throughout development and during final testing using manual testing. The application was tested in Google Chrome, Mozzila, Firefox, Microsoft edge and Safari. All tests passed. All features tested and verified in eah browser. Cookfolio functions correctly across all tested browsers and provides a consistent user experience.
+
+[Back to top](#table-of-content)
+
 ## Responsiveness
 
+| **Device Tested** | **Site responsive** | **Renders as expected** |
+|-------------------|---------------------|-------------------------|
+| Samsung Galaxy S21 Ultra|Excellent|Yes|
+| Iphone 5s/6s      |Excellent|Yes|
+| Ipad              |Excellent|Yes|
+| Samsung Galaxy Tab 3|Excellent|Yes|
+| Desktop           |Excellent|Yes|
+| Laptop            |Excellent|Yes|
+| Google Dev Tools  |Excellent|Yes|
+
+* Responsive design testing was performed during development of Cookfolio to ensure that the application remains functional, accessible and visually consistent across a wide range of devices and screen sizes. Testing was conducted using browser developer tools, real devices, Playwright devices emulation. The website was tested across multiple viewport sizes. All features were tested and passed. Cookfolio includes several responsive design improvements as responsive recipe cards, navigation menu, meal planner, touch-friendly buttons and links, and etc. Responsive testing confirmed that Cookfolio provides a consistent and user-friendly experience across mobile, tablet, desktop and laptop screens. No critical responsive design issues remain.
+
+[Back to top](#table-of-content)
+
 ## Performance
+
+Lighthouse performance testing was completed on both mobile and desktop views. Desktop performance scores were consistently strong, usually ranging between 90 and 100. Mobile performance scores varied more, usually ranging between 80 and 95, depending on the page content, image loading, network, and whether page include dynamic content suach as recipe images, API data, and dashboard components. The main factor affecting mobile performance were large recipe and hero images, external APIs recipe images, dynamic page content, Large contentful paint timings. The project uses WebP images, png fallback images, responsive layouts, pagination for recipe collection. While some mobile scores are lower than desktop scores. the results remaining within an acceptable range, and no critical performance issues were identified. There will be improvements in the future for better performance.
+
+<details><summary>Lighthouse test results</summary>
+
+* Desktop view
+
+<img src="app/static/images/test/lighthouse-home.png"> <img src="app/static/images/test/lighthouse-discover-desktop.png"> <img src="app/static/images/test/lighthouse-desktop-meal.png">
+
+* Mobile view
+
+<img src="app/static/images/test/lighthouse-mobile-home.png"> <img src="app/static/images/test/lighthouse-mobile-recipe.png"> <img src="app/static/images/test/lighthouse-mobile-form.png">
+<img src="app/static/images/test/lighthouse-mobile-recipes.png"> <img src="app/static/images/test/lighthouse-mobile-support.png"> <img src="app/static/images/test/lighthouse-mobile-grocery.png">
+</details>
+
+[Back to top](#table-of-content)
 
 ## Code Validation
 
