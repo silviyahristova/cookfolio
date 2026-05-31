@@ -70,7 +70,7 @@ Click [**here**](https://cookfolio-dc589e41eddc.herokuapp.com/) to view the live
 
 #### **Registered User:**
 
-- As an user, I want to log in , so that i can access my personal dashboard.
+- As an user, I want to log in , so that I can access my personal dashboard.
 - As an user, I want to see a dashboard after logging in, so I can quickly access my recipes.
 - As an user, I want to see my recipes on the dashboard.
 - As an user, I want to add a new recipe.
@@ -1018,6 +1018,8 @@ This helps protect sensitive information such as secret keys, email credentials,
 * Admin and User analytics dashboard.
 
 * Enchanced form security and CSFR protection improvements.
+
+* Improve website performance.
 
 [Back to top](#table-of-content)
 
