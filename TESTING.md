@@ -46,7 +46,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Homepage| Open the homepage URL.| Homepage loads successfully and clearly explains Cookfolio.|
 
-<img src="">
+<img src="app/static/images/test/load-home-page.gif">
 
 </details>
 
@@ -56,7 +56,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Registration| Complete the registration form with details.| Account is created successfully.|
 
-<img src="">
+<img src="app/static/images/test/register-user.gif">
 
 </details>
 
@@ -66,7 +66,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Login| Enter valid login details.| User is logged in and redirected to dashboard.|
 
-<img src="">
+<img src="app/static/images/test/login-user.gif">
 
 </details>
 
@@ -76,7 +76,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Support Form| Submit a valid support message.| Message sends successfully and confirmation is shown.|
 
-<img src="">
+<img src="app/static/images/test/guest-support-form.gif">
 
 </details>
 
@@ -86,7 +86,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Login| Enter valid login details.| User is logged in and redirected to dashboard.|
 
-<img src="">
+<img src="app/static/images/test/login-user.gif">
 
 </details>
 
@@ -96,8 +96,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Dashboard| Log in and open dashboard.| Dashboard displays quick links and user content.|
 
-<img src="">
-
+<img src="app/static/images/test/user-recipe-collection.gif">
 </details>
 
 <details><summary> As an user, I want to see my recipes on the dashboard.</summary>
@@ -106,7 +105,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Dashboard-My recipes| Click **View All Recipes**.| User is redirected to My Recipes page and can see all recipe cards.|
 
-<img src="">
+<img src="app/static/images/test/user-recipe-collection.gif">
 
 </details>
 
@@ -116,7 +115,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Add Recipe| Complete add recipe form.| Recipe is saved successfully.|
 
-<img src="">
+<img src="app/static/images/test/add-recipe.gif">
 </details>
 
 <details><summary> As an user, I want to upload image for my recipe.</summary>
@@ -125,7 +124,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Image Upload| Add or edit recipe with image upload.| Image displays on recipe card and recipe detail page.|
 
-<img src="">
+<img src="app/static/images/test/add-recipe.gif">
 </details>
 
 <details><summary> As an user, I want to view detailed recipe page, so that I can read the full instructions and ingredients.</summary>
@@ -134,7 +133,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Recipe page| Open recipe detail page bh clicking **View recipe** link.| Full recipe information displayed.|
 
-<img src="">
+<img src="app/static/images/test/read-recipe.gif">
 
 </details>
 
@@ -144,7 +143,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Edit Recipe| Edit an existing recipe and save.| Recipe updates successfully.|
 
-<img src="">
+<img src="app/static/images/test/edit-recipe.gif">
 
 </details>
 
@@ -154,7 +153,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Delete Recipe| Delete a recipe and confirm.| Recipe is deleted successfully.|
 
-<img src="">
+<img src="app/static/images/test/delete-recipe.gif">
 
 </details>
 
@@ -164,7 +163,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |My Recipes| Open My Recipes page| All users recipes are displayed.|
 
-<img src="">
+<img src="app/static/images/test/user-recipe-collection.gif">
 
 </details>
 
@@ -174,7 +173,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Recipe Search| Search using recipe keyword.| Matching recipes are shown.|
 
-<img src="">
+<img src="app/static/images/test/search-recipe.gif">
 
 </details>
 
@@ -184,7 +183,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Discover Recipes| Open Discover page.| External recipe ideas are displayed.By default - chicken recipes.|
 
-<img src="">
+<img src="app/static/images/test/discover-recipe.gif">
 
 </details>
 
@@ -194,7 +193,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Category Filter| Select a recipe category.| Recipes are filtered by selected category.|
 
-<img src="">
+<img src="app/static/images/test/search-category.gif">
 
 </details>
 
@@ -204,7 +203,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Add Meal Plan| Fill the form and save.| Recipe is added to selected date and meal category.|
 
-<img src="">
+<img src="app/static/images/test/add-meal-plan.gif">
 
 </details>
 
@@ -214,7 +213,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Meal Planner| Add recipe to meal planner.| Recipe is added to selected date and meal category.|
 
-<img src="">
+<img src="app/static/images/test/future-date-meal-plan.gif">
 
 </details>
 
@@ -224,7 +223,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Edit Meal Plan| Edit an existing meal plan and save.| Meal plan updates successfully.|
 
-<img src="">
+<img src="app/static/images/test/edit-meal.gif">
 
 </details>
 
@@ -234,7 +233,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Delete Meal Plan| Remove recipe from meal planner.| Meal plan entry is deleted.|
 
-<img src="">
+<img src="app/static/images/test/delete-meal.gif">
 
 </details>
 
@@ -244,7 +243,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Responsive Design| Test site on mobile device.| Layout adapts correctly.|
 
-<img src="">
+<img src="app/static/images/test/responsive-design.gif">
 
 </details>
 
@@ -254,7 +253,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Log out| Click Log out.| User is logged out successfully.|
 
-<img src="">
+<img src="app/static/images/test/logout.gif">
 
 </details>
 
@@ -264,7 +263,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Support Form| Submit issue/quiestion form.| Message is sent and confirmation email is sent.|
 
-<img src="">
+<img src="app/static/images/test/guest-support-form.gif">
 
 </details>
 
@@ -274,7 +273,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Flash Messages| Submit support form.| Success message appears.|
 
-<img src="">
+<img src="app/static/images/test/guest-support-form.gif">
 
 </details>
 
@@ -284,7 +283,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 |Admin Dashboard| Log in as admin and open admin page.| Admin dashboard opens successfully.|
 
-<img src="">
+<img src="app/static/images/test/admin-dashboard.gif">
 
 </details>
 
@@ -294,7 +293,7 @@ Overall, the testing strategy helped ensure that Cookfolio delivers a stable, se
 |-------------|---------------|-------------|
 Admin Support Messages| Open admin support inbox.| Support messages are displayed.|
 
-<img src="">
+<img src="app/static/images/test/admin-dashboard.gif">
 
 </details>
 
@@ -304,8 +303,8 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |Authentication| Fill Register/Login form.| Users can create accounts and log in securely.|
 
-<img src="">
-
+<img src="app/static/images/test/register-user.gif">
+<img src="app/static/images/test/login-user.gif">
 </details>
 
 <details><summary> As an admin, I want each recipe to be linked to a specific user so that ownership is enforced.</summary>
@@ -314,7 +313,7 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |Recipe Ownership| Check recipe is connected to logged in user.| Recipe belongs only tp the creator.|
 
-<img src="">
+<img src="app/static/images/test/user-recipe-collection.gif">
 
 </details>
 
@@ -324,17 +323,16 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |Access Control| Try accessing another user`s edit/delete route.| Access is blocked.|
 
-<img src="">
-
+<img src="app/static/images/test/access-denied.png">
 </details>
 
 <details><summary> As an admin, I want the site to be mobile-first.</summary>
 
 | **Feature** | **Test case** | **Outcome** |
 |-------------|---------------|-------------|
-|Mobile-First Design| Test pages on mobile devices.| PAges remain usable on small screens.|
+|Mobile-First Design| Test pages on mobile devices.| Pages remain usable on small screens.|
 
-<img src="">
+<img src="app/static/images/test/responsive-design.gif">
 
 </details>
 
@@ -344,8 +342,13 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |UI Consistency| Check navigation, buttons, cards, and page layout.| Interface is consistent across all pages.|
 
-<img src="">
-
+<img src="app/static/images/test/recipe-cards.png" width=500px>
+<img src="app/static/images/test/api-cards.png" width=500px>
+<img src="app/static/images/test/register-form.png" width=500px>
+<img src="app/static/images/test/login-form.png" width=500px>
+<img src="app/static/images/test/support-form.png" width=500px>
+<img src="app/static/images/test/add-recipe-form.png" width=500px>
+<img src="app/static/images/test/edit-recipe-form.png" width=500px>
 </details>
 
 <details><summary> As an admin, I want to provide a support contact form so that users can report an issue.</summary>
@@ -354,7 +357,7 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |Support Form| Submit support form.| User message is sent successfullyand message is stored.|
 
-<img src="">
+<img src="app/static/images/test/guest-support-form.gif">
 
 </details>
 
@@ -364,8 +367,6 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |Scalability| Check strcture, models, routes and templates.| Code is organized and allows future improvements.|
 
-<img src="">
-
 </details>
 
 <details><summary> As an admin, I want to restrict admin pages, so that only authorized users can access them.</summary>
@@ -374,7 +375,7 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |-------------|---------------|-------------|
 |Admin Access Control| Try opening admin page as normal user.| Access is denied and admin page remain protected.|
 
-<img src="">
+<img src="app/static/images/test/access-denied.png">
 
 </details>
 
@@ -480,7 +481,7 @@ Admin Support Messages| Open admin support inbox.| Support messages are displaye
 |Delete Meal Plan| Click button, then click yes, delete.| Meal plan for this category removed successfully.|
 </details>
 
-<details><summary>Discpver Recipes</summary>
+<details><summary>Discover Recipes</summary>
 
 | **Feature** | **Test case** | **Outcome** |
 |-------------|---------------|-------------|
@@ -531,8 +532,9 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Invalid Login| Login with incorrect credentials.| Login prevented and validation message displayed.|
 |Logout| Click logout button.| User session ended successfully.|
 
-<img src="">
+* Users saved in production database
 
+<img src="app/static/images/test/user-database.png">
 </details>
 
 <details><summary> Route Protection</summary>
@@ -544,7 +546,17 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Admin Routes| Access admin as normal user.| Access denied successfully.|
 |Archive Meal Plan Protection| View past meal plans.| Read-only access is provided, preventing from deleting and updating.|
 
-<img src="">
+* Admin route protected
+
+<img src="app/static/images/test/admin-route-protected.png">
+
+* Navigation bar for guest user
+
+<img src="app/static/images/test/navbar-guest-user.png">
+
+* Navigation bar for logged in user
+
+<img src="app/static/images/test/navbar-logged-user.png">
 
 </details>
 
@@ -557,8 +569,21 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Update Recipe| Edit recipe details.| Changes saved successfully.|
 |Delete Recipe| Delete recipe and confirm deletion.| Recipe removed from database.|
 
-<img src="">
+* Recipes saved to database
 
+<img src="app/static/images/test/recipe-database.png">
+
+* Read recipe
+
+<img src="app/static/images/test/read-saved-recipe.png" width=500px>
+
+* Update recipe
+
+<img src="app/static/images/test/recipe-update.png" width=500px>
+
+* Delete recipe
+
+<img src="app/static/images/test/recipe-delete.png" width=500px>
 </details>
 
 <details><summary> SQLAlchemy Model Relationships</summary>
@@ -576,8 +601,7 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |User -> Support Message| Submit a support message while logged in.| Support message is linked to user account.| One User -> Many Support Messages.|
 |Support Message -> User| View support message in admin panel.| Admin could identify which user submitted each message.| One Support Message -> One User.|
 
-<img src="">
-
+Please refer to [**README.md**](README.md#database-design) for more information.
 </details>
 
 <details><summary> Database Verification</summary>
@@ -590,8 +614,21 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Support Messages| Verify support messages table.| Messages stored successfully.|
 |Foreign Keys| Verify relationships between models.| Relationships functioning correctly.|
 
-<img src="">
+* User record
 
+<img src="app/static/images/test/user-database.png">
+
+* Recipe record
+
+<img src="app/static/images/test/recipe-database.png">
+
+* Meal Plan record
+
+<img src="app/static/images/test/mealplan-database.png">
+
+* Suport messages record
+
+<img src="app/static/images/test/support-message-database.png">
 </details>
 
 <details><summary> Session Management</summary>
@@ -602,8 +639,8 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Logout Session| Logout and access dashboard| Access denied after logout.|
 |Session Persistance| Refresh browser after login.| User remains authenticated.|
 
-<img src="">
-
+<img src="app/static/images/test/logout.png">
+<img src="app/static/images/test/access-denied.png">
 </details>
 
 <details><summary> Form Processing and Validation</summary>
@@ -620,8 +657,12 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Form Pre-Population| Open an existing recipe/meal plan using Edit Recipe/Edit Meal Plan button.| All existing data is automatically loaded in the form.|
 |Dashboard Recipe Category Filtering| Select a category from a dashboard.| Correctly filtered recipes by category and return only recipes matching the selected categoty.|
 
-<img src="">
+<img src="app/static/images/test/all-fields-required.png">
+<img src="app/static/images/test/enter-valid-email.png">
 
+* Previously entered data remain in form
+
+<img src="app/static/images/test/form-retention.png">
 </details>
 
 <details><summary> Flash Messages Functionality</summary>
@@ -632,7 +673,17 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Error Messages| Submit invalid form.| Error message displayed.|
 |Warning Messages| Attempt restricted action.| Warning message displayed.|
 
-<img src="">
+* Success message
+
+<img src="app/static/images/test/message-send.png">
+
+* Error message
+
+<img src="app/static/images/test/all-fields-required.png">
+
+* Warning message
+
+<img src="app/static/images/test/enter-valid-email.png">
 
 </details>
 
@@ -644,7 +695,9 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |403 Page| Access restricted page.| Custom 403 page displayed.|
 |500 Page| Trigger server error in testing environment.| Custom 500 page displayed.|
 
-<img src="">
+<img src="app/static/images/docs/403-page.png" width=600px>
+<img src="app/static/images/docs/404-page.png" width=600px>
+<img src="app/static/images/docs/500-page.png" width=600px>
 
 </details>
 
@@ -657,8 +710,21 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Password Update| Enter new password.| Password updated successfully.|
 |Token Validation| Reuse token after password change.| Token rejected successfully.|
 
-<img src="">
+* Email with reset link send
 
+<img src="app/static/images/test/success-message-reset.png">
+
+* Password do not match
+
+<img src="app/static/images/test/password-no-match.png">
+
+* Reset password successfull
+
+<img src="app/static/images/test/password-success.png">
+
+* Link expire or have been used
+
+<img src="app/static/images/test/link-expiry.png">
 </details>
 
 <details><summary> API Integration Testing</summary>
@@ -671,8 +737,13 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |API Error Handling| Test unavailable API response.| User-friendly error shown.|
 |API Recipe to Meal Plan| Add not imported recipe to meal planner.| Recipe first saved to database and then added to meal plan.|
 
-<img src="">
+* MealDB API Recipe
 
+<img src="app/static/images/test/mealdb-api.png">
+
+* Spoonacular API Recipe
+
+<img src="app/static/images/test/spoonacular-api.png">
 </details>
 
 <details><summary> Email Functionality</summary>
@@ -682,9 +753,23 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Welcome Email| Register new user.|Custom welcome email received.|
 |Password Reset Email| Request password reset.| Custom reset email received.|
 |Support Confirmation Email| Submit support form.| Custom confirmation email received.|
-|Admin notification Email| User submits support form.| Admin notification email received.|
+|Admin Notification Email| User submits support form.| Admin notification email received.|
 
-<img src="">
+* Welcome Email
+
+<img src="app/static/images/docs/welcome-email.png" width=600>
+
+* Password Reset Email
+
+<img src="app/static/images/docs/reset-email.png" width=600>
+
+* Support Confirmation Email
+
+<img src="app/static/images/docs/confirmation-email.png" width=600>
+
+* Admin Notification Email
+
+<img src="app/static/images/test/admin-notification-email.png" width=600>
 
 </details>
 
@@ -694,9 +779,11 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |-------------|---------------|-------------|
 |Edit Protectoin| User attempts to edit another user`s recipe.| Access denied.|
 |Delete Protection| User attempts to delete another user`s recipe.| Access denied.|
-|Recipe Visisbility| User views own recipes.| Only appropriate recipes displayed.|
+|Recipe Visibility| User views own recipes.| Only appropriate recipes displayed.|
 
-<img src="">
+* Recipe Visibility
+
+<img src="app/static/images/test/user-recipes.png" width=600>
 
 </details>
 
@@ -708,7 +795,10 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Non- Admin Access| Login as normal user.| Access denied.|
 |Support Messaged| Admin view support messages.| Messages displayed successfully.|
  
-<img src="">
+* Admin Dashboard
+
+<img src="app/static/images/test/admin-dashboard.png" width=600>
+
 
 </details>
 
@@ -720,8 +810,9 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |Session Protection| Access protected route after logout.| Access denied.|
 |Authorization checks| Attempt restricted actions.| Access prevented.|
 
-<img src="">
+* Password stored as hashes
 
+<img src="app/static/images/test/hashed-password.png" width=600>
 </details>
 
 <details><summary> Deployment Verification</summary>
@@ -733,8 +824,8 @@ Backend testing confirmed that Cookfolio correctly handles authentication, autho
 |User Authentication| Login on production site.| Authentication functions correctly.|
 |CRUD Operations| Create, read, update and delete recipes.| Functionality works in production.|
 
-<img src="">
-
+* PostgreSQL Connection
+<img src="app/static/images/test/postgresql-heroku.png" width=600>
 </details>
 
 ### Real User Testing
@@ -842,12 +933,12 @@ Lighthouse performance testing was completed on both mobile and desktop views. D
 
 * Desktop view
 
-<img src="app/static/images/test/lighthouse-home.png"> <img src="app/static/images/test/lighthouse-discover-desktop.png"> <img src="app/static/images/test/lighthouse-desktop-meal.png">
+<img src="app/static/images/test/lighthouse-home.png" width=300px> <img src="app/static/images/test/lighthouse-discover-desktop.png" width=300px> <img src="app/static/images/test/lighthouse-desktop-meal.png" width=300px>
 
 * Mobile view
 
-<img src="app/static/images/test/lighthouse-mobile-home.png"> <img src="app/static/images/test/lighthouse-mobile-recipe.png"> <img src="app/static/images/test/lighthouse-mobile-form.png">
-<img src="app/static/images/test/lighthouse-mobile-recipes.png"> <img src="app/static/images/test/lighthouse-mobile-support.png"> <img src="app/static/images/test/lighthouse-mobile-grocery.png">
+<img src="app/static/images/test/lighthouse-mobile-home.png" width=300px> <img src="app/static/images/test/lighthouse-mobile-recipe.png" width=300px> <img src="app/static/images/test/lighthouse-mobile-form.png" width=300px>
+<img src="app/static/images/test/lighthouse-mobile-recipes.png" width=300px> <img src="app/static/images/test/lighthouse-mobile-support.png" width=300px> <img src="app/static/images/test/lighthouse-mobile-grocery.png" width=300px>
 </details>
 
 [Back to top](#table-of-content)
