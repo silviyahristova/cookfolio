@@ -192,6 +192,16 @@ The overall structure supports a predictable, intuitive and responsive user jour
 
 A custom 403, 404 and 500 error pages are implemented to handle errors. The pages provide clear feedback to users and offers navigation back to the Home or Dashboard page, ensuring smooth and controlled user experience.
 
+#### **Page Flow Diagram**
+
+A page flow diagram was created to visualise how users navigate through the application based on their authentication state. The diagram illustrates the separation between unauthenticated and authenticated user journeys and shows how users move between key pages such as login, dashboard, and recipe management pages.
+The page flow diagram was used during planning to ensure logical navigation, clear user journeys, and secure access control throughout the application.
+
+<details><summary> Page Flow Diagram</summary>
+
+<img src="app/static/images/docs/cookfolio-page-flow-diagram.drawio.png">
+</details>
+
 ### **Skeleton**
 
 Low-fidelity wireframes were created during the planning stage to define the skeletal structure of the website before development began. These wireframes focus on layout, content hierarchy and user flow rather visual design or styling.
@@ -501,6 +511,8 @@ Testing was integrated throughout the development. The testing process included:
     + used to help to select open-source license for the project providing permissions, conditions and limitations.
 + [Markdown](https://www.markdownguide.org/)
     + used to structure and format The README and TESTING documentations.
++ [Page Flow Diagram](https://www.drawio.com/)
+    + used to create Page Flow Diagram
 
 [Back to top](#table-of-content)
 
